@@ -22,6 +22,7 @@ SOURCES += \
     main.cpp \
     dialog.cpp \
     note.cpp \
+    suspenddia.cpp \
     vector_.cpp
 
 HEADERS += \
@@ -30,6 +31,7 @@ HEADERS += \
     dialog.h \
     history.h \
     note.h \
+    suspenddia.h \
     vector_.h
 
 FORMS += \
@@ -37,7 +39,8 @@ FORMS += \
     addnew.ui \
     dialog.ui \
     history.ui \
-    note.ui
+    note.ui \
+    suspenddia.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

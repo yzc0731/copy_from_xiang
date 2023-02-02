@@ -9,12 +9,18 @@
 #include "note.h"
 #include <QFile>
 #include <QTextCodec>
+#include <QMessageBox>
+#include <QCheckBox>
+#include "suspenddia.h"
+#include <QPushButton>
 
 //主界面窗口设置
 Dialog::Dialog(QWidget *parent)
         : QDialog(parent), ui(new Ui::Dialog) {
     ui->setupUi(this);
 
+    Qt::WindowFlags windowFlag  = Qt::Widget;
+    this->setWindowFlags(windowFlag);     // 添加最小化、最大化按键，并且这些按钮自动有对应功能
 }
 
 Dialog::~Dialog() {
@@ -118,4 +124,40 @@ void Dialog::onCreate() {//创建时调用
         ui->frame_2->widget()->setLayout(gridLayout);
         repaint();     //顺序输出vector所有的东西
     }
+}
+
+void Dialog::closeEvent(QCloseEvent *event){
+    // 点击关闭之后，跳出下面这个对话框。
+    // 如果选择no或者右上角的“x”，啥都不做，直接退出
+    // 如果选择yes，就跳出悬浮界面
+    // 这个函数结束之后主界面直接关闭
+    QMessageBox *questionBox = new QMessageBox(this);
+    questionBox->setIcon(QMessageBox::Question);
+    questionBox->setText("是否进入桌面悬浮状态");
+    questionBox->setWindowTitle("Question");
+
+    QPushButton *yesBtn = new QPushButton(tr("是(&Y)"),this);
+    questionBox->addButton(yesBtn,QMessageBox::YesRole);
+    QPushButton *noBtn = new QPushButton(tr("直接退出(&N)"),this);
+    questionBox->addButton(noBtn,QMessageBox::NoRole);
+
+    QCheckBox *mcheckbox = new QCheckBox("下次不再提示");
+    questionBox->setCheckBox(mcheckbox);
+
+    questionBox->exec();
+}
+
+void Dialog::on_toSusbendBtn_clicked()
+{
+    this->hide();
+
+    //创建一个子窗口
+    SuspendDia *s = new SuspendDia();
+    s->show();
+
+    //监测窗口s的回退信号
+    connect(s,&SuspendDia::back,[=](){
+        s->hide();
+        this->show();
+    });
 }

@@ -3,6 +3,11 @@
 #include <vector>
 #include <QDialog>
 #include "note.h"
+#include <QPushButton>
+
+// 为了更改主界面的“x”按钮之后的事件而添加
+#include <QCloseEvent>
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class Dialog; }
 QT_END_NAMESPACE
@@ -17,6 +22,8 @@ public:
     ~Dialog();
     void onCreate();
     void Shownote();
+    void closeEvent(QCloseEvent *event);  // 点击“x”按钮
+
 public slots:
     void on_pushButton_clicked();
 
@@ -25,6 +32,8 @@ public slots:
     void on_pushButton_3_toggled(bool checked);
 
     void on_pushButton_4_clicked();
+
+    void on_toSusbendBtn_clicked();
 
 public:
     Ui::Dialog *ui;
