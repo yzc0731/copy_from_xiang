@@ -21,6 +21,7 @@ Dialog::Dialog(QWidget *parent)
 
     Qt::WindowFlags windowFlag  = Qt::Widget;
     this->setWindowFlags(windowFlag);     // 添加最小化、最大化按键，并且这些按钮自动有对应功能
+
 }
 
 Dialog::~Dialog() {
@@ -131,6 +132,7 @@ void Dialog::closeEvent(QCloseEvent *event){
     // 如果选择no或者右上角的“x”，啥都不做，直接退出
     // 如果选择yes，就跳出悬浮界面
     // 这个函数结束之后主界面直接关闭
+
     QMessageBox *questionBox = new QMessageBox(this);
     questionBox->setIcon(QMessageBox::Question);
     questionBox->setText("是否进入桌面悬浮状态");
@@ -145,8 +147,12 @@ void Dialog::closeEvent(QCloseEvent *event){
     questionBox->setCheckBox(mcheckbox);
 
     questionBox->exec();
-}
 
+    if (questionBox->clickedButton() == yesBtn){
+        on_toSusbendBtn_clicked();
+    }
+
+}
 void Dialog::on_toSusbendBtn_clicked()
 {
     this->hide();

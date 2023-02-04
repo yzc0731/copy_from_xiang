@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>771</width>
-    <height>223</height>
+    <width>712</width>
+    <height>873</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,7 +29,28 @@
    <property name="spacing">
     <number>5</number>
    </property>
-   <item row="1" column="1">
+   <item row="2" column="2">
+    <widget class="QPushButton" name="pushButton">
+     <property name="text">
+      <string>添加(&amp;A)</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3">
+    <widget class="QPushButton" name="pushButton_2">
+     <property name="text">
+      <string>关于</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="5">
+    <widget class="QPushButton" name="toSusbendBtn">
+     <property name="text">
+      <string>悬浮球</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
     <widget class="QPushButton" name="pushButton_3">
      <property name="text">
       <string>最小化</string>
@@ -39,48 +60,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="4">
-    <widget class="QPushButton" name="pushButton_4">
-     <property name="text">
-      <string>历史记录</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2">
-    <widget class="QPushButton" name="pushButton">
-     <property name="text">
-      <string>添加(&amp;A)</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label">
-     <property name="maximumSize">
-      <size>
-       <width>800</width>
-       <height>800</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>界面1：主界面</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="3">
-    <widget class="QPushButton" name="pushButton_2">
-     <property name="text">
-      <string>关于</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="5">
-    <widget class="QPushButton" name="toSusbendBtn">
-     <property name="text">
-      <string>悬浮球</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="6">
+   <item row="3" column="0" colspan="6">
     <widget class="QFrame" name="frame">
      <property name="frameShape">
       <enum>QFrame::Box</enum>
@@ -152,14 +132,34 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>725</width>
-           <height>105</height>
+           <width>666</width>
+           <height>755</height>
           </rect>
          </property>
         </widget>
        </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label">
+     <property name="maximumSize">
+      <size>
+       <width>800</width>
+       <height>800</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>界面1：主界面</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="4">
+    <widget class="QPushButton" name="pushButton_4">
+     <property name="text">
+      <string>历史记录</string>
+     </property>
     </widget>
    </item>
   </layout>

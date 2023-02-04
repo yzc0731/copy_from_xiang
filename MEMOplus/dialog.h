@@ -4,8 +4,8 @@
 #include <QDialog>
 #include "note.h"
 #include <QPushButton>
-
-// 为了更改主界面的“x”按钮之后的事件而添加
+#include <QMessageBox>
+#include <QCheckBox>
 #include <QCloseEvent>
 
 QT_BEGIN_NAMESPACE
@@ -37,5 +37,6 @@ public slots:
 
 public:
     Ui::Dialog *ui;
+
 };
 #endif // DIALOG_H
