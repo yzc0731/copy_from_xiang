@@ -143,15 +143,30 @@ void Dialog::closeEvent(QCloseEvent *event){
     QPushButton *noBtn = new QPushButton(tr("直接退出(&N)"),this);
     questionBox->addButton(noBtn,QMessageBox::NoRole);
 
-    QCheckBox *mcheckbox = new QCheckBox("下次不再提示");
-    questionBox->setCheckBox(mcheckbox);
+    QCheckBox *checkbox = new QCheckBox("下次不再提示");
+    questionBox->setCheckBox(checkbox);
 
-    questionBox->exec();
-
-    if (questionBox->clickedButton() == yesBtn){
-        on_toSusbendBtn_clicked();
+    switch (nextTime) {
+        case 0: {
+            questionBox->exec();
+            if (checkbox->isChecked()){
+                if (questionBox->clickedButton() == yesBtn){
+                    nextTime = 1;
+                    on_toSusbendBtn_clicked();
+                } else {
+                    nextTime = 2;
+                }
+            }
+            break;
+        }
+        case 1:{
+            on_toSusbendBtn_clicked();
+            break;
+        }
+        default:{
+            break;
+        }
     }
-
 }
 void Dialog::on_toSusbendBtn_clicked()
 {

@@ -38,5 +38,7 @@ public slots:
 public:
     Ui::Dialog *ui;
 
+private:
+    int nextTime = 0;   // 说明有下一次
 };
 #endif // DIALOG_H

@@ -136,6 +136,25 @@
            <height>755</height>
           </rect>
          </property>
+         <widget class="QCheckBox" name="checkBox">
+          <property name="geometry">
+           <rect>
+            <x>280</x>
+            <y>370</y>
+            <width>105</width>
+            <height>22</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>CheckBox</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+          <property name="checked">
+           <bool>false</bool>
+          </property>
+         </widget>
         </widget>
        </widget>
       </item>
