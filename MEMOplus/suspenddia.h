@@ -15,15 +15,16 @@ public:
     explicit SuspendDia(QWidget *parent = nullptr);
     ~SuspendDia();
 
-private slots:
-    void on_exitBtn_clicked();
-
 signals:
     //创建一个信号
     void back();
 
+private slots:
+    void on_pacityBox_valueChanged(int arg1);
+
 private:
     Ui::SuspendDia *ui;
+    double pacity = 1;
 };
 
 #endif // SUSPENDDIA_H

@@ -8,7 +8,7 @@ SuspendDia::SuspendDia(QWidget *parent) :
     ui->setupUi(this);
     ui->title->setText(tr("软件名称"));
     ui->backBtn->setText(tr("回到主界面"));
-    ui->exitBtn->setText(tr("退出悬浮球"));
+    setWindowOpacity(pacity);
 
     //监测信号，当按下back信号的时候，会发出一个back信号
     connect(ui->backBtn,&QPushButton::clicked,[=](){
@@ -21,7 +21,8 @@ SuspendDia::~SuspendDia()
     delete ui;
 }
 
-void SuspendDia::on_exitBtn_clicked()
+void SuspendDia::on_pacityBox_valueChanged(int arg1)
 {
-    this->close();
+    pacity = double(arg1+1)/100;
+    setWindowOpacity(pacity);
 }
