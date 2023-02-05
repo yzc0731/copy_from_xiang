@@ -40,6 +40,5 @@ void Addnew::on_pushButton_clicked()
     note_vector->push_back(n1);   //放到vector最后一个位置
     Vector_ vector;
     vector.vector_for_file(*note_vector);
-    //
     close();
 }

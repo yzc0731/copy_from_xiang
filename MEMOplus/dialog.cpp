@@ -31,9 +31,9 @@ Dialog::~Dialog() {
 
 void Dialog::on_pushButton_clicked() {
     Addnew *add = new Addnew(&note_vector);
-    add->exec();
-    Shownote();  //刷新
-}   //打开新增面板
+    add->exec();    //打开新增面板
+    Shownote();     //刷新
+}
 
 void Dialog::on_pushButton_2_clicked() {
     About *about = new About;
@@ -118,9 +118,11 @@ void Dialog::onCreate() {//创建时调用
             num = str_read[0].toInt();   //将第一个数据转化为int类
             Note *n1 = new Note(&note_vector, num, str_read[1], str_read[2], str_read[3], str_read[4], str_read[5]);
             note_vector.push_back(n1);   //放到vector最后一个位置
+
             if (n1->finish == 0) {
                 gridLayout->addWidget(n1);
             }
+
         }
         ui->frame_2->widget()->setLayout(gridLayout);
         repaint();     //顺序输出vector所有的东西
@@ -146,8 +148,10 @@ void Dialog::closeEvent(QCloseEvent *event){
     QCheckBox *checkbox = new QCheckBox("下次不再提示");
     questionBox->setCheckBox(checkbox);
 
-    switch (nextTime) {
-        case 0: {
+    switch (nextTime)
+    {
+        case 0:
+        {
             questionBox->exec();
             if (checkbox->isChecked()){
                 if (questionBox->clickedButton() == yesBtn){
@@ -156,29 +160,37 @@ void Dialog::closeEvent(QCloseEvent *event){
                 } else {
                     nextTime = 2;
                 }
+            } else {
+                if (questionBox->clickedButton() == yesBtn){
+                    on_toSusbendBtn_clicked();
+                }
             }
             break;
         }
-        case 1:{
+        case 1:
+        {
             on_toSusbendBtn_clicked();
             break;
         }
-        default:{
+        default:
+        {
             break;
         }
     }
 }
+
 void Dialog::on_toSusbendBtn_clicked()
 {
-    this->hide();
-
     //创建一个子窗口
     SuspendDia *s = new SuspendDia();
     s->show();
+
+    this->hide();
 
     //监测窗口s的回退信号
     connect(s,&SuspendDia::back,[=](){
         s->hide();
         this->show();
+        Shownote();
     });
 }
