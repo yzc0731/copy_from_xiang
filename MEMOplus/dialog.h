@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QCheckBox>
 #include <QCloseEvent>
+#include "suspenddia.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Dialog; }
@@ -23,13 +24,12 @@ public:
     void onCreate();
     void Shownote();
     void closeEvent(QCloseEvent *event);  // 点击“x”按钮
+    QString getText();
 
 public slots:
     void on_pushButton_clicked();
 
     void on_pushButton_2_clicked();
-
-    void on_pushButton_3_toggled(bool checked);
 
     void on_pushButton_4_clicked();
 
@@ -40,5 +40,7 @@ public:
 
 private:
     int nextTime = 0;   // 说明有下一次
+    SuspendDia *s;
+    QString _text;
 };
 #endif // DIALOG_H

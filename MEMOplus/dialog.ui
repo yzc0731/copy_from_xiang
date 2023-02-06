@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>595</width>
-    <height>832</height>
+    <width>478</width>
+    <height>554</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,38 +29,7 @@
    <property name="spacing">
     <number>5</number>
    </property>
-   <item row="2" column="2">
-    <widget class="QPushButton" name="pushButton">
-     <property name="text">
-      <string>添加(&amp;A)</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="3">
-    <widget class="QPushButton" name="pushButton_2">
-     <property name="text">
-      <string>关于</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="5">
-    <widget class="QPushButton" name="toSusbendBtn">
-     <property name="text">
-      <string>悬浮窗</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QPushButton" name="pushButton_3">
-     <property name="text">
-      <string>最小化</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0" colspan="6">
+   <item row="3" column="0" colspan="5">
     <widget class="QFrame" name="frame">
      <property name="frameShape">
       <enum>QFrame::Box</enum>
@@ -132,8 +101,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>549</width>
-           <height>714</height>
+           <width>432</width>
+           <height>436</height>
           </rect>
          </property>
         </widget>
@@ -142,10 +111,31 @@
      </layout>
     </widget>
    </item>
-   <item row="2" column="4">
+   <item row="2" column="0">
+    <widget class="QPushButton" name="pushButton">
+     <property name="text">
+      <string>添加(&amp;A)</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QPushButton" name="pushButton_2">
+     <property name="text">
+      <string>关于</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
     <widget class="QPushButton" name="pushButton_4">
      <property name="text">
       <string>历史记录</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3">
+    <widget class="QPushButton" name="toSusbendBtn">
+     <property name="text">
+      <string>悬浮窗</string>
      </property>
     </widget>
    </item>

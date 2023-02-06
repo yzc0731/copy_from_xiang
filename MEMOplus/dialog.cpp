@@ -13,6 +13,7 @@
 #include <QCheckBox>
 #include "suspenddia.h"
 #include <QPushButton>
+#include "suspendball.h"
 
 //主界面窗口设置
 Dialog::Dialog(QWidget *parent)
@@ -41,17 +42,6 @@ void Dialog::on_pushButton_2_clicked() {
 
 }  //打开关于面板
 
-void Dialog::on_pushButton_3_toggled(bool checked) {
-
-    if (checked) {
-        ui->pushButton_3->setText(tr("显示"));
-        ui->frame->hide();
-    } else {
-        ui->pushButton_3->setText(tr("最小化"));
-        ui->frame->show();
-    }
-}
-
 void Dialog::on_pushButton_4_clicked() {
     history *a = new history(this, &note_vector);
     a->show();
@@ -70,7 +60,7 @@ void Dialog::Shownote() {//刷新时调用
     QGridLayout *gridLayout = new QGridLayout();                   //网格布局
 
     //
-    for(int i=0;i<note_vector.size();i++){
+    for(size_t i=0; i < note_vector.size(); i++){
         if (note_vector.at(i)->finish == 0) {
             gridLayout->addWidget(note_vector.at(i));
     }
@@ -90,8 +80,6 @@ void Dialog::onCreate() {//创建时调用
         delete ui->frame_2->widget()->layout();
     }
     QGridLayout *gridLayout = new QGridLayout();                   //网格布局
-
-    //
 
     QFile file;
     file.setFileName("log.txt");   //保存到本地地址
@@ -186,8 +174,11 @@ void Dialog::closeEvent(QCloseEvent *event){
 void Dialog::on_toSusbendBtn_clicked()
 {
     // 创建一个子窗口
-    SuspendDia *s = new SuspendDia();
-    s->show();
+    // SuspendDia *s = new SuspendDia();
+    // s->show();
+    _text = getText();
+    suspendBall *sb = new suspendBall(_text,QPoint(50,50),50);
+    sb->show();
 
     // 隐藏主窗口
     this->hide();
@@ -196,6 +187,38 @@ void Dialog::on_toSusbendBtn_clicked()
     connect(s,&SuspendDia::back,[=](){
         s->hide();
         this->show();
-        Shownote();
+        // Shownote();
     });
+}
+
+QString Dialog::getText(){
+    QFile file;
+    file.setFileName("log.txt");   //保存到本地地址
+    QString str_read[7];
+    QString strline;
+    int num;
+    if (file.open(QIODevice::ReadOnly)){                             //只读
+        QTextCodec *codec = QTextCodec::codecForName("GBK");         //指定读码方式为GBK
+        note_vector.clear();
+        while (!file.atEnd()){                                       //当没有读到文件末尾时
+            strline = codec->toUnicode(file.readLine());             //以GBK的编码方式读取一行
+            QChar c = strline[0];                       //判断第一个字符是否是回车符（空文件只有一个回车符）
+            char c0 = c.toLatin1();
+            if (c0 > 57 || c0 < 48) { return nullptr; }
+            QStringList list = strline.split(" ");                   //以一个空格为分隔符
+            for (int i = 0; i < 7; i++) {
+                str_read[i] = list[i];
+            }
+            num = str_read[0].toInt();   //将第一个数据转化为int类
+            Note *n1 = new Note(&note_vector, num, str_read[1], str_read[2], str_read[3], str_read[4], str_read[5]);
+            note_vector.push_back(n1);   //放到vector最后一个位置
+
+            if (n1->finish == 0) {
+                // gridLayout->addWidget(n1);
+                return str_read[1];
+            }
+
+        }
+    }
+    return nullptr;// 若所有事情都已经完成，代码运行到这里，也不会出错
 }

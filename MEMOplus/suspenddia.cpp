@@ -4,7 +4,7 @@
 #include <QTextCodec>
 #include <QFile>
 
-SuspendDia::SuspendDia(QWidget *parent) :
+SuspendDia::SuspendDia(QWidget *parent):
     QDialog(parent),
     ui(new Ui::SuspendDia)
 {
