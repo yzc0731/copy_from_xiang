@@ -161,6 +161,7 @@ void Dialog::closeEvent(QCloseEvent *event){
                     nextTime = 2;
                 }
             } else {
+                // 没勾选的话,nextTime不会变
                 if (questionBox->clickedButton() == yesBtn){
                     on_toSusbendBtn_clicked();
                 }
@@ -171,20 +172,24 @@ void Dialog::closeEvent(QCloseEvent *event){
         {
             on_toSusbendBtn_clicked();
             break;
+            // 如果勾选"下次不再提示"+yes就会到这里
         }
         default:
         {
             break;
+            // 如果勾选"下次不再提示"+no就会到直接结束
         }
     }
 }
 
+// 按下悬浮窗按钮，跳到悬浮窗界面
 void Dialog::on_toSusbendBtn_clicked()
 {
-    //创建一个子窗口
+    // 创建一个子窗口
     SuspendDia *s = new SuspendDia();
     s->show();
 
+    // 隐藏主窗口
     this->hide();
 
     //监测窗口s的回退信号

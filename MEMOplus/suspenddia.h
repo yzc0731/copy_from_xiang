@@ -16,7 +16,7 @@ public:
     std::vector<Note*> note_vector;
     explicit SuspendDia(QWidget *parent = nullptr);
     ~SuspendDia();
-    void Oncreate();    // 创建一个栏目用来存放log.txt文件中的第一条记录
+    void Oncreate();
 
 signals:
     void back();
