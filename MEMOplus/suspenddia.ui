@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>531</width>
-    <height>342</height>
+    <width>389</width>
+    <height>258</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,10 +16,10 @@
   <widget class="QFrame" name="frame">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>40</y>
-     <width>451</width>
-     <height>211</height>
+     <x>20</x>
+     <y>60</y>
+     <width>351</width>
+     <height>151</height>
     </rect>
    </property>
    <property name="frameShape">
@@ -29,51 +29,23 @@
     <enum>QFrame::Raised</enum>
    </property>
   </widget>
-  <widget class="QWidget" name="horizontalLayoutWidget_2">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>260</y>
-     <width>201</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
-    <item>
-     <widget class="QLabel" name="title">
-      <property name="text">
-       <string>调整透明度</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QSlider" name="horizontalSlider">
-      <property name="minimum">
-       <number>50</number>
-      </property>
-      <property name="pageStep">
-       <number>5</number>
-      </property>
-      <property name="sliderPosition">
-       <number>99</number>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
   <widget class="QWidget" name="horizontalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>260</y>
-     <width>232</width>
+     <x>20</x>
+     <y>20</y>
+     <width>350</width>
      <height>41</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QPushButton" name="settingBtn">
+      <property name="text">
+       <string>设置</string>
+      </property>
+     </widget>
+    </item>
     <item>
      <widget class="QPushButton" name="backBtn">
       <property name="text">

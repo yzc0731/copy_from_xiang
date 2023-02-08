@@ -24,6 +24,7 @@ SOURCES += \
     main.cpp \
     dialog.cpp \
     note.cpp \
+    settingdia.cpp \
     suspenddia.cpp \
     vector_.cpp
 
@@ -35,6 +36,7 @@ HEADERS += \
     dialog.h \
     history.h \
     note.h \
+    settingdia.h \
     suspenddia.h \
     vector_.h
 
@@ -45,6 +47,7 @@ FORMS += \
     dialog.ui \
     history.ui \
     note.ui \
+    settingdia.ui \
     suspenddia.ui
 
 # Default rules for deployment.

@@ -4,14 +4,15 @@
 #include <QTextCodec>
 #include <QFile>
 #include "ball.h"
+#include "settingdia.h"
 
 SuspendDia::SuspendDia(QWidget *parent):
     QDialog(parent),ui(new Ui::SuspendDia)
 {
     ui->setupUi(this);
-    this->setWindowTitle(tr("MEMOplus悬浮窗"));
-    this->setWindowFlags(Qt::Widget);   // 最大化最小化和关闭按钮
-    setWindowOpacity(pacity);   // 可以设置透明度
+    this->setWindowTitle(tr("悬浮窗"));
+    this->setWindowFlags(Qt::Widget);
+    // setWindowOpacity(pacity);   // 可以设置透明度
 
     Oncreate();     //  创造显示一条记录
     this->move(_beginPos);
@@ -19,7 +20,7 @@ SuspendDia::SuspendDia(QWidget *parent):
     //监测信号，当按下backBtn的时候，会发出一个back信号
     connect(ui->backBtn,&QPushButton::clicked,[=](){
         emit this->back();
-        hasBall = false;
+        hasBall = true;
     });
 }
 
@@ -34,11 +35,11 @@ void SuspendDia::on_exitBtn_clicked()
 }
 
 // 透明度滑动条变化，就能调整透明度
-void SuspendDia::on_horizontalSlider_sliderMoved(int position)
-{
-    pacity = double(position+1)/100;
-    setWindowOpacity(pacity);
-}
+//void SuspendDia::on_horizontalSlider_sliderMoved(int position)
+//{
+//    pacity = double(position+1)/100;
+//    setWindowOpacity(pacity);
+//}
 
 // 创建一个栏目用来存放log.txt文件中的第一条记录
 void SuspendDia::Oncreate(){
@@ -77,18 +78,43 @@ void SuspendDia::Oncreate(){
 
             if (n1->finish == 0) {
                 gridLayout->addWidget(n1);
+                text += str_read[1];
+                text += "\n";
+                text += str_read[3];
+                text += "\n";
+                text += str_read[2];
                 break;
-            }// 判断是否未完成，若未完成，输出，结束
+            }// 判断该事件是否未完成，若未完成，输出，结束while循环
         }
         ui->frame->setLayout(gridLayout);
         repaint();
     }
 }
 
-//离开窗口区域
-void SuspendDia::leaveEvent(QEvent *){
-    if (hasBall){
-        Ball *ball = new Ball(nullptr,"Nothing on list",_beginPos);    // 创建一个悬浮球
+////离开窗口区域
+//void SuspendDia::leaveEvent(QEvent *){
+//    if (!hasBall){
+//        Ball *ball = new Ball(nullptr,"Nothing on list",_beginPos);    // 创建一个悬浮球
+//        hasBall = true;
+//        ball->show();
+
+//        this->hide();   // 隐藏悬浮窗窗口
+
+//        //监测窗口s的回退信号
+//        connect(ball,&Ball::backFromBall,[=](){
+//            _beginPos = ball->getBeginPos();
+
+//            ball->hide();
+//            this->move(_beginPos);
+//            this->show();
+//        });
+//    }
+//}
+
+void SuspendDia::mouseDoubleClickEvent(QMouseEvent *)
+{
+    if (!hasBall){
+        Ball *ball = new Ball(nullptr,text,_beginPos);    // 创建一个悬浮球
         ball->show();
 
         this->hide();   // 隐藏悬浮窗窗口
@@ -100,7 +126,39 @@ void SuspendDia::leaveEvent(QEvent *){
             ball->hide();
             this->move(_beginPos);
             this->show();
-            this->ui->title->setText(tr("%1+%2").arg(_beginPos.x()).arg(_beginPos.y()));
         });
     }
+}
+
+void SuspendDia::mousePressEvent(QMouseEvent *){
+    pressed = true;
+    _beginPos = QCursor::pos();
+}
+
+void SuspendDia::mouseReleaseEvent(QMouseEvent *){
+    pressed = false;
+}
+
+void SuspendDia::mouseMoveEvent(QMouseEvent *){
+    if (pressed)
+    {
+        QPoint newPoint = QCursor::pos();                       //记录鼠标移动最新的鼠标坐标
+        float xDis = newPoint.x() - _beginPos.x();				//计算移动后和按下时的坐标差x
+        float yDis = newPoint.y() - _beginPos.y();				//计算移动后和按下时的坐标差y
+        this->move(this->pos().x() + xDis, this->pos().y()+yDis);	//让自定义按钮的位置加上坐标差，并移动至加上移动距离之后的位置
+        _beginPos = QCursor::pos();                                 //更新按下时的坐标为当前坐标位置
+    }
+}
+
+void SuspendDia::on_settingBtn_clicked()
+{
+    SettingDia *set = new SettingDia(nullptr,_pacity);    // 创建一个设置窗口
+    QPoint setPos = QPoint(_beginPos.x()+this->width(),_beginPos.y());
+    set->move(setPos);
+    set->show();
+
+    connect(set,&SettingDia::pacityChanged,[=](){
+        _pacity = set->getPacity();
+        this->setWindowOpacity(_pacity);
+    });
 }

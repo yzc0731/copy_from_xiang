@@ -55,7 +55,7 @@ Ball::~Ball()
 void Ball::enterEvent(QEvent *){
     // emit this->backFromBall();
     QTimer *timer = new QTimer(this);
-    timer->start(3000);
+    timer->start(10000);
     connect(timer,&QTimer::timeout,this,&Ball::timeout);
 }
 
@@ -111,6 +111,13 @@ bool Ball::isContains(QPoint p){
             && _center.y()-_radius < p.y()
             && _center.y()+_radius > p.y());
 }// 将其看做方形的？
+
+void Ball::mouseDoubleClickEvent(QMouseEvent *)
+{
+    _beginPos = QPoint (QCursor().pos().x()-100,QCursor().pos().y()-100);
+    // theFirstTimer = false;
+    emit this->backFromBall();
+}
 
 QPoint Ball::getBeginPos(){
     return _beginPos;

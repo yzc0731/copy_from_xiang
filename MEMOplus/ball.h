@@ -20,10 +20,11 @@ public:
     void enterEvent(QEvent *);  //进入窗口区域
     void timeout();
 
-    void mousePressEvent(QMouseEvent *e);       //--鼠标按下事件
-    void mouseReleaseEvent(QMouseEvent *e);     //--鼠标释放事件
-    void mouseMoveEvent(QMouseEvent *e);        //--鼠标移动事件
+    void mousePressEvent(QMouseEvent *e);       //鼠标按下事件
+    void mouseReleaseEvent(QMouseEvent *e);     //鼠标释放事件
+    void mouseMoveEvent(QMouseEvent *e);        //鼠标移动事件
     bool isContains(QPoint p);                  //判断鼠标是否在圆形范围之内
+    void mouseDoubleClickEvent(QMouseEvent *); //鼠标双击事件
 
     QPoint getBeginPos();
 
