@@ -17,10 +17,11 @@ Ball::Ball(QWidget *parent) :
     //在构造函数中
 }
 
-Ball::Ball(QWidget *parent, QString text):
-    QDialog(parent),ui(new Ui::Ball),_text(text)
+Ball::Ball(QWidget *parent, QString text, QPoint posBegin):
+    QDialog(parent),ui(new Ui::Ball),_text(text),_beginPos(posBegin)
 {
     ui->setupUi(this);
+    this->move(_beginPos);
     // _beginPos = this->pos();
     // 无边框
     this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint|Qt::WindowStaysOnTopHint);
@@ -72,7 +73,7 @@ void Ball::timeout(){
             +(y-_center.y())*(y-_center.y());
     if ((distance<(_radius*_radius))
             && theFirstTimer){
-        _beginPos = QCursor().pos();
+        _beginPos = QPoint (QCursor().pos().x()-100,QCursor().pos().y()-100);
         theFirstTimer = false;
         emit this->backFromBall();
     }

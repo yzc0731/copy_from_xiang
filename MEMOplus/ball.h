@@ -13,7 +13,7 @@ class Ball : public QDialog
 
 public:
     explicit Ball(QWidget *parent = nullptr);
-    Ball(QWidget *parent = nullptr, QString text = "Nothing on list");
+    Ball(QWidget *parent = nullptr, QString text = "Nothing on list", QPoint posBegin = QPoint(100,100));
 
     void paintEvent(QPaintEvent *);
     ~Ball();

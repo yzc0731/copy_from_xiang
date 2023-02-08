@@ -88,7 +88,7 @@ void SuspendDia::Oncreate(){
 //离开窗口区域
 void SuspendDia::leaveEvent(QEvent *){
     if (hasBall){
-        Ball *ball = new Ball(nullptr,"Nothing on list");    // 创建一个悬浮球
+        Ball *ball = new Ball(nullptr,"Nothing on list",_beginPos);    // 创建一个悬浮球
         ball->show();
 
         this->hide();   // 隐藏悬浮窗窗口
