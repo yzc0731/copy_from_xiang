@@ -19,11 +19,11 @@ SOURCES += \
     ../../Qt/5.14.0/project/CircleDialog/circledialog.cpp \
     about.cpp \
     addnew.cpp \
+    ball.cpp \
     history.cpp \
     main.cpp \
     dialog.cpp \
     note.cpp \
-    suspendball.cpp \
     suspenddia.cpp \
     vector_.cpp
 
@@ -31,20 +31,20 @@ HEADERS += \
     ../../Qt/5.14.0/project/CircleDialog/circledialog.h \
     about.h \
     addnew.h \
+    ball.h \
     dialog.h \
     history.h \
     note.h \
-    suspendball.h \
     suspenddia.h \
     vector_.h
 
 FORMS += \
     about.ui \
     addnew.ui \
+    ball.ui \
     dialog.ui \
     history.ui \
     note.ui \
-    suspendball.ui \
     suspenddia.ui
 
 # Default rules for deployment.

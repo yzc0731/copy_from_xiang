@@ -22,8 +22,10 @@ public:
     QString Date;
     QString ddl;
     QString note;
+
 private slots:
     void on_checkBox_clicked();
+
 private:
     Ui::Note *ui;
 };

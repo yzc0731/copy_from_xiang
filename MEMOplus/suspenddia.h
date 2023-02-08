@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include "note.h"
+#include <QLabel>
 
 namespace Ui {
 class SuspendDia;
@@ -17,6 +18,7 @@ public:
     explicit SuspendDia(QWidget *parent = nullptr);
     ~SuspendDia();
     void Oncreate();
+    void leaveEvent(QEvent *);  //离开窗口区域
 
 signals:
     void back();
@@ -29,6 +31,10 @@ private slots:
 private:
     Ui::SuspendDia *ui;
     double pacity = 1.0;
+    bool hasBall = true;
+
+public:
+    QPoint _beginPos = QPoint(100,100);
 };
 
 #endif // SUSPENDDIA_H

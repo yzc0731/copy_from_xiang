@@ -13,7 +13,7 @@
 #include <QCheckBox>
 #include "suspenddia.h"
 #include <QPushButton>
-#include "suspendball.h"
+#include "ball.h"
 
 //主界面窗口设置
 Dialog::Dialog(QWidget *parent)
@@ -117,7 +117,7 @@ void Dialog::onCreate() {//创建时调用
     }
 }
 
-void Dialog::closeEvent(QCloseEvent *event){
+void Dialog::closeEvent(QCloseEvent *){
     // 点击关闭之后，跳出下面这个对话框。
     // 如果选择no或者右上角的“x”，啥都不做，直接退出
     // 如果选择yes，就跳出悬浮界面
@@ -174,11 +174,8 @@ void Dialog::closeEvent(QCloseEvent *event){
 void Dialog::on_toSusbendBtn_clicked()
 {
     // 创建一个子窗口
-    // SuspendDia *s = new SuspendDia();
-    // s->show();
-    _text = getText();
-    suspendBall *sb = new suspendBall(_text,QPoint(50,50),50);
-    sb->show();
+    SuspendDia *s = new SuspendDia();
+    s->show();
 
     // 隐藏主窗口
     this->hide();
@@ -189,36 +186,4 @@ void Dialog::on_toSusbendBtn_clicked()
         this->show();
         // Shownote();
     });
-}
-
-QString Dialog::getText(){
-    QFile file;
-    file.setFileName("log.txt");   //保存到本地地址
-    QString str_read[7];
-    QString strline;
-    int num;
-    if (file.open(QIODevice::ReadOnly)){                             //只读
-        QTextCodec *codec = QTextCodec::codecForName("GBK");         //指定读码方式为GBK
-        note_vector.clear();
-        while (!file.atEnd()){                                       //当没有读到文件末尾时
-            strline = codec->toUnicode(file.readLine());             //以GBK的编码方式读取一行
-            QChar c = strline[0];                       //判断第一个字符是否是回车符（空文件只有一个回车符）
-            char c0 = c.toLatin1();
-            if (c0 > 57 || c0 < 48) { return nullptr; }
-            QStringList list = strline.split(" ");                   //以一个空格为分隔符
-            for (int i = 0; i < 7; i++) {
-                str_read[i] = list[i];
-            }
-            num = str_read[0].toInt();   //将第一个数据转化为int类
-            Note *n1 = new Note(&note_vector, num, str_read[1], str_read[2], str_read[3], str_read[4], str_read[5]);
-            note_vector.push_back(n1);   //放到vector最后一个位置
-
-            if (n1->finish == 0) {
-                // gridLayout->addWidget(n1);
-                return str_read[1];
-            }
-
-        }
-    }
-    return nullptr;// 若所有事情都已经完成，代码运行到这里，也不会出错
 }

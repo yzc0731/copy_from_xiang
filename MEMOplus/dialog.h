@@ -23,7 +23,7 @@ public:
     ~Dialog();
     void onCreate();
     void Shownote();
-    void closeEvent(QCloseEvent *event);  // 点击“x”按钮
+    void closeEvent(QCloseEvent *);  // 点击“x”按钮
     QString getText();
 
 public slots:

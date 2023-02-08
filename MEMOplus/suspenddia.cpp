@@ -3,10 +3,10 @@
 #include <QPushButton>
 #include <QTextCodec>
 #include <QFile>
+#include "ball.h"
 
 SuspendDia::SuspendDia(QWidget *parent):
-    QDialog(parent),
-    ui(new Ui::SuspendDia)
+    QDialog(parent),ui(new Ui::SuspendDia)
 {
     ui->setupUi(this);
     this->setWindowTitle(tr("MEMOplus悬浮窗"));
@@ -14,10 +14,12 @@ SuspendDia::SuspendDia(QWidget *parent):
     setWindowOpacity(pacity);   // 可以设置透明度
 
     Oncreate();     //  创造显示一条记录
+    this->move(_beginPos);
 
     //监测信号，当按下backBtn的时候，会发出一个back信号
     connect(ui->backBtn,&QPushButton::clicked,[=](){
         emit this->back();
+        hasBall = false;
     });
 }
 
@@ -80,5 +82,25 @@ void SuspendDia::Oncreate(){
         }
         ui->frame->setLayout(gridLayout);
         repaint();
+    }
+}
+
+//离开窗口区域
+void SuspendDia::leaveEvent(QEvent *){
+    if (hasBall){
+        Ball *ball = new Ball(nullptr,"Nothing on list");    // 创建一个悬浮球
+        ball->show();
+
+        this->hide();   // 隐藏悬浮窗窗口
+
+        //监测窗口s的回退信号
+        connect(ball,&Ball::backFromBall,[=](){
+            _beginPos = ball->getBeginPos();
+
+            ball->hide();
+            this->move(_beginPos);
+            this->show();
+            this->ui->title->setText(tr("%1+%2").arg(_beginPos.x()).arg(_beginPos.y()));
+        });
     }
 }
