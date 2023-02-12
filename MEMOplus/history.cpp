@@ -17,7 +17,7 @@ history::history(QWidget *parent,std::vector<Note*> *note_vector1) :
         delete ui->scrollArea->widget()->layout();
     }
     QGridLayout *gridlayout=new QGridLayout();
-    for(int i=0;i<note_vector1->size();i++)
+    for(int i=0;i < note_vector1->size();i++)
     {
         Note *n=note_vector1->at(i);
         if(n->finish == 1)

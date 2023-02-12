@@ -38,14 +38,9 @@ Note::~Note()
 void Note::on_checkBox_clicked()
 {
     finish=1;
-//    std::cout<<this<<std::endl;
-//    std::cout<<note_vector<<std::endl;
-//    std::cout<<index<<std::endl;
-//    std::cout<<note_vector->at(index)<<std::endl;
-//    std::cout<<note_vector->size()<<std::endl;
     note_vector->at(index)->finish=1;
-    note_vector->at(index)->ui->checkBox->setChecked(false);//取消选中
+    note_vector->at(index)->ui->checkBox->setChecked(false);    //取消选中
     Vector_ vector;
-    vector.vector_for_file(*note_vector);
+    vector.vector_for_file(*note_vector);   //写入文件
     this->close();
 }

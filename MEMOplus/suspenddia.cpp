@@ -46,10 +46,15 @@ void SuspendDia::onRefresh()
     QString str_read[7];
     QString strline;
     int num;
+
+    bool nothing = true;
+
     if (file.open(QIODevice::ReadOnly))                               //只读
     {
         QTextCodec *codec = QTextCodec::codecForName("GBK");         //指定读码方式为GBK
+
         note_vector.clear();
+
         while (!file.atEnd())                                        //当没有读到文件末尾时
         {
             strline = codec->toUnicode(file.readLine());             //以GBK的编码方式读取一行
@@ -62,15 +67,19 @@ void SuspendDia::onRefresh()
             }
             num = str_read[0].toInt();   //将第一个数据转化为int类
             Note *n1 = new Note(&note_vector, num, str_read[1], str_read[2], str_read[3], str_read[4], str_read[5]);
-            note_vector.push_back(n1);   //放到vector最后一个位置
-            if (n1->finish == 0) {
+
+            note_vector.push_back(n1);   //将读到的每行数据放到vector中，这个vector中的所有数据最后又会重新写入log.txt文件
+
+            if (n1->finish == 0 && nothing) {
                 gridLayout->addWidget(n1);
+                // 把第一条没有被完成的记录，增添到界面上
                 text += str_read[1];
                 text += "\n";
                 text += str_read[3];
                 text += "\n";
                 text += str_read[2];
-                break;
+
+                nothing = false;
             }
         }
         ui->frame->setLayout(gridLayout);

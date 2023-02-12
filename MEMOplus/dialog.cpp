@@ -114,7 +114,7 @@ void Dialog::on_toSusbendBtn_clicked()
     connect(s,&SuspendDia::back,[=](){
         s->hide();
         this->show();
-        // Shownote();
+        onRefresh(); // 刷新
     });
 }
 
