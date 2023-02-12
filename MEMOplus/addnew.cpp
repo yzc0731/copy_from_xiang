@@ -15,7 +15,7 @@ Addnew::Addnew(std::vector<Note*> *note_vector) :
 
 {
     ui->setupUi(this);
-    this->note_vector=note_vector;
+    this->note_vector1=note_vector;
 }
 
 Addnew::~Addnew()
@@ -36,9 +36,10 @@ void Addnew::on_pushButton_clicked()
     for(int i=0;i<5;i++)
         qDebug()<<str[i]<<endl;               //在Qt界面输出以上五点（类似调试输出
     //以下用于写入note_vector
-    Note *n1 = new Note(note_vector,0,str[0], str[1], str[2], str[4], str[3]);
-    note_vector->push_back(n1);   //放到vector最后一个位置
+    Note *n1 = nullptr;
+    n1 = new Note(note_vector1,0,str[0], str[1], str[2], str[4], str[3]);
+    note_vector1->push_back(n1);   //放到vector最后一个位置
     Vector_ vector;
-    vector.vector_for_file(*note_vector);
+    vector.vector_for_file(*note_vector1);
     close();
 }

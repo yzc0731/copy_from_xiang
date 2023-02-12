@@ -21,10 +21,8 @@ public:
     std::vector<Note*> note_vector;
     Dialog(QWidget *parent = nullptr);
     ~Dialog();
-    void onCreate();
-    void Shownote();
     void closeEvent(QCloseEvent *);  // 点击“x”按钮
-    QString getText();
+    void onRefresh();
 
 public slots:
     void on_pushButton_clicked();

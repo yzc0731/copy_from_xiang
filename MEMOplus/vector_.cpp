@@ -11,7 +11,7 @@ void Vector_::vector_for_file(std::vector<Note *> note_vector)
         if(file.open(QIODevice::WriteOnly| QIODevice::Text))
         {
             QTextStream stream(&file);
-            for(int i=0;i<note_vector.size();i++)
+            for(int i=0;i < note_vector.size();i++)
             {
                 stream<<note_vector.at(i)->finish<<" ";
                 stream<<note_vector.at(i)->Thing<<" ";
@@ -22,4 +22,5 @@ void Vector_::vector_for_file(std::vector<Note *> note_vector)
                 //
             }
         }
+        file.close();
     }

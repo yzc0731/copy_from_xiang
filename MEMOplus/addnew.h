@@ -14,10 +14,10 @@ class Addnew : public QDialog
 Q_OBJECT
 
 public:
-    std::vector<Note*> *note_vector;
+    std::vector<Note*> *note_vector1;
     explicit Addnew(std::vector<Note*> *note_vector);
     //Addnew(QWidget *parent = nullptr);
-    QString a[6];
+    //QString a[6];
     ~Addnew();
 
 public slots:
