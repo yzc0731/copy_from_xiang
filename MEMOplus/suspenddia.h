@@ -17,7 +17,7 @@ public:
     std::vector<Note*> note_vector;
     explicit SuspendDia(QWidget *parent = nullptr);
     ~SuspendDia();
-    void Oncreate();
+    void onRefresh();
     // void leaveEvent(QEvent *);  //离开窗口区域
     void mouseDoubleClickEvent(QMouseEvent *); //鼠标双击事件
 

@@ -18,6 +18,7 @@ Note::Note(std::vector<Note*> *note_vector,int num,QString str1,QString str2,QSt
         finish(num),Thing(str1),Time(str2),Date(str3),ddl(str4),note(str5),ui(new Ui::Note)
 {
     index=note_vector->size();
+    // index是全局变量，用于存储，有记录的条数
     ui->setupUi(this);
     this->note_vector=note_vector;
     this->setWindowFlags(Qt::FramelessWindowHint);
@@ -28,10 +29,12 @@ Note::Note(std::vector<Note*> *note_vector,int num,QString str1,QString str2,QSt
     ui->label_4->setText(ddl);
     ui->label_5->setText(note);
 }
+
 Note::~Note()
 {
     delete ui;
 }
+
 void Note::on_checkBox_clicked()
 {
     finish=1;
