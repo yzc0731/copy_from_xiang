@@ -4,7 +4,10 @@
 #include <QTimer>
 #include <QDateTime>
 #include <QMouseEvent>
-
+#include <QDesktopWidget>
+#include <QDebug>
+#include <QApplication>
+#include <QScreen>
 Ball::Ball(QWidget *parent) :
     QDialog(parent),ui(new Ui::Ball)
 {
@@ -52,18 +55,53 @@ Ball::~Ball()
     delete ui;
 }
 
-void Ball::enterEvent(QEvent *){
+void Ball::enterEvent(QEvent *e){
     // emit this->backFromBall();
-    QTimer *timer = new QTimer(this);
-    timer->start(10000);
-    connect(timer,&QTimer::timeout,this,&Ball::timeout);
+//    QTimer *timer = new QTimer(this);
+//    timer->start(10000);
+    //    connect(timer,&QTimer::timeout,this,&Ball::timeout);
+
+    if (m_timer && m_timer->isActive())
+    {
+        m_timer->stop();
+    }
+    ShowDockWidget();
+    QWidget::enterEvent(e);
+}
+
+void Ball::leaveEvent(QEvent *e)
+{
+    QPoint mousePos = mapFromGlobal(QCursor::pos());
+    if (rect().contains(mousePos) == false
+      && mousePos.x() != rect().width())
+    {
+        HideDockWidget();
+    }
+    else
+    {
+        if (m_timer == nullptr)
+        {
+            m_timer = new QTimer(this);
+            connect(m_timer, &QTimer::timeout, this, [this]{
+                QPoint mousePos = mapFromGlobal(QCursor::pos());
+                if (this->rect().contains(mousePos) == false
+                 && mousePos.x() != rect().width())
+                {
+                 HideDockWidget();
+                }
+            });
+        }
+        m_timer->start(500);
+    }
+
+    QWidget::leaveEvent(e);
 }
 
 // QCursor::pos() 的结果是鼠标相对于桌面的绝对位置
 // mousePressEvent的参数event的位置，event->pos() 是鼠标相对于应用程序的位置，
 // event->globalPos() 相对于桌面原点的位置，绝对位置
 
-void Ball::timeout(){
+void Ball::timeOut(){
     // QPoint coursepoint = QCursor::pos();
 
     int x=this->mapFromGlobal(QCursor().pos()).x();
@@ -93,6 +131,13 @@ void Ball::mouseReleaseEvent(QMouseEvent *e){
     update();//触发窗体重绘
     if(isContains(e->pos()))    //当鼠标点击按钮
         emit clicked();         //发送点击信号
+
+    _beginPos = QPoint (QCursor().pos().x(),QCursor().pos().y());
+
+//    if(_beginPos.x() < 100){
+//        qDebug()<<"hello";
+//        MoveWindow(_beginPos, QPoint(-50,_beginPos.y()));
+//    }
 }
 
 void Ball::mouseMoveEvent(QMouseEvent *e){
@@ -119,6 +164,106 @@ void Ball::mouseDoubleClickEvent(QMouseEvent *)
     emit this->backFromBall();
 }
 
+void Ball::MoveWindow(const QPoint &start, const QPoint &end, unsigned int step)
+{
+    QPoint distance = end - start;
+    QPoint stepPos;
+    QPoint unitStep;
+    if (end.x() == start.x()){
+        if (end.y() > start.y()){
+            unitStep.setY(step);
+        } else {
+            unitStep.setY(-1*step);
+        }
+    } else {
+        if (end.x() > start.x()){
+            unitStep.setX(step);
+        } else {
+            unitStep.setX(-1*step);
+        }
+    }
+
+    stepPos = unitStep;
+    int distanceLength = distance.manhattanLength();
+    while(stepPos.manhattanLength() < distanceLength){
+        move(start+stepPos);
+        stepPos += unitStep;
+    }
+    move(end);
+    recoverposition = start;
+}
+
+void Ball::ShowDockWidget()
+{
+    if (isinvisible)
+    {
+      return;
+    }
+
+    isinvisible = true;
+
+    QScreen *screen = qApp->primaryScreen();
+    int screenWidth = screen->size().width();            //屏幕宽
+
+    if (_beginPos.x() < 150)
+    {
+        MoveWindow(_beginPos, recoverposition);
+        _beginPos = this->pos();
+        qDebug()<<QString("(%1,%2)").arg(_beginPos.x()).arg(_beginPos.y());
+    }
+    else if (_beginPos.x() > screenWidth - 150)
+    {
+        MoveWindow(_beginPos, recoverposition);
+        _beginPos = this->pos();
+    }
+    else if (_beginPos.y() < 150)
+    {
+        MoveWindow(_beginPos, recoverposition);
+        _beginPos = this->pos();
+    }
+    else
+    {
+        isinvisible = false;
+    }
+}
+
+void Ball::HideDockWidget()
+{
+    if (!isinvisible){
+        return;
+    } else {
+        isinvisible = false;
+
+        QScreen *screen = qApp->primaryScreen();
+        int screenWidth = screen->size().width();            //屏幕宽
+
+        if (_beginPos.x() < detectLength ){
+            qDebug()<<"Hide";
+            MoveWindow(_beginPos, QPoint(exposeLength, _beginPos.y()));
+            _beginPos = this->pos();
+            qDebug()<<QString("(%1,%2)").arg(_beginPos.x()).arg(_beginPos.y());
+
+        } else if (_beginPos.x() > screenWidth-detectLength){
+            MoveWindow(_beginPos, QPoint(screenWidth- exposeLength, _beginPos.y()));
+            _beginPos = this->pos();
+
+        } else if (_beginPos.y() < detectLength){
+            MoveWindow(_beginPos, QPoint(_beginPos.x(), exposeLength));
+            _beginPos = this->pos();
+
+        } else {
+            isinvisible = true;
+        }
+        if (!isinvisible){
+            if (m_timer && m_timer->isActive()){
+                m_timer->stop();
+            }
+        }
+    }
+}
+
 QPoint Ball::getBeginPos(){
     return _beginPos;
 }
+
+
