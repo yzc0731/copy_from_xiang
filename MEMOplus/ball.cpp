@@ -215,6 +215,7 @@ void Ball::ShowDockWidget()
     {
         MoveWindow(_beginPos, recoverposition);
         _beginPos = this->pos();
+        qDebug()<<QString("(%1,%2)").arg(_beginPos.x()).arg(_beginPos.y());
     }
     else if (_beginPos.y() < 150)
     {
@@ -244,8 +245,10 @@ void Ball::HideDockWidget()
             qDebug()<<QString("(%1,%2)").arg(_beginPos.x()).arg(_beginPos.y());
 
         } else if (_beginPos.x() > screenWidth-detectLength){
-            MoveWindow(_beginPos, QPoint(screenWidth- exposeLength, _beginPos.y()));
+            qDebug()<<"Hide";
+            MoveWindow(_beginPos, QPoint(screenWidth-30, _beginPos.y()));
             _beginPos = this->pos();
+            qDebug()<<QString("(%1,%2)").arg(_beginPos.x()).arg(_beginPos.y());
 
         } else if (_beginPos.y() < detectLength){
             MoveWindow(_beginPos, QPoint(_beginPos.x(), exposeLength));

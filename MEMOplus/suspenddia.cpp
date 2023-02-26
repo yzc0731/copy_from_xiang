@@ -18,7 +18,7 @@ SuspendDia::SuspendDia(QWidget *parent):
     this->move(_beginPos);
 
     //监测信号，当按下backBtn的时候，会发出一个back信号
-    connect(ui->backBtn,&QPushButton::clicked,[=](){
+    connect(ui->backBtn , &QPushButton::clicked,[=](){
         emit this->back();
         hasBall = true;
     });
