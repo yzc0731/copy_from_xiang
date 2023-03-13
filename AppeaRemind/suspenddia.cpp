@@ -13,8 +13,9 @@ SuspendDia::SuspendDia(QWidget *parent, bool logsTimed):
     QDialog(parent),ui(new Ui::SuspendDia)
 {
     ui->setupUi(this);
-    this->setWindowTitle(tr("悬浮窗"));
-    this->setWindowFlags(Qt::Widget);
+    //this->setWindowTitle(tr("悬浮窗"));
+    this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint
+                         | Qt::WindowMinMaxButtonsHint|Qt::WindowStaysOnTopHint);
     // setWindowOpacity(pacity);   // 可以设置透明度
 
     if(logsTimed){
@@ -159,10 +160,11 @@ void SuspendDia::on_exitBtn_clicked()
     this->close();
 }
 
-// 创建一个栏目用来存放log.txt文件中的第一条记录
-
 void SuspendDia::mouseDoubleClickEvent(QMouseEvent *)
 {
+    if(set){
+        set->close();
+    }
     if (!hasBall){
         Ball *ball = new Ball(nullptr,text,_beginPos);    // 创建一个悬浮球
         ball->show();
@@ -184,6 +186,7 @@ void SuspendDia::mousePressEvent(QMouseEvent *){
 
 void SuspendDia::mouseReleaseEvent(QMouseEvent *){
     pressed = false;
+    _beginPos = QPoint (this->pos().x(),this->pos().y());
 }
 
 void SuspendDia::mouseMoveEvent(QMouseEvent *){
@@ -192,8 +195,17 @@ void SuspendDia::mouseMoveEvent(QMouseEvent *){
         QPoint newPoint = QCursor::pos();                       //记录鼠标移动最新的鼠标坐标
         float xDis = newPoint.x() - _beginPos.x();				//计算移动后和按下时的坐标差x
         float yDis = newPoint.y() - _beginPos.y();				//计算移动后和按下时的坐标差y
-        this->move(this->pos().x() + xDis, this->pos().y()+yDis);	//让自定义按钮的位置加上坐标差，并移动至加上移动距离之后的位置
-        _beginPos = QCursor::pos();                                 //更新按下时的坐标为当前坐标位置
+        this->move(this->pos().x() + xDis, this->pos().y()+yDis);
+        //让自定义按钮的位置加上坐标差，并移动至加上移动距离之后的位置
+//        if(set){
+//            qDebug() << QString("%1,%2").arg(this->set->pos().x() + xDis).arg(this->set->pos().y()+yDis);
+//            this->set->move(this->set->pos().x() + xDis, this->set->pos().y()+yDis);
+//        }
+        _beginPos = QCursor::pos();
+        if(set){
+            QPoint setPos = QPoint(this->pos().x()+this->width(),this->pos().y());
+            set->move(setPos);      //更新按下时的坐标为当前坐标位置
+        }
     }
 }
 
@@ -202,6 +214,16 @@ void SuspendDia::closeEvent(QCloseEvent *)
     if(set){
         set->close();
     }
+}
+
+void SuspendDia::setPacityToFile()
+{
+
+}
+
+void SuspendDia::getPacityFromFile()
+{
+
 }
 
 void SuspendDia::on_settingBtn_clicked()

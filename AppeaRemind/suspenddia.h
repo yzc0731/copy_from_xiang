@@ -27,6 +27,8 @@ public:
     void mouseReleaseEvent(QMouseEvent *);     //鼠标释放事件
     void mouseMoveEvent(QMouseEvent *);        //鼠标移动事件
     void closeEvent(QCloseEvent *);         // 点击“x”按钮
+    void setPacityToFile();
+    void getPacityFromFile();
 
 signals:
     void back();

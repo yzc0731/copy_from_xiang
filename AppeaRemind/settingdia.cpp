@@ -14,8 +14,9 @@ SettingDia::SettingDia(QWidget *parent, double pacity):
     QDialog(parent),ui(new Ui::SettingDia),_pacity(pacity)
 {
     ui->setupUi(this);
-    this->setWindowTitle(tr("设置"));
-    this->setWindowFlags(Qt::SubWindow);
+    // this->setWindowTitle(tr("设置"));
+    this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint
+                         | Qt::WindowMinMaxButtonsHint|Qt::WindowStaysOnTopHint);
     this->setWindowOpacity(pacity);
     int value = pacity*100 - 1;
     ui->horizontalSlider->setValue(value);

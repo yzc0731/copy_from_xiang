@@ -15,11 +15,13 @@ Ball::Ball(QWidget *parent) :
 {
     ui->setupUi(this);
     _beginPos = this->pos();
+
     // 无边框
-    this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint|Qt::WindowStaysOnTopHint);
+    this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint
+                         | Qt::WindowMinMaxButtonsHint|Qt::WindowStaysOnTopHint);
+
     // 窗口整体透明，但窗口控件不透明
     this->setAttribute(Qt::WA_TranslucentBackground,true);
-    //在构造函数中
 }
 
 Ball::Ball(QWidget *parent, QString text, QPoint posBegin):
