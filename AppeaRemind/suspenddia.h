@@ -33,6 +33,8 @@ private slots:
     void on_exitBtn_clicked();
     void on_settingBtn_clicked();
 
+    void on_backBtn_clicked();
+
 private:
     Ui::SuspendDia *ui;
     double _pacity = 1.0;
@@ -42,7 +44,7 @@ private:
 
 public:
     QPoint _beginPos = QPoint(100,100);
-    SettingDia *set;
+    SettingDia *set = nullptr;
     Note *notesus;
 };
 

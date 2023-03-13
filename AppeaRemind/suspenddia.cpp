@@ -20,14 +20,14 @@ SuspendDia::SuspendDia(QWidget *parent):
     onRefresh();     // 创造显示一条记录
     this->move(_beginPos);
 
-    //监测信号，当按下backBtn的时候，会发出一个back信号
-    connect(ui->backBtn, &QPushButton::clicked, this, [=](){
-        emit this->back();
-        hasBall = true;
-        if(set){
-            set->close();
-        }
-    });
+//    //监测信号，当按下backBtn的时候，会发出一个back信号
+//    connect(ui->backBtn, &QPushButton::clicked, this, [=](){
+//        emit this->back();
+//        hasBall = true;
+//        if(set){
+//            set->close();
+//        }
+//    });
 }
 
 SuspendDia::~SuspendDia()
@@ -156,4 +156,13 @@ void SuspendDia::on_settingBtn_clicked()
         _pacity = set->getPacity();
         this->setWindowOpacity(_pacity);
     });
+}
+
+void SuspendDia::on_backBtn_clicked()
+{
+    hasBall = true;
+    if(set != nullptr){
+        set->close();
+    }
+    emit this->back();
 }
