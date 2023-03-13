@@ -9,19 +9,13 @@ EditDialog::EditDialog(Note *n1,QString str1,QString str2,QString str3,QString s
     s1(str1),s2(str2),s3(str3),s4(str4),s5(str5),s6(str6),s7(str7),note(n1),ui(new Ui::EditDialog)
 {
     ui->setupUi(this);
-//
     ui->nameLineEdit->setText(s1);
-//
     QTime tm = QTime::fromString(s2,"hh:mm");
     ui->timeTimeEdit->setTime(tm);
-//
     QDate da = QDate::fromString(s3,"yyyy/MM/dd");
     ui->dateDateEdit->setDate(da);
-//
     ui->noteLineEdit->setText(s4);
-//
     ui->impoComboBox->setCurrentText(s5);
-//
     if(note->repeat_times == "#")
         {
         ui->label_2->hide();

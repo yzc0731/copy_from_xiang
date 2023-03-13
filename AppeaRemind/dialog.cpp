@@ -76,7 +76,6 @@ void Dialog::timeUpdate(void)
     systime = datetime.toString("hh:mm yyyy/MM/dd");
     QFile file;
     file.setFileName("log.txt");                                      //保存到本地地址
-    //QString str_read[10][7];
     QString strline;
     int mark[10];
     int j = 0;
@@ -353,22 +352,22 @@ void Dialog::on_pushButton_5_toggled(bool checked)
 {
     if (checked) {
         ui->pushButton_5->setText(tr("按创建先后顺序显示"));
-        qDebug()<<"0"<<endl;
+        //qDebug()<<"0"<<endl;
         this->onRefresh_for_time();
 
         Vector_ vector;
         vector.vector_for_file(note_vector_time, "logTimed.txt");
         //输出为按照时间排序的文件
         logsTimed = true;
-        qDebug()<<QString("%1").arg(logsTimed);
+        //qDebug()<<QString("%1").arg(logsTimed);
     }
     else {
         ui->pushButton_5->setText(tr("按时间先后顺序显示"));
-        qDebug()<<"0"<<endl;
+        //qDebug()<<"0"<<endl;
         this->onRefresh();
 
         logsTimed = false;
-        qDebug()<<QString("%1").arg(logsTimed);
+        //qDebug()<<QString("%1").arg(logsTimed);
     }
 }
 

@@ -4,6 +4,7 @@
 #include <QPushButton>
 #include <QTextCodec>
 #include <QFile>
+#include <QFileInfo>
 #include <QDebug>
 
 #include "ball.h"
@@ -16,7 +17,8 @@ SuspendDia::SuspendDia(QWidget *parent, bool logsTimed):
     //this->setWindowTitle(tr("悬浮窗"));
     this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint
                          | Qt::WindowMinMaxButtonsHint|Qt::WindowStaysOnTopHint);
-    // setWindowOpacity(pacity);   // 可以设置透明度
+    getSettingsFromFile();
+    this->setWindowOpacity(_pacity);
 
     if(logsTimed){
         onRefreshForTime();
@@ -157,24 +159,32 @@ void SuspendDia::on_exitBtn_clicked()
     if(set){
         set->close();
     }
+    settingsToFile();
     this->close();
 }
 
 void SuspendDia::mouseDoubleClickEvent(QMouseEvent *)
 {
+    settingsToFile();
     if(set){
         set->close();
     }
     if (!hasBall){
+        int width = this->width();
+        int height = this->height();
+        _beginPos = QPoint (_beginPos.x()+width/2, _beginPos.y()+height/2);
         Ball *ball = new Ball(nullptr,text,_beginPos);    // 创建一个悬浮球
         ball->show();
         this->hide();   // 隐藏悬浮窗窗口
+
         connect(ball,&Ball::backFromBall,[=](){
             _beginPos = ball->getBeginPos();
-
+            _beginPos = QPoint (_beginPos.x()-width/2, _beginPos.y()-height/2);
             ball->hide();
             this->move(_beginPos);
             this->show();
+            getSettingsFromFile();
+            this->setWindowOpacity(_pacity);
         });//监测窗口s的回退信号
     }
 }
@@ -197,33 +207,45 @@ void SuspendDia::mouseMoveEvent(QMouseEvent *){
         float yDis = newPoint.y() - _beginPos.y();				//计算移动后和按下时的坐标差y
         this->move(this->pos().x() + xDis, this->pos().y()+yDis);
         //让自定义按钮的位置加上坐标差，并移动至加上移动距离之后的位置
-//        if(set){
-//            qDebug() << QString("%1,%2").arg(this->set->pos().x() + xDis).arg(this->set->pos().y()+yDis);
-//            this->set->move(this->set->pos().x() + xDis, this->set->pos().y()+yDis);
-//        }
         _beginPos = QCursor::pos();
         if(set){
             QPoint setPos = QPoint(this->pos().x()+this->width(),this->pos().y());
-            set->move(setPos);      //更新按下时的坐标为当前坐标位置
+            set->move(setPos);      //更新设置窗口的位置
         }
     }
 }
 
-void SuspendDia::closeEvent(QCloseEvent *)
+void SuspendDia::settingsToFile()
 {
-    if(set){
-        set->close();
+    QFile file;
+    file.setFileName("logset.txt");   //保存到本地地址
+    if(file.open(QIODevice::WriteOnly| QIODevice::Text))
+    {
+        QTextStream stream(&file);
+        stream<<QString("%1").arg(_pacity)<<"\n";
+        qDebug() << QString("%1").arg(_pacity);
     }
+    file.close();
 }
 
-void SuspendDia::setPacityToFile()
+void SuspendDia::getSettingsFromFile()
 {
-
-}
-
-void SuspendDia::getPacityFromFile()
-{
-
+    //QFileInfo *fileinfo = new QFileInfo();
+    if(QFileInfo::exists("logset.txt")){
+        qDebug()<<"File exists";
+        QFile file;
+        file.setFileName("logset.txt");                                      //保存到本地地址
+        QString strline;
+        if (file.open(QIODevice::ReadOnly)){
+            strline = file.readLine();             //读取一行
+            //qDebug()<<"read";
+            _pacity = strline.toDouble();
+            qDebug() << QString("%1").arg(_pacity);
+        }
+    }
+    else{
+        qDebug()<<"File not exists";
+    }
 }
 
 void SuspendDia::on_settingBtn_clicked()
@@ -245,5 +267,8 @@ void SuspendDia::on_backBtn_clicked()
     if(set != nullptr){
         set->close();
     }
+
+    settingsToFile();
+
     emit this->back();
 }

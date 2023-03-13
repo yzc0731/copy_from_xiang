@@ -6,8 +6,9 @@ SettingDia::SettingDia(QWidget *parent) :
     ui(new Ui::SettingDia)
 {
     ui->setupUi(this);
-    this->setWindowTitle(tr("设置"));
-    this->setWindowFlags(Qt::SubWindow);
+    // this->setWindowTitle(tr("设置"));
+    this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint
+                         | Qt::WindowMinMaxButtonsHint|Qt::WindowStaysOnTopHint);
 }
 
 SettingDia::SettingDia(QWidget *parent, double pacity):
