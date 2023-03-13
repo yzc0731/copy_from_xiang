@@ -378,7 +378,7 @@ bool Dialog::isSmaller(Note *a, Note *b){
 void Dialog::on_toSusbendBtn_clicked()
 {
     // 创建一个子窗口
-    SuspendDia *s = new SuspendDia();
+    s = new SuspendDia();
     s->show();
 
     // 隐藏主窗口

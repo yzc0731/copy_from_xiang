@@ -213,13 +213,15 @@ void Note::on_checkBox_clicked()
                 note_vector->at(index)->repeat_gap = "#";
             }
         }
+        if(isAm){
+            qDebug() << "abab";
+            this->am->close();
+            qDebug() << "cdcd";
+            ui->pushButton_2->setText("+");
+        }
         Vector_ vector;
         vector.vector_for_file(*note_vector);
         emit refresh();
-        if(isAm){
-            this->am->close();
-            ui->pushButton_2->setText("+");
-        }
 }
 //
 void Note::on_pushButton_clicked()
