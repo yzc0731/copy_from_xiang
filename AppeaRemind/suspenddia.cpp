@@ -9,7 +9,7 @@
 #include "ball.h"
 #include "settingdia.h"
 
-SuspendDia::SuspendDia(QWidget *parent):
+SuspendDia::SuspendDia(QWidget *parent, bool logsTimed):
     QDialog(parent),ui(new Ui::SuspendDia)
 {
     ui->setupUi(this);
@@ -17,17 +17,13 @@ SuspendDia::SuspendDia(QWidget *parent):
     this->setWindowFlags(Qt::Widget);
     // setWindowOpacity(pacity);   // 可以设置透明度
 
-    onRefresh();     // 创造显示一条记录
-    this->move(_beginPos);
+    if(logsTimed){
+        onRefreshForTime();
+    } else{
+        onRefresh();     // 创造显示一条记录
+    }
 
-//    //监测信号，当按下backBtn的时候，会发出一个back信号
-//    connect(ui->backBtn, &QPushButton::clicked, this, [=](){
-//        emit this->back();
-//        hasBall = true;
-//        if(set){
-//            set->close();
-//        }
-//    });
+    this->move(_beginPos);
 }
 
 SuspendDia::~SuspendDia()
@@ -95,8 +91,71 @@ void SuspendDia::onRefresh()
     }
 }
 
+void SuspendDia::onRefreshForTime()
+{
+    if (ui->frame->layout() != nullptr) {//删除原有布局
+        QLayoutItem *item;
+        while ((item = ui->frame->layout()->takeAt(0)) != nullptr) {
+            delete item->widget();
+            delete item;
+        }
+        delete ui->frame->layout();
+    }
+    QGridLayout *gridLayout = new QGridLayout();                   //网格布局
+
+    QFile file;
+    file.setFileName("logTimed.txt");
+    QString str_read[9];
+    QString strline;
+    int num;
+
+    bool nothing = true;
+
+    if (file.open(QIODevice::ReadOnly))                               //只读
+    {
+        QTextCodec *codec = QTextCodec::codecForName("GBK");         //指定读码方式为GBK
+
+        note_vector.clear();
+
+        while (!file.atEnd())                                        //当没有读到文件末尾时
+        {
+            strline = codec->toUnicode(file.readLine());             //以GBK的编码方式读取一行
+            QChar c = strline[0];                       //判断第一个字符是否是回车符（空文件只有一个回车符）
+            char c0 = c.toLatin1();
+            if (c0 > 57 || c0 < 48) { return; }
+            QStringList list = strline.split(" ");                   //以一个空格为分隔符
+            for (int i = 0; i < 9; i++) {
+                str_read[i] = list[i];
+            }
+            num = str_read[0].toInt();   //将第一个数据转化为int类
+            notesus = new Note(&note_vector,num,str_read[1],str_read[2],str_read[3],
+                    str_read[4],str_read[5],str_read[6],str_read[7]);
+
+            QObject::connect(notesus,&Note::refresh,this,&SuspendDia::onRefresh);  //关联信号和槽
+
+            note_vector.push_back(notesus);   //将读到的每行数据放到vector中，这个vector中的所有数据最后又会重新写入log.txt文件
+
+            if (notesus->finish == 0 && nothing) {
+                gridLayout->addWidget(notesus); // 把第一条没有被完成的记录，增添到界面上
+                text += str_read[1];
+                text += "\n";
+                text += str_read[3];
+                text += "\n";
+                text += str_read[2];
+
+                nothing = false;
+            }
+        }
+        ui->frame->setLayout(gridLayout);
+        repaint();     //顺序输出vector所有的东西
+    }
+}
+
 void SuspendDia::on_exitBtn_clicked()
 {
+    if(set){
+        set->close();
+    }
     this->close();
 }
 

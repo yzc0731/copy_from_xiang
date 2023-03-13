@@ -17,14 +17,16 @@ class SuspendDia : public QDialog
 
 public:
     std::vector<Note*> note_vector;
-    explicit SuspendDia(QWidget *parent = nullptr);
+    explicit SuspendDia(QWidget *parent = nullptr, bool logsTimed = false);
+    //SuspendDia(QWidget *parent = nullptr, bool logsTimed = false);
     ~SuspendDia();
     void onRefresh();
+    void onRefreshForTime();
     void mouseDoubleClickEvent(QMouseEvent *); //鼠标双击事件
     void mousePressEvent(QMouseEvent *);       //鼠标按下事件
     void mouseReleaseEvent(QMouseEvent *);     //鼠标释放事件
     void mouseMoveEvent(QMouseEvent *);        //鼠标移动事件
-    void closeEvent(QCloseEvent *); // 点击“x”按钮
+    void closeEvent(QCloseEvent *);         // 点击“x”按钮
 
 signals:
     void back();
@@ -32,7 +34,6 @@ signals:
 private slots:
     void on_exitBtn_clicked();
     void on_settingBtn_clicked();
-
     void on_backBtn_clicked();
 
 private:

@@ -63,6 +63,6 @@ private:
     int nextTime = 0;   // 说明有下一次
     SuspendDia *s;
     QString _text;
-    bool logsTimed= false;
+    bool logsTimed = false;
 };
 #endif // DIALOG_H

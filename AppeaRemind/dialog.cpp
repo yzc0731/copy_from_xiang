@@ -227,8 +227,6 @@ void Dialog::onRefresh() {        //用于初始化和添加的刷新函数
         }
         ui->frame_2->widget()->setLayout(gridLayout);
         repaint();                                //顺序输出vector所有的东西
-        //logsTimed = false;
-        //qDebug()<<QString("%1").arg(logsTimed);
     }
 }
 
@@ -276,8 +274,6 @@ void Dialog::onRefresh1() {     //专门用于编辑的刷新函数
         }
         ui->frame_2->widget()->setLayout(gridLayout);
         repaint();                             //顺序输出vector所有的东西
-        //logsTimed = false;
-        //qDebug()<<QString("%1").arg(logsTimed);
     }
 }
 
@@ -351,10 +347,6 @@ void Dialog::onRefresh_for_time(){        //用于时间顺序的刷新函数
     }
     ui->frame_2->widget()->setLayout(gridLayout);
     repaint();
-    //Vector_ vector;
-    //vector.vector_for_file(note_vector_time, "logTimed.txt");
-    //logsTimed = true;
-    //qDebug()<<QString("%1").arg(logsTimed);
 }
 
 void Dialog::on_pushButton_5_toggled(bool checked)
@@ -363,11 +355,20 @@ void Dialog::on_pushButton_5_toggled(bool checked)
         ui->pushButton_5->setText(tr("按创建先后顺序显示"));
         qDebug()<<"0"<<endl;
         this->onRefresh_for_time();
+
+        Vector_ vector;
+        vector.vector_for_file(note_vector_time, "logTimed.txt");
+        //输出为按照时间排序的文件
+        logsTimed = true;
+        qDebug()<<QString("%1").arg(logsTimed);
     }
     else {
         ui->pushButton_5->setText(tr("按时间先后顺序显示"));
         qDebug()<<"0"<<endl;
         this->onRefresh();
+
+        logsTimed = false;
+        qDebug()<<QString("%1").arg(logsTimed);
     }
 }
 
@@ -378,7 +379,7 @@ bool Dialog::isSmaller(Note *a, Note *b){
 void Dialog::on_toSusbendBtn_clicked()
 {
     // 创建一个子窗口
-    s = new SuspendDia();
+    s = new SuspendDia(nullptr,logsTimed);
     s->show();
 
     // 隐藏主窗口
