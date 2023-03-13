@@ -3,16 +3,18 @@
 
 #include <QDialog>
 
+#include "note.h"
+
 namespace Ui {
-class history;
+    class history;
 }
 
 class history : public QDialog
 {
-    Q_OBJECT
+Q_OBJECT
 
 public:
-    explicit history(QWidget *parent = nullptr);
+    explicit history(QWidget *parent = nullptr,std::vector<Note *> *note_vector1= nullptr);
     ~history();
 
 private:

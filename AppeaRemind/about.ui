@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>326</width>
-    <height>187</height>
+    <height>158</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,12 +17,12 @@
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>这是版本说明：
-版本：0.3 
-采用了一个窗口来收纳历史记录
-实现了添加界面写入文档的操作
-实现了读文件的操作（虽然只能读最后一行）
-</string>
+      <string>版本：v0.6
+
+
+本次更新完善了编辑功能，现在更改可以立刻刷新
+可以根据重要程度设置颜色了，虽然不知道怎么调()
+目前应该可以正确读取系统时间并且增加10min</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
