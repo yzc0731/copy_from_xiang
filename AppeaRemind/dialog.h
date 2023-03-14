@@ -40,6 +40,7 @@ public:
     void closeEvent(QCloseEvent *); // 点击“x”按钮
     bool isLogsTimed();
     void suspendDiaBack();
+    void composeRefresh();
 
 public slots:
     void on_pushButton_clicked();

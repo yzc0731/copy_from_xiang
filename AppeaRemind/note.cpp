@@ -216,6 +216,7 @@ void Note::on_checkBox_clicked()
         }
         Vector_ vector;
         vector.vector_for_file(*note_vector);
+        //先覆写后台log.txt文件，再刷新输出到主界面上
         emit refresh();
 }
 //

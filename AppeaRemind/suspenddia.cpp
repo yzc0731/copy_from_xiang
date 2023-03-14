@@ -6,6 +6,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QDebug>
+#include <QDateTime>
 
 #include "ball.h"
 #include "settingdia.h"
@@ -95,8 +96,9 @@ void SuspendDia::onRefresh()
 }
 
 void SuspendDia::onRefreshForTime()
-{
-    if (ui->frame->layout() != nullptr) {//删除原有布局
+{   
+    //如果是第一次按照时间顺序排序，先从log.txt里面读取，按照时间排序之后输出
+    if (ui->frame->layout() != nullptr) {   //删除原有布局
         QLayoutItem *item;
         while ((item = ui->frame->layout()->takeAt(0)) != nullptr) {
             delete item->widget();
@@ -104,54 +106,84 @@ void SuspendDia::onRefreshForTime()
         }
         delete ui->frame->layout();
     }
-    QGridLayout *gridLayout = new QGridLayout();                   //网格布局
+    QGridLayout *gridLayout = new QGridLayout();                     //网格布局
+    gridLayout->setVerticalSpacing(20);
 
     QFile file;
-    file.setFileName("logTimed.txt");
+    file.setFileName("log.txt");                                     //打开本地地址
     QString str_read[9];
     QString strline;
     int num;
 
     bool nothing = true;
 
-    if (file.open(QIODevice::ReadOnly))                               //只读
+    if (file.open(QIODevice::ReadOnly))                              //只读
     {
         QTextCodec *codec = QTextCodec::codecForName("GBK");         //指定读码方式为GBK
-
-        note_vector.clear();
-
+        note_vector.clear();                                         //清空vector
         while (!file.atEnd())                                        //当没有读到文件末尾时
         {
             strline = codec->toUnicode(file.readLine());             //以GBK的编码方式读取一行
-            QChar c = strline[0];                       //判断第一个字符是否是回车符（空文件只有一个回车符）
+            QChar c = strline[0];                                    //判断第一个字符是否是回车符（空文件只有一个回车符）
             char c0 = c.toLatin1();
             if (c0 > 57 || c0 < 48) { return; }
             QStringList list = strline.split(" ");                   //以一个空格为分隔符
-            for (int i = 0; i < 9; i++) {
-                str_read[i] = list[i];
-            }
-            num = str_read[0].toInt();   //将第一个数据转化为int类
-            notesus = new Note(&note_vector,num,str_read[1],str_read[2],str_read[3],
-                    str_read[4],str_read[5],str_read[6],str_read[7]);
-
-            QObject::connect(notesus,&Note::refresh,this,&SuspendDia::onRefreshForTime);  //关联信号和槽
-
-            note_vector.push_back(notesus);   //将读到的每行数据放到vector中，这个vector中的所有数据最后又会重新写入log.txt文件
-
-            if (notesus->finish == 0 && nothing) {
-                gridLayout->addWidget(notesus); // 把第一条没有被完成的记录，增添到界面上
-                text += str_read[1];
-                text += "\n";
-                text += str_read[3];
-                text += "\n";
-                text += str_read[2];
-
-                nothing = false;
-            }
+            for (int i = 0; i < 9; i++) { str_read[i] = list[i]; }
+            num = str_read[0].toInt();                 //将第一个数据转化为int类
+            Note *n1 = new Note(&note_vector, num, str_read[1],
+                        str_read[2], str_read[3],str_read[4],
+                        str_read[5],str_read[6], str_read[7]);
+            QObject::connect(n1, &Note::refresh, this, &SuspendDia::onRefreshForTime);
+            //因为在这个界面上没有办法修改顺序，所以就不需要composeRefresh
+            note_vector.push_back(n1);                //放到vector最后一个位置
         }
-        ui->frame->setLayout(gridLayout);
-        repaint();     //顺序输出vector所有的东西
     }
+
+    // 以上这段代码是：删除布局之后再从log.txt文件中读一遍
+    // 然后下面要开始按照时间排序，把notevector中的东西，按照时间顺序，放到notevectortime中，然后输出
+
+    note_vector_time.clear();
+
+    QString date_time_str[note_vector.size()][2];   //储存时间和日期
+    QDateTime date_time[note_vector.size()];        //日时
+    uint time[note_vector.size()];
+    for(unsigned i = 0; i < note_vector.size(); i++)
+    {
+        date_time_str[i][0] = note_vector.at(i)->Date;
+        date_time_str[i][1] = note_vector.at(i)->Time;
+        QString s=date_time_str[i][0];
+        QDate d = QDate::fromString(s,"yyyy/MM/dd");
+        QTime t = QTime::fromString(date_time_str[i][1],"hh:mm");
+        date_time[i] = QDateTime(d,t);
+        time[i] = date_time[i].toTime_t();
+        note_vector.at(i)->time_int=time[i];
+    }
+    //以上步骤提取了note_vector内的时间和日期并且合成了QDateTime类，转换为时间截time
+
+    for(unsigned i=0; i < note_vector.size(); i++){
+        note_vector_time.push_back(note_vector.at(i));
+        qDebug() << "hello";
+    } //放到notevectortime中
+
+    std::sort(note_vector_time.begin(),note_vector_time.end(),isSmaller);
+
+    for(unsigned i=0; i < note_vector_time.size(); i++){
+        qDebug() << QString ("%1").arg(note_vector_time.at(i)->finish);
+        if(note_vector_time.at(i)->finish == 0 && nothing){
+            gridLayout->addWidget(note_vector_time.at(i));
+
+            text += str_read[1];
+            text += "\n";
+            text += str_read[3];
+            text += "\n";
+            text += str_read[2];
+
+            nothing = false;
+        }
+    }
+
+    ui->frame->setLayout(gridLayout);
+    repaint();
 }
 
 void SuspendDia::on_exitBtn_clicked()
@@ -275,4 +307,8 @@ void SuspendDia::on_backBtn_clicked()
     settingsToFile();
 
     emit this->back();
+}
+
+bool SuspendDia::isSmaller(Note *a, Note *b){
+    return a->time_int < b->time_int;
 }

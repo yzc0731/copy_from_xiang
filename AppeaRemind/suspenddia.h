@@ -18,6 +18,8 @@ class SuspendDia : public QDialog
 
 public:
     std::vector<Note*> note_vector;
+    std::vector<Note*> note_vector_time;
+    static bool isSmaller(Note* a,Note* b);
     explicit SuspendDia(QWidget *parent = nullptr, bool logsTimed = false);
     //SuspendDia(QWidget *parent = nullptr, bool logsTimed = false);
     ~SuspendDia();
