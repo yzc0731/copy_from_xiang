@@ -235,11 +235,10 @@ void SuspendDia::settingsToFile()
 
 void SuspendDia::getSettingsFromFile()
 {
-    //QFileInfo *fileinfo = new QFileInfo();
     if(QFileInfo::exists("logset.txt")){
         qDebug()<<"File exists";
         QFile file;
-        file.setFileName("logset.txt");                                      //保存到本地地址
+        file.setFileName("logset.txt");         //保存到本地地址
         QString strline;
         if (file.open(QIODevice::ReadOnly)){
             strline = file.readLine();             //读取一行
