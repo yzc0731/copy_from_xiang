@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>269</width>
+    <width>221</width>
     <height>258</height>
    </rect>
   </property>
@@ -60,10 +60,10 @@
      <item>
       <widget class="QSlider" name="horizontalSlider_2">
        <property name="minimum">
-        <number>50</number>
+        <number>30</number>
        </property>
        <property name="maximum">
-        <number>99</number>
+        <number>70</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -75,9 +75,16 @@
    <item row="3" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QCheckBox" name="checkBox">
+      <widget class="QLabel" name="label_2">
        <property name="text">
         <string>是否选择开机自启</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="checkBox">
+       <property name="text">
+        <string/>
        </property>
       </widget>
      </item>
