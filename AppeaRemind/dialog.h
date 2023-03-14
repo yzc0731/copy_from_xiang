@@ -41,6 +41,8 @@ public:
     bool isLogsTimed();
     void suspendDiaBack();
     void composeRefresh();
+    void settingsToFile();
+    void getSettingsFromFile();
 
 public slots:
     void on_pushButton_clicked();

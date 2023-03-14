@@ -38,7 +38,7 @@ Dialog::Dialog(QWidget *parent)
     this->setWindowTitle("AppeaRemind");
     Qt::WindowFlags windowFlag  = Qt::Widget;
     this->setWindowFlags(windowFlag);     // 添加最小化、最大化按键，并且这些按钮自动有对应功能
-
+    getSettingsFromFile();
     datetime = QDateTime::currentDateTime();
     systime = datetime.toString("hhh:mm yyyy/MM/dd");
     //创建定时器定时更新时间和日期
@@ -178,6 +178,7 @@ void Dialog::closeEvent(QCloseEvent *){
             // 如果勾选"下次不再提示"+no就会到直接结束
         }
     }
+    settingsToFile();
 }
 
 bool Dialog::isLogsTimed()
@@ -353,6 +354,72 @@ void Dialog::composeRefresh(){
         onRefresh_for_time();
     } else {
         onRefresh();
+    }
+}
+
+void Dialog::settingsToFile()
+{
+    QString strAll;
+    QStringList strAllList;
+    QFile readFile;
+    QTextStream stream(&readFile);
+    readFile.setFileName("logset.txt");   //保存到本地地址,但是这样子的话相当于是重新创建一个空的logset.txt
+    if(readFile.open(QIODevice::ReadOnly)){
+        QString strLine;
+        while (!readFile.atEnd()){
+            strLine = stream.readLine();
+            if (strLine != ""){
+                strAll += strLine;
+                strAll += "\n";
+            }
+        }
+    }
+    readFile.close();
+
+    QFile filewrite;
+    filewrite.setFileName("logset.txt");
+    if(filewrite.open(QIODevice::WriteOnly|QIODevice::Text))
+    {
+        QTextStream stream(&filewrite);
+        strAllList = strAll.split("\n");
+        int size = strAllList.size() - 1; //把最后一个换行符后面的空字符去掉
+        bool flag = true;
+        for(int i = 0; i < size; i++){
+            QString strLine = strAllList.at(i);
+            if(strLine.contains("nextTime")){  //实现对nextTime的替换
+                strLine = "nextTime#"+QString("%1").arg(nextTime)+"\n";
+                flag = false;
+            }
+            stream << strLine << "\n";
+        }
+        // 如果出了这个循环，flag还是false，那么就根本没有进入这个循环，那就说明本来没有nexttime这个变量
+        if(flag){
+            stream << "nextTime#"+QString("%1").arg(nextTime);
+        }
+    }
+    filewrite.close();
+}
+
+void Dialog::getSettingsFromFile()
+{
+    if(QFileInfo::exists("logset.txt")){
+        QFile file;
+        file.setFileName("logset.txt");         //保存到本地地址
+        QString strline;
+        if (file.open(QIODevice::ReadOnly))
+        {
+            while (!file.atEnd())
+            {
+                strline = file.readLine();             //读取一行
+                QStringList list = strline.split("#");  //按照#划分成{nextTime,1}
+                if(list[0] == "nextTime")
+                {
+                    nextTime = list[1].toInt();
+                }
+            }
+        }
+    } else {
+        qDebug()<<"File not exists";
     }
 }
 

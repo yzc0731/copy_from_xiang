@@ -254,29 +254,79 @@ void SuspendDia::mouseMoveEvent(QMouseEvent *){
 
 void SuspendDia::settingsToFile()
 {
-    QFile file;
-    file.setFileName("logset.txt");   //保存到本地地址
-    if(file.open(QIODevice::WriteOnly| QIODevice::Text))
-    {
-        QTextStream stream(&file);
-        stream<<QString("%1").arg(_pacity)<<"\n";
-        qDebug() << QString("%1").arg(_pacity);
+    QString strAll;
+    QStringList strAllList;
+    QFile readFile;
+    QTextStream stream(&readFile);
+    readFile.setFileName("logset.txt");   //保存到本地地址,但是这样子的话相当于是重新创建一个空的logset.txt
+    if(readFile.open(QIODevice::ReadOnly)){
+        QString strLine;
+        while (!readFile.atEnd()){
+            strLine = stream.readLine();
+            if (strLine != ""){
+                strAll += strLine;
+                strAll += "\n";
+            }
+        }
     }
-    file.close();
+    readFile.close();
+
+    QFile filewrite;
+    filewrite.setFileName("logset.txt");
+    if(filewrite.open(QIODevice::WriteOnly|QIODevice::Text))
+    {
+        QTextStream stream(&filewrite);
+        strAllList = strAll.split("\n");
+        int size = strAllList.size() - 1; //把最后一个换行符后面的空字符去掉
+        bool flagOfPacity = true;
+        bool flagOfRadius = true;
+        for(int i = 0; i < size; i++){
+            QString strLine = strAllList.at(i);
+            if(strLine.contains("pacity")){  //实现对pacity的替换
+                strLine = "pacity#"+QString("%1").arg(_pacity)+"\n";
+                flagOfPacity = false;
+            }
+            if(strLine.contains("radius")){ //实现对radius的替换
+                strLine = "radius#"+QString("%1").arg(radiusOfBall)+"\n";
+                flagOfRadius = false;
+            }
+            stream << strLine << "\n";
+        }
+        // 如果出了这个循环，flag还是false，那么就根本没有进入这个循环，那就说明本来没有pacity这个变量
+        if(flagOfPacity){
+            stream << "pacity#"+QString("%1").arg(_pacity);
+        }
+        if(flagOfRadius){
+            stream << "radius#"+QString("%1").arg(radiusOfBall);
+        }
+    }
+    filewrite.close();
 }
 
 void SuspendDia::getSettingsFromFile()
 {
-    if(QFileInfo::exists("logset.txt")){
-        qDebug()<<"File exists";
+    if(QFileInfo::exists("logset.txt"))
+    {
         QFile file;
         file.setFileName("logset.txt");         //保存到本地地址
         QString strline;
-        if (file.open(QIODevice::ReadOnly)){
-            strline = file.readLine();             //读取一行
-            //qDebug()<<"read";
-            _pacity = strline.toDouble();
-            qDebug() << QString("%1").arg(_pacity);
+        if (file.open(QIODevice::ReadOnly))
+        {
+            while (!file.atEnd())
+            {
+                strline = file.readLine();             //读取一行
+                QStringList list = strline.split("#");  //按照#划分成{nextTime,1}
+                if(list[0] == "pacity")
+                {
+                    _pacity = list[1].toDouble();
+                    continue;
+                }
+                if(list[0] == "radius")
+                {
+                    radiusOfBall = list[1].toInt();
+                    continue;
+                }
+            }
         }
     }
     else{
@@ -291,10 +341,13 @@ void SuspendDia::on_settingBtn_clicked()
     set->move(setPos);
     set->show();
 
-    connect(set,&SettingDia::pacityChanged,[=](){
-        _pacity = set->getPacity();
-        this->setWindowOpacity(_pacity);
-    });
+    connect(set,&SettingDia::pacityChanged,this,&SuspendDia::backFromSet);
+}
+
+void SuspendDia::backFromSet(){
+    _pacity = set->getPacity();
+    this->setWindowOpacity(_pacity);
+    radiusOfBall = set->getRadius();
 }
 
 void SuspendDia::on_backBtn_clicked()
@@ -303,9 +356,7 @@ void SuspendDia::on_backBtn_clicked()
     if(set != nullptr){
         set->close();
     }
-
     settingsToFile();
-
     emit this->back();
 }
 

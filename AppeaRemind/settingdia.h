@@ -16,10 +16,13 @@ public:
     SettingDia(QWidget *parent = nullptr, double pacity = 1.0);
     ~SettingDia();
     double getPacity();
+    int getRadius();
 
 private slots:
     void on_backBtn_clicked();
     void on_horizontalSlider_valueChanged(int value);
+
+    void on_horizontalSlider_2_valueChanged(int value);
 
 signals:
     void pacityChanged();
@@ -27,6 +30,7 @@ signals:
 private:
     Ui::SettingDia *ui;
     double _pacity = 1.0;
+    int _radius = 50;
 };
 
 #endif // SETTINGDIA_H

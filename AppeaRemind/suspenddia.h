@@ -33,6 +33,7 @@ public:
     void settingsToFile();
     void getSettingsFromFile();
     void backFromBall();
+    void backFromSet();
 
 signals:
     void back();
@@ -46,14 +47,16 @@ private:
     Ui::SuspendDia *ui;
     double _pacity = 1.0;
     bool hasBall = false;
-    Ball *ball;
-    bool pressed = false;
     QString text;
+    int radiusOfBall = 50;
+    bool pressed = false;
+
 
 public:
     QPoint _beginPos = QPoint(100,100);
     SettingDia *set = nullptr;
     Note *notesus;
+    Ball *ball;
 };
 
 #endif // SUSPENDDIA_H

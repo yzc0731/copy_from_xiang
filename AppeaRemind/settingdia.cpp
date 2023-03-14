@@ -36,6 +36,11 @@ double SettingDia::getPacity()
     return _pacity;
 }
 
+int SettingDia::getRadius()
+{
+    return _radius;
+}
+
 void SettingDia::on_backBtn_clicked()
 {
     this->close();
@@ -46,4 +51,9 @@ void SettingDia::on_horizontalSlider_valueChanged(int value)
     _pacity = double(value+1)/100.0;
     setWindowOpacity(_pacity);
     emit this->pacityChanged();
+}
+
+void SettingDia::on_horizontalSlider_2_valueChanged(int value)
+{
+    _radius = value;
 }
