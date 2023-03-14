@@ -75,7 +75,7 @@ void SuspendDia::onRefresh()
                     str_read[4],str_read[5],str_read[6],str_read[7]);
 
             QObject::connect(notesus,&Note::refresh,this,&SuspendDia::onRefresh);  //关联信号和槽
-
+            //每次点击都能实现
             note_vector.push_back(notesus);   //将读到的每行数据放到vector中，这个vector中的所有数据最后又会重新写入log.txt文件
 
             if (notesus->finish == 0 && nothing) {
@@ -134,7 +134,7 @@ void SuspendDia::onRefreshForTime()
             notesus = new Note(&note_vector,num,str_read[1],str_read[2],str_read[3],
                     str_read[4],str_read[5],str_read[6],str_read[7]);
 
-            QObject::connect(notesus,&Note::refresh,this,&SuspendDia::onRefresh);  //关联信号和槽
+            QObject::connect(notesus,&Note::refresh,this,&SuspendDia::onRefreshForTime);  //关联信号和槽
 
             note_vector.push_back(notesus);   //将读到的每行数据放到vector中，这个vector中的所有数据最后又会重新写入log.txt文件
 
@@ -163,6 +163,19 @@ void SuspendDia::on_exitBtn_clicked()
     this->close();
 }
 
+void SuspendDia::backFromBall()
+{
+    int width = this->width();
+    int height = this->height();
+    _beginPos = ball->getBeginPos();
+    _beginPos = QPoint (_beginPos.x()-width/2, _beginPos.y()-height/2);
+    ball->hide();
+    this->move(_beginPos);
+    this->show();
+    getSettingsFromFile();
+    this->setWindowOpacity(_pacity);
+}
+
 void SuspendDia::mouseDoubleClickEvent(QMouseEvent *)
 {
     settingsToFile();
@@ -173,19 +186,11 @@ void SuspendDia::mouseDoubleClickEvent(QMouseEvent *)
         int width = this->width();
         int height = this->height();
         _beginPos = QPoint (_beginPos.x()+width/2, _beginPos.y()+height/2);
-        Ball *ball = new Ball(nullptr,text,_beginPos);    // 创建一个悬浮球
+        ball = new Ball(nullptr,text,_beginPos);    // 创建一个悬浮球
         ball->show();
         this->hide();   // 隐藏悬浮窗窗口
 
-        connect(ball,&Ball::backFromBall,[=](){
-            _beginPos = ball->getBeginPos();
-            _beginPos = QPoint (_beginPos.x()-width/2, _beginPos.y()-height/2);
-            ball->hide();
-            this->move(_beginPos);
-            this->show();
-            getSettingsFromFile();
-            this->setWindowOpacity(_pacity);
-        });//监测窗口s的回退信号
+        connect(ball,&Ball::backFromBall,this,&SuspendDia::backFromBall);//监测窗口s的回退信号
     }
 }
 

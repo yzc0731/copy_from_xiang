@@ -6,6 +6,7 @@
 
 #include "settingdia.h"
 #include "note.h"
+#include "ball.h"
 
 namespace Ui {
 class SuspendDia;
@@ -29,6 +30,7 @@ public:
     //void closeEvent(QCloseEvent *);         // 点击“x”按钮
     void settingsToFile();
     void getSettingsFromFile();
+    void backFromBall();
 
 signals:
     void back();
@@ -42,6 +44,7 @@ private:
     Ui::SuspendDia *ui;
     double _pacity = 1.0;
     bool hasBall = false;
+    Ball *ball;
     bool pressed = false;
     QString text;
 

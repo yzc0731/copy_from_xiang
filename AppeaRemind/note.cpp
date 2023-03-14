@@ -63,19 +63,16 @@ Note::~Note()
 void Note::on_checkBox_clicked()
 {
     Sleep(1000);
-    if(note_vector->at(index)->repeat_times == "#")
-    {
-    finish=1;
-    note_vector->at(index)->finish=1;
-    note_vector->at(index)->
-    ui->checkBox->setChecked(true);    //保持选中
-    Vector_ vector; 
-    vector.vector_for_file(*note_vector);
-    this->close();
+    if(note_vector->at(index)->repeat_times == "#"){
+        finish=1;
+        note_vector->at(index)->finish=1;
+        note_vector->at(index)->ui->checkBox->setChecked(true);//保持选中
+        Vector_ vector;
+        vector.vector_for_file(*note_vector);
+        this->close();
     }
     //
-    if(note_vector->at(index)->repeat_times != "#")
-    {
+    if(note_vector->at(index)->repeat_times != "#"){
         QString str_date = note_vector->at(index)->Date;
         QStringList list = str_date.split("/");
         int year,month,day;
@@ -214,9 +211,7 @@ void Note::on_checkBox_clicked()
             }
         }
         if(isAm){
-            qDebug() << "abab";
             this->am->close();
-            qDebug() << "cdcd";
             ui->pushButton_2->setText("+");
         }
         Vector_ vector;

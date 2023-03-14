@@ -1,6 +1,7 @@
 #include "settingdia.h"
 #include "ui_settingdia.h"
 
+#include <QScrollArea>
 SettingDia::SettingDia(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SettingDia)
@@ -9,6 +10,8 @@ SettingDia::SettingDia(QWidget *parent) :
     // this->setWindowTitle(tr("设置"));
     this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint
                          | Qt::WindowMinMaxButtonsHint|Qt::WindowStaysOnTopHint);
+    QScrollArea *scroll=new QScrollArea(this);
+    scroll->setWidget(this);
 }
 
 SettingDia::SettingDia(QWidget *parent, double pacity):
