@@ -6,6 +6,7 @@
 #include <QStyle>
 #include <QDesktopWidget>
 
+
 #include "addnew.h"
 #include "about.h"
 #include "history.h"
@@ -37,6 +38,8 @@ dateTime::dateTime(QWidget *parent) :
    // connect(timer, SIGNAL(timeout()), this, SLOT(myslot()));
     connect(timer, &QTimer::timeout, this, &dateTime::timeUpdate);
     timer->start(1000);
+
+
 }
 
 dateTime::~dateTime()
