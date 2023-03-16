@@ -49,6 +49,20 @@
      </property>
     </widget>
    </item>
+   <item row="0" column="1">
+    <widget class="QPushButton" name="pushButton">
+     <property name="text">
+      <string>添加(&amp;A)</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QPushButton" name="toSusbendBtn">
+     <property name="text">
+      <string>悬浮窗</string>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="0" colspan="4">
     <widget class="QFrame" name="frame">
      <property name="frameShape">
@@ -166,7 +180,7 @@
          </size>
         </property>
         <property name="text">
-         <string>按时间先后顺序显示</string>
+         <string>变为时间顺序</string>
         </property>
         <property name="checkable">
          <bool>true</bool>
@@ -174,20 +188,6 @@
        </widget>
       </item>
      </layout>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QPushButton" name="pushButton">
-     <property name="text">
-      <string>添加(&amp;A)</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QPushButton" name="toSusbendBtn">
-     <property name="text">
-      <string>悬浮窗</string>
-     </property>
     </widget>
    </item>
   </layout>
