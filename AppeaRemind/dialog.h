@@ -23,6 +23,7 @@ QT_END_NAMESPACE
 extern QString name;
 extern QString thing;
 extern QString importance;
+extern int line;
 
 class Dialog : public QDialog
 {
@@ -39,10 +40,6 @@ public:
     void onRefresh_for_time();
     void closeEvent(QCloseEvent *); // 点击“x”按钮
     bool isLogsTimed();
-    void suspendDiaBack();
-    void composeRefresh();
-    void settingsToFile();
-    void getSettingsFromFile();
 
 public slots:
     void on_pushButton_clicked();
@@ -59,14 +56,14 @@ public:
     QDateTime datetime;
     QTimer *timer;
     QString systime;
-    QString str_time[10][7];
-    int sign[10] = {0};
+    //QString str_time[10][7];
+    int sign[100] = {0};
     int m;
 
 private:
     int nextTime = 0;   // 说明有下一次
     SuspendDia *s;
     QString _text;
-    bool logsTimed = false;
+    bool logsTimed= false;
 };
 #endif // DIALOG_H

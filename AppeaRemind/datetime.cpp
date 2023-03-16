@@ -6,6 +6,7 @@
 #include <QStyle>
 #include <QDesktopWidget>
 
+
 #include "addnew.h"
 #include "about.h"
 #include "history.h"
@@ -37,6 +38,8 @@ dateTime::dateTime(QWidget *parent) :
    // connect(timer, SIGNAL(timeout()), this, SLOT(myslot()));
     connect(timer, &QTimer::timeout, this, &dateTime::timeUpdate);
     timer->start(1000);
+
+
 }
 
 dateTime::~dateTime()
@@ -50,9 +53,9 @@ void dateTime::timeUpdate(void)
     systime = datetime.toString("hhh:mm yyyy/MM/dd");
     QFile file;
     file.setFileName("log.txt");   //保存到本地地址
-    QString str_read[10][7];
+    QString str_read[line][7];
     QString strline;
-    int mark[10];
+    int mark[line];
     int j = 0;
     if (file.open(QIODevice::ReadOnly))                               //只读
     {
@@ -81,7 +84,7 @@ void dateTime::timeUpdate(void)
    // QTime timeNow=QTime::currentTime();//获取实时时间
     //QString systime = timeNow.toString("hhh:mm") + " " + QDate::currentDate().toString("yyyy/MM/dd");
 
-    QString settime[10];
+    QString settime[line];
     for(int z = 0; z < j; z++)//读取所有设定时间并转化为字符串
     settime[z] = str_read[z][2] + " " + str_read[z][3];
 
