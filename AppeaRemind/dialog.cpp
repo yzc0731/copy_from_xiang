@@ -39,6 +39,11 @@ Dialog::Dialog(QWidget *parent)
     Qt::WindowFlags windowFlag  = Qt::Widget;
     this->setWindowFlags(windowFlag);     // 添加最小化、最大化按键，并且这些按钮自动有对应功能
     getSettingsFromFile();
+    if(logsTimed){
+        ui->pushButton_5->setText(tr("改为构建顺序"));
+    } else {
+        ui->pushButton_5->setText(tr("改为时间顺序"));
+    } //但是logstimed还没有放入logset文件中
     datetime = QDateTime::currentDateTime();
     systime = datetime.toString("hhh:mm yyyy/MM/dd");
     //创建定时器定时更新时间和日期
@@ -426,13 +431,13 @@ void Dialog::getSettingsFromFile()
 void Dialog::on_pushButton_5_toggled(bool checked)
 {
     if (checked) {
-        ui->pushButton_5->setText(tr("按创建先后顺序显示"));
+        ui->pushButton_5->setText(tr("改为构建顺序"));
         this->onRefresh_for_time();
         //输出为按照时间排序的文件
         logsTimed = true;
     }
     else {
-        ui->pushButton_5->setText(tr("按时间先后顺序显示"));
+        ui->pushButton_5->setText(tr("改为时间顺序"));
         this->onRefresh();
         logsTimed = false;
     }
