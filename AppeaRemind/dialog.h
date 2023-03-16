@@ -59,8 +59,8 @@ public:
     QDateTime datetime;
     QTimer *timer;
     QString systime;
-    QString str_time[10][7];
-    int sign[10] = {0};
+    //QString str_time[10][7];
+    int sign[100] = {0};
     int m;
 
 private:
