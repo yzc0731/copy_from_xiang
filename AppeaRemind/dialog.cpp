@@ -1,10 +1,13 @@
 #include "dialog.h"
 #include "ui_dialog.h"
 
+#include <vector>
+
 #include <algorithm>
 #include <QGridLayout>
 #include <QDebug>
 #include <QFile>
+#include <QFileInfo>
 #include <QTextCodec>
 #include <QDateTime>
 #include <QMessageBox>
@@ -40,10 +43,12 @@ Dialog::Dialog(QWidget *parent)
     this->setWindowFlags(windowFlag);     // 添加最小化、最大化按键，并且这些按钮自动有对应功能
     getSettingsFromFile();
     if(logsTimed){
-        ui->pushButton_5->setText(tr("改为构建顺序"));
+        ui->pushButton_5->setText(tr("改为创建顺序"));
+        qDebug() <<"hello";
     } else {
         ui->pushButton_5->setText(tr("改为时间顺序"));
-    } //但是logstimed还没有放入logset文件中
+        qDebug() <<"hello123123";
+    }
     datetime = QDateTime::currentDateTime();
     systime = datetime.toString("hhh:mm yyyy/MM/dd");
     //创建定时器定时更新时间和日期
@@ -68,13 +73,12 @@ void Dialog::on_pushButton_clicked() {
 void Dialog::on_pushButton_2_clicked() {
     About *about = new About;
     about->show();
-
 }  //打开关于面板
+
 void Dialog::on_pushButton_4_clicked() {
     history *a = new history(this, &note_vector);
     a->show();
 }   //历史事项对应窗口
-
 
 void Dialog::timeUpdate(void)
 {
@@ -193,6 +197,7 @@ void Dialog::closeEvent(QCloseEvent *){
             // 如果勾选"下次不再提示"+no就会到直接结束
         }
     }
+    settingsToFile();
 }
 
 bool Dialog::isLogsTimed()
@@ -212,7 +217,6 @@ void Dialog::onRefresh() {        //用于初始化和添加的刷新函数
     }
     QGridLayout *gridLayout = new QGridLayout();                     //网格布局
     gridLayout->setVerticalSpacing(20);
-    //---------------------------------------------------------------//
     QFile file;
     file.setFileName("log.txt");                                     //保存到本地地址
     QString str_read[9];
@@ -229,22 +233,21 @@ void Dialog::onRefresh() {        //用于初始化和添加的刷新函数
             char c0 = c.toLatin1();
             if (c0 > 57 || c0 < 48)
             { return; }
-            //
             QStringList list = strline.split(" ");                   //以一个空格为分隔符
             for (int i = 0; i < 9; i++){str_read[i] = list[i];}
             num = str_read[0].toInt();                 //将第一个数据转化为int类
-            Note *n1 = new Note(&note_vector,num,str_read[1],str_read[2],str_read[3],str_read[4],str_read[5],str_read[6],str_read[7]);
-            //
-            QObject::connect(n1,&Note::refresh,this,&Dialog::onRefresh1);  //关联信号和槽
+            Note *n1 = new Note(&note_vector,num, str_read[1],
+                    str_read[2], str_read[3], str_read[4],
+                    str_read[5], str_read[6], str_read[7]);
+            QObject::connect(n1,&Note::refresh,this,&Dialog::composeRefresh);  //关联信号和槽
             note_vector.push_back(n1);                //放到vector最后一个位置
             if (n1->finish == 0) {
                 gridLayout->addWidget(n1);
+                qDebug() <<"hello";
             }
         }
         ui->frame_2->widget()->setLayout(gridLayout);
         repaint();                                //顺序输出vector所有的东西
-        //logsTimed = false;
-        //qDebug()<<QString("%1").arg(logsTimed);
     }
 }
 
@@ -259,9 +262,6 @@ void Dialog::onRefresh1() {     //专门用于编辑的刷新函数
         delete ui->frame_2->widget()->layout();
     }
     QGridLayout *gridLayout = new QGridLayout();                   //网格布局
-
-    //
-
     QFile file;
     file.setFileName("log.txt");                                    //保存到本地地址
     QString str_read[9];
@@ -278,22 +278,18 @@ void Dialog::onRefresh1() {     //专门用于编辑的刷新函数
             char c0 = c.toLatin1();
             if (c0 > 57 || c0 < 48)
             { return; }
-
-            //
             QStringList list = strline.split(" ");                   //以一个空格为分隔符
             for (int i = 0; i < 9; i++) {
                 str_read[i] = list[i];
             }
             num = str_read[0].toInt();         //将第一个数据转化为int类
             Note *n1 = new Note(&note_vector, num, str_read[1], str_read[2], str_read[3], str_read[4], str_read[5],str_read[6],str_read[7]);
-            QObject::connect(n1,&Note::refresh,this,&Dialog::onRefresh1);   //关联信号和槽
+            QObject::connect(n1,&Note::refresh,this,&Dialog::composeRefresh);   //关联信号和槽
             note_vector.push_back(n1);         //放到vector最后一个位置
             if (n1->finish == 0) {gridLayout->addWidget(n1);}
         }
         ui->frame_2->widget()->setLayout(gridLayout);
         repaint();                             //顺序输出vector所有的东西
-        //logsTimed = false;
-        //qDebug()<<QString("%1").arg(logsTimed);
     }
 }
 
@@ -309,7 +305,6 @@ void Dialog::onRefresh_for_time(){        //用于时间顺序的刷新函数
     }
     QGridLayout *gridLayout = new QGridLayout();                     //网格布局
     gridLayout->setVerticalSpacing(20);
-    //---------------------------------------------------------------//
     QFile file;
     file.setFileName("log.txt");                                     //保存到本地地址
     QString str_read[9];
@@ -325,14 +320,13 @@ void Dialog::onRefresh_for_time(){        //用于时间顺序的刷新函数
             QChar c = strline[0];                                    //判断第一个字符是否是回车符（空文件只有一个回车符）
             char c0 = c.toLatin1();
             if (c0 > 57 || c0 < 48) { return; }
-            //
             QStringList list = strline.split(" ");                   //以一个空格为分隔符
             for (int i = 0; i < 9; i++) { str_read[i] = list[i]; }
             num = str_read[0].toInt();                 //将第一个数据转化为int类
-            Note *n1 = new Note(&note_vector, num, str_read[1], str_read[2], str_read[3], str_read[4], str_read[5],
-                                str_read[6], str_read[7]);
-            //
-            QObject::connect(n1, &Note::refresh, this, &Dialog::onRefresh1);  //关联信号和槽
+            Note *n1 = new Note(&note_vector, num, str_read[1],
+                    str_read[2],str_read[3], str_read[4],
+                    str_read[5],str_read[6], str_read[7]);
+            QObject::connect(n1, &Note::refresh, this, &Dialog::composeRefresh);  //关联信号和槽
             note_vector.push_back(n1);                //放到vector最后一个位置
 
         }
@@ -359,27 +353,34 @@ void Dialog::onRefresh_for_time(){        //用于时间顺序的刷新函数
     }
     std::sort(note_vector_time.begin(),note_vector_time.end(),isSmaller);
     for(unsigned i=0; i < note_vector_time.size(); i++){
-
-        if(note_vector_time.at(i)->finish==0)
+        if(note_vector_time.at(i)->finish == 0){
             gridLayout->addWidget(note_vector_time.at(i));
+            qDebug() <<"hello";
+        }
     }
     ui->frame_2->widget()->setLayout(gridLayout);
     repaint();
-    //Vector_ vector;
-    //vector.vector_for_file(note_vector_time, "logTimed.txt");
-    //logsTimed = true;
-    //qDebug()<<QString("%1").arg(logsTimed);
+}
+
+void Dialog::composeRefresh(){
+    if(logsTimed){
+        onRefresh_for_time();
+    } else {
+        onRefresh();
+    }
 }
 
 void Dialog::on_pushButton_5_toggled(bool checked)
 {
-    if (checked) {
-        ui->pushButton_5->setText(tr("改为构建顺序"));
+    if (!logsTimed) {
+        ui->pushButton_5->setText(tr("改为创建顺序"));
         this->onRefresh_for_time();
-    }
-    else {
+        //输出为按照时间排序的文件
+        logsTimed = true;
+    } else {
         ui->pushButton_5->setText(tr("改为时间顺序"));
         this->onRefresh();
+        logsTimed = false;
     }
 }
 
@@ -387,19 +388,85 @@ bool Dialog::isSmaller(Note *a, Note *b){
     return a->time_int < b->time_int;
 }
 
+void Dialog::suspendDiaBack(){
+    s->hide();
+    this->show();
+    composeRefresh();
+    getSettingsFromFile();//从悬浮窗中回来的时候，也要获取文件中的数据
+}
+
 void Dialog::on_toSusbendBtn_clicked()
 {
-    // 创建一个子窗口
-    SuspendDia *s = new SuspendDia();
+    s = new SuspendDia(nullptr,logsTimed);  // 创建一个子窗口
     s->show();
+    this->hide();   // 隐藏主窗口
+    settingsToFile();
+    connect(s,&SuspendDia::back,this,&Dialog::suspendDiaBack); //监测窗口s的回退信号
+}
 
-    // 隐藏主窗口
-    this->hide();
+void Dialog::settingsToFile()
+{
+    std::vector<QString> strAll;
+    QFile readFile;
+    readFile.setFileName("logset.txt");
+    QTextStream stream(&readFile);
+    if(readFile.open(QIODevice::ReadOnly)){
+        QString strLine;
+        for(int i = 0; i < 5; i++){
+            strLine = stream.readLine();
+            strAll.push_back(strLine);
+        }
+    }
+    readFile.close();
+    //qDebug() << strAll;
+    QFile fileModify;
+    fileModify.setFileName("logset.txt");
+    if(fileModify.open(QIODevice::WriteOnly|QIODevice::Text))
+    {
+        QTextStream stream(&fileModify);
+        //strAllList = strAll.split("\n");    //按照行来划分成list
+        int size = strAll.size();   //size = 5。
+        //qDebug() << QString ("%1").arg(size);
+        strAll[0] = "logsTimed#"+QString("%1").arg(logsTimed);     //取第一行,实现对logsTimed的替换
+        strAll[1] = "nextTime#"+QString("%1").arg(nextTime);     //取第二行,实现对nextTime的替换
+        for(int i = 0; i < size - 1; i++){
+            QString strLine = strAll[i];
+            stream << strLine + "\n";
+        }//读取修改过后的每一行并输出
+        QString strLine = strAll.at(size - 1);     //读取第五行
+        stream << strLine;
+    }
+    fileModify.close();
+}
 
-    //监测窗口s的回退信号
-    connect(s,&SuspendDia::back,[=](){
-        s->hide();
-        this->show();
-        onRefresh(); // 刷新
-    });
+void Dialog::getSettingsFromFile()
+{
+    if(QFileInfo::exists("logset.txt")){
+        QFile file;
+        file.setFileName("logset.txt");         //保存到本地地址
+        QString strline;
+        if (file.open(QIODevice::ReadOnly))
+        {
+            strline = file.readLine();             //读取第一行logsTimed
+            QStringList list = strline.split("#");  //按照#划分成{logsTimed,0}
+            logsTimed = list[1].toInt();
+            strline = file.readLine();             //读取第二行nextTime
+            QStringList list2 = strline.split("#");  //按照#划分成{nextTime,0}
+            nextTime = list2[1].toInt();
+        }
+    } else {
+        qDebug()<<"File not exists";
+        QFile initFile;
+        initFile.setFileName("logset.txt");
+        if(initFile.open(QIODevice::WriteOnly|QIODevice::Text))
+        {
+            QTextStream stream(&initFile);
+            stream << "logsTimed#1\n";
+            stream << "nextTime#0\n";
+            stream << "pacity#1.0\n";
+            stream << "radius#50\n";
+            stream << "autoOpen#0";
+        }
+        initFile.close();
+    }
 }

@@ -28,7 +28,7 @@ Note::Note(std::vector<Note*> *note_vector,int num,QString str1,QString str2,QSt
     this->am = new AppRemind(this->Thing, this->Date, this->Time);
     index=note_vector->size();
     ui->setupUi(this);
-    this->note_vector=note_vector;
+    this->note_vector = note_vector;
     this->setWindowFlags(Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_TranslucentBackground);
     ui->label->setText(Thing);
@@ -71,7 +71,6 @@ void Note::on_checkBox_clicked()
         vector.vector_for_file(*note_vector);
         this->close();
     }
-    //
     if(note_vector->at(index)->repeat_times != "#"){
         QString str_date = note_vector->at(index)->Date;
         QStringList list = str_date.split("/");

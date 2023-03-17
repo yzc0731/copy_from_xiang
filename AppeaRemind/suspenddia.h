@@ -34,6 +34,7 @@ public:
     void getSettingsFromFile();
     void backFromBall();
     void backFromSet();
+    void pacityChange();
 
 signals:
     void back();
@@ -50,7 +51,7 @@ private:
     QString text;
     int radiusOfBall = 50;
     bool pressed = false;
-
+    bool autoOpen = false;
 
 public:
     QPoint _beginPos = QPoint(100,100);

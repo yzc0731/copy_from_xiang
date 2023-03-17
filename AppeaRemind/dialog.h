@@ -40,6 +40,10 @@ public:
     void onRefresh_for_time();
     void closeEvent(QCloseEvent *); // 点击“x”按钮
     bool isLogsTimed();
+    void suspendDiaBack();
+    void composeRefresh();
+    void settingsToFile();
+    void getSettingsFromFile();
 
 public slots:
     void on_pushButton_clicked();
