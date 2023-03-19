@@ -216,8 +216,8 @@ void SuspendDia::backFromBall()
 void SuspendDia::backFromSet()
 {
     radiusOfBall = set->getRadius();
-    autoOpen = set->isAutoOpen();
-    qDebug() <<QString("%1").arg(autoOpen);
+    _autoOpen = set->isAutoOpen();
+    //autoOpen(_autoOpen);
 }
 
 void SuspendDia::mouseDoubleClickEvent(QMouseEvent *)
@@ -259,7 +259,7 @@ void SuspendDia::mouseMoveEvent(QMouseEvent *){
         //让自定义按钮的位置加上坐标差，并移动至加上移动距离之后的位置
         _beginPos = QCursor::pos();
         if(set){
-            QPoint setPos = QPoint(this->pos().x()+this->width(),this->pos().y());
+            QPoint setPos = QPoint(this->pos().x()-set->width(),this->pos().y());
             set->move(setPos);      //更新设置窗口的位置
         }
     }
@@ -288,7 +288,7 @@ void SuspendDia::settingsToFile()
         int size = strAll.size();   //size = 5。
         strAll[2] = "pacity#"+QString("%1").arg(_pacity);     //取第三行,实现对pacity的替换
         strAll[3] = "radius#"+QString("%1").arg(radiusOfBall);     //取第四行,实现对nextTime的替换
-        strAll[4] = "autoOpen#"+QString("%1").arg(autoOpen);    //取第五行,实现对nextTime的替换
+        strAll[4] = "autoOpen#"+QString("%1").arg(_autoOpen);    //取第五行,实现对nextTime的替换
         for(int i = 0; i < size - 1; i++){
             QString strLine = strAll[i];
             stream << strLine + "\n";
@@ -317,8 +317,7 @@ void SuspendDia::getSettingsFromFile()
             radiusOfBall = list2[1].toInt();
             strline = file.readLine();             //读取第五行autoOpen
             QStringList list3 = strline.split("#");  //按照#划分成{autoOpen,0}
-            autoOpen = list3[1].toInt();
-            qDebug() << autoOpen;
+            _autoOpen = list3[1].toInt();
         }
     } else {
         qDebug()<<"File not exists";
@@ -339,8 +338,8 @@ void SuspendDia::getSettingsFromFile()
 
 void SuspendDia::on_settingBtn_clicked()
 {
-    set = new SettingDia(nullptr,_pacity,radiusOfBall,autoOpen);    // 创建一个设置窗口
-    QPoint setPos = QPoint(_beginPos.x()+this->width(),_beginPos.y());
+    set = new SettingDia(nullptr,_pacity,radiusOfBall,_autoOpen);    // 创建一个设置窗口
+    QPoint setPos = QPoint(_beginPos.x()-set->width(),_beginPos.y());
     set->move(setPos);
     set->show();
     connect(set,&SettingDia::backFromSet,this,&SuspendDia::backFromSet);

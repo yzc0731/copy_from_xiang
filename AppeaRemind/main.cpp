@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QApplication>
 
+#include "dialog.h"
 #include "about.h"
 #include "history.h"
 #include "addnew.h"

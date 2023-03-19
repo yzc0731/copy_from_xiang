@@ -44,10 +44,8 @@ Dialog::Dialog(QWidget *parent)
     getSettingsFromFile();
     if(logsTimed){
         ui->pushButton_5->setText(tr("改为创建顺序"));
-        qDebug() <<"hello";
     } else {
         ui->pushButton_5->setText(tr("改为时间顺序"));
-        qDebug() <<"hello123123";
     }
     datetime = QDateTime::currentDateTime();
     systime = datetime.toString("hhh:mm yyyy/MM/dd");
@@ -127,9 +125,8 @@ void Dialog::timeUpdate(void)
             }
             mark[j] = str_time[j][0].toInt();   //将第一个数据转化为int类
             j ++;
-}}
-
-
+        }
+    }
     QString settime[line];
     for(int z = 0; z < line; z++)                                             //读取所有设定时间并转化为字符串
     settime[z] = str_time[z][2] + " " + str_time[z][3];
@@ -151,7 +148,6 @@ void Dialog::closeEvent(QCloseEvent *){
     // 如果选择no或者右上角的“x”，啥都不做，直接退出
     // 如果选择yes，就跳出悬浮界面
     // 这个函数结束之后主界面直接关闭
-
     QMessageBox *questionBox = new QMessageBox(this);
     questionBox->setIcon(QMessageBox::Question);
     questionBox->setText("是否进入桌面悬浮状态");
@@ -206,7 +202,6 @@ bool Dialog::isLogsTimed()
 }
 
 void Dialog::onRefresh() {        //用于初始化和添加的刷新函数
-//
     if (ui->frame_2->widget()->layout() != nullptr) {   //删除原有布局
         QLayoutItem *item;
         while ((item = ui->frame_2->widget()->layout()->takeAt(0)) != nullptr) {
@@ -243,7 +238,6 @@ void Dialog::onRefresh() {        //用于初始化和添加的刷新函数
             note_vector.push_back(n1);                //放到vector最后一个位置
             if (n1->finish == 0) {
                 gridLayout->addWidget(n1);
-                qDebug() <<"hello";
             }
         }
         ui->frame_2->widget()->setLayout(gridLayout);
@@ -355,7 +349,6 @@ void Dialog::onRefresh_for_time(){        //用于时间顺序的刷新函数
     for(unsigned i=0; i < note_vector_time.size(); i++){
         if(note_vector_time.at(i)->finish == 0){
             gridLayout->addWidget(note_vector_time.at(i));
-            qDebug() <<"hello";
         }
     }
     ui->frame_2->widget()->setLayout(gridLayout);
@@ -418,15 +411,12 @@ void Dialog::settingsToFile()
         }
     }
     readFile.close();
-    //qDebug() << strAll;
     QFile fileModify;
     fileModify.setFileName("logset.txt");
     if(fileModify.open(QIODevice::WriteOnly|QIODevice::Text))
     {
         QTextStream stream(&fileModify);
-        //strAllList = strAll.split("\n");    //按照行来划分成list
         int size = strAll.size();   //size = 5。
-        //qDebug() << QString ("%1").arg(size);
         strAll[0] = "logsTimed#"+QString("%1").arg(logsTimed);     //取第一行,实现对logsTimed的替换
         strAll[1] = "nextTime#"+QString("%1").arg(nextTime);     //取第二行,实现对nextTime的替换
         for(int i = 0; i < size - 1; i++){
@@ -455,7 +445,7 @@ void Dialog::getSettingsFromFile()
             nextTime = list2[1].toInt();
         }
     } else {
-        qDebug()<<"File not exists";
+        //qDebug()<<"File not exists";
         QFile initFile;
         initFile.setFileName("logset.txt");
         if(initFile.open(QIODevice::WriteOnly|QIODevice::Text))

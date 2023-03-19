@@ -21,7 +21,6 @@ public:
     std::vector<Note*> note_vector_time;
     static bool isSmaller(Note* a,Note* b);
     explicit SuspendDia(QWidget *parent = nullptr, bool logsTimed = false);
-    //SuspendDia(QWidget *parent = nullptr, bool logsTimed = false);
     ~SuspendDia();
     void onRefresh();
     void onRefreshForTime();
@@ -51,7 +50,7 @@ private:
     QString text;
     int radiusOfBall = 50;
     bool pressed = false;
-    bool autoOpen = false;
+    bool _autoOpen = false;
 
 public:
     QPoint _beginPos;
