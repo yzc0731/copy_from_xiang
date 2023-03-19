@@ -54,7 +54,7 @@ private:
     bool autoOpen = false;
 
 public:
-    QPoint _beginPos = QPoint(100,100);
+    QPoint _beginPos;
     SettingDia *set = nullptr;
     Note *notesus;
     Ball *ball;

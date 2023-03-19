@@ -7,6 +7,8 @@
 #include <QFileInfo>
 #include <QDebug>
 #include <QDateTime>
+#include <QApplication>
+#include <QScreen>
 
 #include "ball.h"
 #include "settingdia.h"
@@ -27,6 +29,11 @@ SuspendDia::SuspendDia(QWidget *parent, bool logsTimed):
         onRefresh();     // 创造显示一条记录
     }
 
+    QScreen *screen = qApp->primaryScreen();
+    int screenWidth = screen->size().width();
+    int screenHeight = screen->size().height();
+    int uiWidth = this->width();
+    _beginPos = QPoint (screenWidth - uiWidth, screenHeight/3);
     this->move(_beginPos);
 }
 

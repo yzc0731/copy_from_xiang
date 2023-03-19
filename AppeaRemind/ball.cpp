@@ -70,22 +70,17 @@ void Ball::enterEvent(QEvent *e)
 void Ball::leaveEvent(QEvent *e)
 {
     QPoint mousePos = mapFromGlobal(QCursor::pos());
-    if (rect().contains(mousePos) == false
-      && mousePos.x() != rect().width())
-    {
+    if ( rect().contains(mousePos) == false && mousePos.x() != rect().width()){
         HideDockWidget();
-    }
-    else
-    {
+    } else {
         if (m_timer == nullptr)
         {
             m_timer = new QTimer(this);
             connect(m_timer, &QTimer::timeout, this, [this]{
                 QPoint mousePos = mapFromGlobal(QCursor::pos());
-                if (this->rect().contains(mousePos) == false
-                 && mousePos.x() != rect().width())
+                if (this->rect().contains(mousePos) == false && mousePos.x() != rect().width())
                 {
-                 HideDockWidget();
+                    HideDockWidget();
                 }
             });
         }
@@ -93,20 +88,6 @@ void Ball::leaveEvent(QEvent *e)
     }
 
     QWidget::leaveEvent(e);
-}
-
-void Ball::timeOut(){
-    int x=this->mapFromGlobal(QCursor().pos()).x();
-    int y=this->mapFromGlobal(QCursor().pos()).y();
-
-    int distance = (x-_center.x())*(x-_center.x())
-            +(y-_center.y())*(y-_center.y());
-    if ((distance<(_radius*_radius))
-            && theFirstTimer){
-        _beginPos = QPoint (QCursor().pos().x()-100,QCursor().pos().y()-100);
-        theFirstTimer = false;
-        emit this->backFromBall();
-    }
 }
 
 void Ball::mousePressEvent(QMouseEvent *e){
@@ -145,7 +126,6 @@ bool Ball::isContains(QPoint p){
 void Ball::mouseDoubleClickEvent(QMouseEvent *)
 {
     _beginPos = QPoint (QCursor().pos().x(),QCursor().pos().y());
-    // theFirstTimer = false;
     emit this->backFromBall();
 }
 

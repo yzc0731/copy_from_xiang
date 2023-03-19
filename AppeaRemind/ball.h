@@ -21,8 +21,6 @@ public:
     ~Ball();
     void enterEvent(QEvent *);                  //进入窗口区域
     void leaveEvent(QEvent *);                  //离开窗口区域
-    void timeOut();
-
     void mousePressEvent(QMouseEvent *e);       //鼠标按下事件
     void mouseReleaseEvent(QMouseEvent *e);     //鼠标释放事件
     void mouseMoveEvent(QMouseEvent *e);        //鼠标移动事件
@@ -45,7 +43,6 @@ private:
     QPoint _center = QPoint(75,75);     //相对窗体的圆心位置坐标
     QPoint _beginPos;                   //窗体相对屏幕的起始坐标
     int _radius = 50;                   //圆形半径
-    bool theFirstTimer = true;
     bool ishideable = true;
     QTimer *m_timer = nullptr;
     const int detectLength = 80;
