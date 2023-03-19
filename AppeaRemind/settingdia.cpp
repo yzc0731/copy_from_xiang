@@ -64,15 +64,20 @@ void SettingDia::autoOpen(bool flag)
 {
     QSettings autoRunSetting(regedit, QSettings::NativeFormat);
     QString name = "AppeaRemind";
-    QString appPath = qApp->applicationFilePath();
+    QString appPath = QCoreApplication::applicationFilePath();
     QString oldPath = autoRunSetting.value(name).toString();//从注册表中获取这个软件名字对应的绝对路径
     QString newPath = QDir::toNativeSeparators(appPath);//toNativeSeparators函数将"/"替换为"\"
     if(flag){
+        newPath.replace(".exe",".lnk"); //把路径中的exe换成lnk
+
+        if (!QFile::exists(newPath)) {
+            QFile::link(QCoreApplication::applicationFilePath(), name + ".lnk");
+        }
+
         if (oldPath != newPath){
             //如果注册表中的路径和当前程序路径不一样，则表示没有设置自启动或者已经更换了路径,那就得重新设置
             autoRunSetting.remove(name);
             autoRunSetting.setValue(name, newPath);
-        } else {
         }
     }
     else{

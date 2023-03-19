@@ -445,7 +445,6 @@ void Dialog::getSettingsFromFile()
             nextTime = list2[1].toInt();
         }
     } else {
-        //qDebug()<<"File not exists";
         QFile initFile;
         initFile.setFileName("logset.txt");
         if(initFile.open(QIODevice::WriteOnly|QIODevice::Text))
