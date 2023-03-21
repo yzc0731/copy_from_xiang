@@ -76,9 +76,8 @@ void EditDialog::on_pushButton_clicked()
     close();
 }
 
-void EditDialog::on_checkBox_stateChanged(int arg1)
+void EditDialog::on_checkBox_stateChanged(int)
 {
-    arg1 = 0;
     if(ui->checkBox->checkState()==Qt::Unchecked)
     {
         ui->label_2->hide();

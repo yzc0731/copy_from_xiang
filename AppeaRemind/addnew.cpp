@@ -316,9 +316,8 @@ void Addnew::on_pushButton_clicked()
     close();
 }
 
-void Addnew::on_checkBox_stateChanged(int arg1)
+void Addnew::on_checkBox_stateChanged(int)
 {
-    arg1 = 0;
     if(ui->checkBox->checkState()==Qt::Unchecked)
     {
         ui->label_4->hide();

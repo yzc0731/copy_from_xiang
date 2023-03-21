@@ -14,7 +14,7 @@ Ball::Ball(QWidget *parent) :
     QDialog(parent),ui(new Ui::Ball)
 {
     ui->setupUi(this);
-    _beginPos = this->pos();
+    _globalBallPos = this->pos();
 
     // 无边框
     this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint
@@ -26,11 +26,11 @@ Ball::Ball(QWidget *parent) :
 
 Ball::Ball(QWidget *parent, QString text, QPoint posBegin, int radius, QString importance):
     QDialog(parent),ui(new Ui::Ball),_text(text),
-    _beginPos(posBegin), _radius(radius), _importance(importance)
+    _globalBallPos(posBegin), _radius(radius), _importance(importance)
 {
     ui->setupUi(this);
-    this->move(_beginPos);
-    // _beginPos = this->pos();
+    QPoint windowPos = QPoint (_globalBallPos.x()-150,_globalBallPos.y()-150);
+    this->move(windowPos);
     // 无边框
     this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint|Qt::WindowStaysOnTopHint);
     // 窗口整体透明，但窗口控件不透明
@@ -42,23 +42,28 @@ void Ball::paintEvent(QPaintEvent *)
     QPainter p(this);//将当前窗体作为画布
     if(_importance == "非常重要")
     {
-        p.setBrush(QColor(255,100,70,50));
+        p.setBrush(QColor(255,100,70,150));
+        qDebug() << "little red";
     }
     if(_importance == "无")
     {
-        p.setBrush(QColor(255,255,255,50));
+        p.setBrush(QColor(255,255,255,150));
+        qDebug() << "white";
     }
     if(_importance == "比较重要")
     {
-        p.setBrush(QColor(65,105,225,50));
+        p.setBrush(QColor(65,105,225,150));
+        qDebug() << "blue";
     }
     if(_importance == "重要")
     {
-        p.setBrush(QColor(255,255,0,50));
+        p.setBrush(QColor(255,255,0,150));
+        qDebug() << "yellow";
     }
     if(_importance == "紧迫")
     {
-        p.setBrush(QColor(255,0,0,50));      //纯红色
+        p.setBrush(QColor(255,0,0,150));      //纯红色
+        qDebug() <<"red";
     }
     p.setPen(Qt::NoPen);//没有线条
     //画圆形
@@ -106,7 +111,6 @@ void Ball::leaveEvent(QEvent *e)
         }
         m_timer->start(500);    //鼠标离开悬浮球0.5秒之后，就触发hide操作
     }
-
     QWidget::leaveEvent(e);
 }
 
@@ -114,8 +118,17 @@ void Ball::mousePressEvent(QMouseEvent *e){
    if(isContains(e->pos()))
     {
         _pressed = true;
-        _beginPos = e->pos();    //鼠标相对窗体的位置
+        _relateWindowPos = e->pos();    //鼠标相对窗体的位置
         update();                //触发窗体重绘
+    }
+}
+
+void Ball::mouseMoveEvent(QMouseEvent *e){
+    if (_pressed)
+    {
+         //e->pos鼠标移动过程中，鼠标相对窗体的位置-刚按下鼠标时鼠标相对窗体的位置=鼠标移动的大小
+         //鼠标移动的大小+窗体原来的位置=窗体移动后的位置
+         this->move(e->pos() - _relateWindowPos + this->pos());
     }
 }
 
@@ -124,16 +137,8 @@ void Ball::mouseReleaseEvent(QMouseEvent *e){
     update();//触发窗体重绘
     if(isContains(e->pos()))    //当鼠标点击按钮
         emit clicked();         //发送点击信号
-    _beginPos = this->pos();
-}
-
-void Ball::mouseMoveEvent(QMouseEvent *e){
-    if (_pressed)
-    {
-         //e->pos鼠标移动过程中，鼠标相对窗体的位置-刚按下鼠标时鼠标相对窗体的位置=鼠标移动的大小
-         //鼠标移动的大小+窗体原来的位置=窗体移动后的位置
-         this->move(e->pos() - _beginPos + this->pos());
-    }
+    _globalBallPos = QPoint (this->pos().x()+_center.x(), this->pos().y()+_center.y());
+    //this->pos()获取的是当前窗口的坐标，我要长宽分别加上100，100
 }
 
 bool Ball::isContains(QPoint p){
@@ -145,7 +150,7 @@ bool Ball::isContains(QPoint p){
 
 void Ball::mouseDoubleClickEvent(QMouseEvent *)
 {
-    _beginPos = QPoint (QCursor().pos().x(),QCursor().pos().y());
+    _globalBallPos = QPoint (QCursor().pos().x(),QCursor().pos().y());
     emit this->backFromBall();
 }
 
@@ -171,75 +176,85 @@ void Ball::MoveWindow(const QPoint &start, const QPoint &end, unsigned int step)
     stepPos = unitStep;
     int distanceLength = distance.manhattanLength();
     while(stepPos.manhattanLength() < distanceLength){
-        move(start+stepPos);
+        this->move(start+stepPos);
         stepPos += unitStep;
     }
-    move(end);
+    this->move(end);
 }
 
 void Ball::ShowDockWidget()
 {
-    if (ishideable)
+    QPoint windowPos = QPoint (_globalBallPos.x()-_center.x(), _globalBallPos.y()-_center.y());
+    QPoint windowPos2;
+    if (hideStatus == 0)//那就说明没有被隐藏过，直接跳过
     {
       return;
     }
-    ishideable = true;
-
+    //如果现在是隐藏状态，那就触发恢复操作
     QScreen *screen = qApp->primaryScreen();
     int screenWidth = screen->size().width();            //屏幕宽
-
-    if (_beginPos.x() < detectLength_2){                               //左边
-        MoveWindow(_beginPos, QPoint(0,_beginPos.y()));
-        _beginPos = this->pos();
+    switch (hideStatus) {
+        case 1:{
+            windowPos2 = QPoint (-_center.x(),windowPos.y());
+            break;
+        }
+        case 2:{
+            windowPos2 = QPoint (screenWidth-_center.x(),windowPos.y());
+            break;
+        }
+        case 3:{
+            windowPos2 = QPoint (windowPos.x(),-_center.y());
+            break;
+        }
     }
-    else if (_beginPos.x() > screenWidth - detectLength_2){            //右边
-        MoveWindow(_beginPos, QPoint(screenWidth - 90,_beginPos.y()));
-        _beginPos = this->pos();
-    }
-    else if (_beginPos.y() < detectLength_2){                          //上面
-        MoveWindow(_beginPos, QPoint(_beginPos.x(),0));
-        _beginPos = this->pos();
-    }
-    else{
-        ishideable = false;
-    }
+    MoveWindow(windowPos, windowPos2);
+    _globalBallPos = QPoint (this->pos().x()+_center.x(), this->pos().y()+_center.y());
+    qDebug() << _globalBallPos.x() << "," <<_globalBallPos.y();
+    hideStatus = 0;
 }
 
 void Ball::HideDockWidget()
 {
-    if (!ishideable){   //如果这个东西不可被隐藏，就不能被隐藏
+    QPoint windowPos = QPoint (_globalBallPos.x()-_center.x(),_globalBallPos.y()-_center.y());
+    QPoint windowPos2;
+    if (hideStatus != 0){   //如果这个东西现在是隐藏状态，就不能被隐藏
         return;
     }
-    //如果这个东西可被隐藏，就按照下面的步骤触发隐藏操作
-    ishideable = false;
-
+    //如果hideStatus == 0，那么这个东西可被隐藏，就按照下面的步骤触发隐藏操作
     QScreen *screen = qApp->primaryScreen();
     int screenWidth = screen->size().width();            //屏幕宽
-    int screenHeight = screen->size().height();         //屏幕高
-    double screenScale = double(screenHeight)/double(screenWidth);
 
-    if (_beginPos.x() < detectLength ){                 //左边
-        MoveWindow(_beginPos, QPoint(exposeLength, _beginPos.y()));
-        _beginPos = this->pos();
-    } else if (_beginPos.x() > screenWidth-detectLength){   //右边
-        MoveWindow(_beginPos, QPoint(screenWidth - 30, _beginPos.y()));   //单独定义右边的缩进量
-        _beginPos = this->pos();
-    } else if (_beginPos.y() < detectLength){               //上面
-        MoveWindow(_beginPos, QPoint(_beginPos.x(), exposeLength*screenScale)); //beginPos*要乘以电脑的长宽比
-        _beginPos = this->pos();
+    if (_globalBallPos.x() < wideDetectRange ){                 //左边
+        qDebug() << _globalBallPos.x() << "," <<_globalBallPos.y();
+        qDebug() << this->pos().x();
+        windowPos2 = QPoint(- hideLength - _center.x(), windowPos.y());
+        //MoveWindow(windowPos, windowPos2);
+        //这一步让this->pos()变成了windowPos2
+        hideStatus = 1;//左
+    } else if (_globalBallPos.x() > screenWidth - wideDetectRange){   //右边
+        windowPos2 = QPoint(screenWidth + hideLength -_center.x(), windowPos.y());
+        //MoveWindow(windowPos, windowPos2);
+        hideStatus = 2;//右
+    } else if (_globalBallPos.y() < highDetectRange){               //上面
+        windowPos2 = QPoint(windowPos.x(), -hideLength -_center.y());
+        //MoveWindow(windowPos, windowPos2);
+        hideStatus = 3;//上
     } else {
-        ishideable = true;
+        hideStatus = 0;
+        return;
     }
-
-    if (!ishideable ){          //如果隐藏成功，那么就停止计时器
+    MoveWindow(windowPos, windowPos2);
+    _globalBallPos = QPoint (this->pos().x()+_center.x(), this->pos().y()+_center.y());
+    qDebug() << _globalBallPos.x() << "," <<_globalBallPos.y();
+    qDebug() << this->pos().x();
+    if (hideStatus != 0){          //如果隐藏成功，那么就停止计时器
         if (m_timer && m_timer->isActive()){
             m_timer->stop();
         }
     }
-
 }
 
 QPoint Ball::getBeginPos()
 {
-    return _beginPos;
+    return _globalBallPos;
 }

@@ -37,6 +37,7 @@ SuspendDia::SuspendDia(QWidget *parent, bool logsTimed):
     QScreen *screen = qApp->primaryScreen();
     int screenWidth = screen->size().width();
     int screenHeight = screen->size().height();
+
     int uiWidth = this->width();
     _beginPos = QPoint (screenWidth - uiWidth, screenHeight/3);
     this->move(_beginPos);

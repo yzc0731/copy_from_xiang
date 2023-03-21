@@ -3,6 +3,8 @@
 
 #include <QDialog>
 #include <QTimer>
+#include <QScreen>
+#include <QApplication>
 
 namespace Ui {
 class Ball;
@@ -39,14 +41,16 @@ signals:
 private:
     Ui::Ball *ui;
     QString _text = "Nothing on list";  //控件显示文本
-    QPoint _center = QPoint(150,150);     //相对窗体的圆心位置坐标
-    QPoint _beginPos;                   //窗体相对屏幕的起始坐标
+    QPoint _center = QPoint(100,100);     //相对窗体的圆心位置坐标
+    QPoint _globalBallPos;                   //窗体相对屏幕的起始坐标
+    QPoint _relateWindowPos;
     int _radius;                   //圆形半径
-    bool ishideable = true;
+    int hideStatus = 0; //0表示没有隐藏，1表示左隐藏，2表示右隐藏，3表示上隐藏
     QTimer *m_timer = nullptr;
-    const int detectLength = 80;
-    const int detectLength_2 = 150;
-    const int exposeLength = -75;
+    int wideDetectRange = qApp->primaryScreen()->size().width()/25;
+    int highDetectRange = qApp->primaryScreen()->size().height()/25;
+    int hideLength = _radius/3;
+    //int returnLength = _radius/2;
     QString _importance;
 
 public:

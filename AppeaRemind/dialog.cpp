@@ -56,7 +56,7 @@ Dialog::Dialog(QWidget *parent)
     connect(timer, &QTimer::timeout, this, &Dialog::timeUpdate);
     timer->start(1000);
     //显示日期时间
-    extern QString str_read[20][7];
+    //extern QString str_read[20][7];
     QFile::link("AppeaRemind.exe", QStandardPaths::writableLocation(QStandardPaths::DesktopLocation).append("/").append("AppeaRemind.lnk"));
 }
 
