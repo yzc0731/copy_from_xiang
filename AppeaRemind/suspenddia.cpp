@@ -81,19 +81,12 @@ void SuspendDia::onRefresh()
             num = str_read[0].toInt();   //将第一个数据转化为int类
             notesus = new Note(&note_vector,num,str_read[1],str_read[2],str_read[3],
                     str_read[4],str_read[5],str_read[6],str_read[7]);
-
             QObject::connect(notesus,&Note::refresh,this,&SuspendDia::onRefresh);  //关联信号和槽
             //每次点击都能实现
             note_vector.push_back(notesus);   //将读到的每行数据放到vector中，这个vector中的所有数据最后又会重新写入log.txt文件
-
             if (notesus->finish == 0 && nothing) {
                 gridLayout->addWidget(notesus); // 把第一条没有被完成的记录，增添到界面上
-                text += str_read[1];
-                text += "\n";
-                text += str_read[3];
-                text += "\n";
-                text += str_read[2];
-
+                addStringToBall(notesus);
                 nothing = false;
             }
         }
@@ -170,25 +163,27 @@ void SuspendDia::onRefreshForTime()
     for(unsigned i=0; i < note_vector.size(); i++){
         note_vector_time.push_back(note_vector.at(i));
     } //放到notevectortime中
-
     std::sort(note_vector_time.begin(),note_vector_time.end(),isSmaller);
-
     for(unsigned i=0; i < note_vector_time.size(); i++){
         if(note_vector_time.at(i)->finish == 0 && nothing){
-            gridLayout->addWidget(note_vector_time.at(i));
-
-            text += str_read[1];
-            text += "\n";
-            text += str_read[3];
-            text += "\n";
-            text += str_read[2];
-
+            gridLayout->addWidget(note_vector_time.at(i));            
+            addStringToBall(note_vector_time.at(i));
             nothing = false;
         }
     }
 
     ui->frame->setLayout(gridLayout);
     repaint();
+}
+
+void SuspendDia::addStringToBall(Note *note)
+{
+    _text = note->Thing;
+    _text += "\n";
+    _text += note->Date;
+    _text += "\n";
+    _text += note->Time;
+    _importance = note->ddl;
 }
 
 void SuspendDia::on_exitBtn_clicked()
@@ -215,7 +210,7 @@ void SuspendDia::backFromBall()
 
 void SuspendDia::backFromSet()
 {
-    radiusOfBall = set->getRadius();
+    _radiusOfBall = set->getRadius();
     _autoOpen = set->isAutoOpen();
     //autoOpen(_autoOpen);
 }
@@ -231,7 +226,7 @@ void SuspendDia::mouseDoubleClickEvent(QMouseEvent *)
         int width = this->width();
         int height = this->height();
         _beginPos = QPoint (_beginPos.x()+width/2, _beginPos.y()+height/2);
-        ball = new Ball(nullptr,text,_beginPos,radiusOfBall);    // 创建一个悬浮球
+        ball = new Ball(nullptr, _text, _beginPos, _radiusOfBall, _importance);    // 创建一个悬浮球
         ball->show();
         this->hide();   // 隐藏悬浮窗窗口
 
@@ -287,7 +282,7 @@ void SuspendDia::settingsToFile()
         //strAllList = strAll.split("\n");    //按照行来划分成list
         int size = strAll.size();   //size = 5。
         strAll[2] = "pacity#"+QString("%1").arg(_pacity);     //取第三行,实现对pacity的替换
-        strAll[3] = "radius#"+QString("%1").arg(radiusOfBall);     //取第四行,实现对nextTime的替换
+        strAll[3] = "radius#"+QString("%1").arg(_radiusOfBall);     //取第四行,实现对nextTime的替换
         strAll[4] = "autoOpen#"+QString("%1").arg(_autoOpen);    //取第五行,实现对nextTime的替换
         for(int i = 0; i < size - 1; i++){
             QString strLine = strAll[i];
@@ -314,7 +309,7 @@ void SuspendDia::getSettingsFromFile()
             _pacity = list[1].toDouble();
             strline = file.readLine();             //读取第四行radius
             QStringList list2 = strline.split("#");  //按照#划分成{radius,50}
-            radiusOfBall = list2[1].toInt();
+            _radiusOfBall = list2[1].toInt();
             strline = file.readLine();             //读取第五行autoOpen
             QStringList list3 = strline.split("#");  //按照#划分成{autoOpen,0}
             _autoOpen = list3[1].toInt();
@@ -338,7 +333,7 @@ void SuspendDia::getSettingsFromFile()
 
 void SuspendDia::on_settingBtn_clicked()
 {
-    set = new SettingDia(nullptr,_pacity,radiusOfBall,_autoOpen);    // 创建一个设置窗口
+    set = new SettingDia(nullptr,_pacity,_radiusOfBall,_autoOpen);    // 创建一个设置窗口
     QPoint setPos = QPoint(_beginPos.x()-set->width(),_beginPos.y());
     set->move(setPos);
     set->show();

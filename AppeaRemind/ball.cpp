@@ -24,8 +24,9 @@ Ball::Ball(QWidget *parent) :
     this->setAttribute(Qt::WA_TranslucentBackground,true);
 }
 
-Ball::Ball(QWidget *parent, QString text, QPoint posBegin, int radius):
-    QDialog(parent),ui(new Ui::Ball),_text(text),_beginPos(posBegin), _radius(radius)
+Ball::Ball(QWidget *parent, QString text, QPoint posBegin, int radius, QString importance):
+    QDialog(parent),ui(new Ui::Ball),_text(text),
+    _beginPos(posBegin), _radius(radius), _importance(importance)
 {
     ui->setupUi(this);
     this->move(_beginPos);

@@ -24,6 +24,7 @@ public:
     ~SuspendDia();
     void onRefresh();
     void onRefreshForTime();
+    void addStringToBall(Note* note);
     void mouseDoubleClickEvent(QMouseEvent *); //鼠标双击事件
     void mousePressEvent(QMouseEvent *);       //鼠标按下事件
     void mouseReleaseEvent(QMouseEvent *);     //鼠标释放事件
@@ -47,10 +48,11 @@ private:
     Ui::SuspendDia *ui;
     double _pacity = 1.0;
     bool hasBall = false;
-    QString text;
-    int radiusOfBall = 50;
+    QString _text;
+    int _radiusOfBall = 50;
     bool pressed = false;
     bool _autoOpen = false;
+    QString _importance;
 
 public:
     QPoint _beginPos;

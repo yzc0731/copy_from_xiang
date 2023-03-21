@@ -15,8 +15,7 @@ class Ball : public QDialog
 public:
     explicit Ball(QWidget *parent = nullptr);
     Ball(QWidget *parent = nullptr, QString text = "Nothing on list",
-         QPoint posBegin = QPoint(100,100), int radius = 50);
-
+         QPoint posBegin = QPoint(100,100), int radius = 50, QString importance = "无");
     void paintEvent(QPaintEvent *);
     ~Ball();
     void enterEvent(QEvent *);                  //进入窗口区域
@@ -42,12 +41,13 @@ private:
     QString _text = "Nothing on list";  //控件显示文本
     QPoint _center = QPoint(75,75);     //相对窗体的圆心位置坐标
     QPoint _beginPos;                   //窗体相对屏幕的起始坐标
-    int _radius = 50;                   //圆形半径
+    int _radius;                   //圆形半径
     bool ishideable = true;
     QTimer *m_timer = nullptr;
     const int detectLength = 80;
     const int detectLength_2 = 150;
     const int exposeLength = -75;
+    QString _importance;
 
 public:
     bool _pressed;
