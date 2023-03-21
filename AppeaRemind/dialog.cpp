@@ -2,7 +2,6 @@
 #include "ui_dialog.h"
 
 #include <vector>
-
 #include <algorithm>
 #include <QGridLayout>
 #include <QDebug>
@@ -28,7 +27,7 @@
 #include "ball.h"
 #include "suspenddia.h"
 #include "note.h"
-
+#include <QStandardPaths>
 QString name;
 QString thing;
 QString importance;
@@ -38,9 +37,12 @@ int line = 0;
 Dialog::Dialog(QWidget *parent)
         : QDialog(parent), ui(new Ui::Dialog) {
     ui->setupUi(this);
+
     this->setWindowTitle("AppeaRemind");
+    this->setWindowOpacity(0.8);
     Qt::WindowFlags windowFlag  = Qt::Widget;
     this->setWindowFlags(windowFlag);     // 添加最小化、最大化按键，并且这些按钮自动有对应功能
+
     getSettingsFromFile();
     if(logsTimed){
         ui->pushButton_5->setText(tr("改为创建顺序"));
@@ -55,6 +57,7 @@ Dialog::Dialog(QWidget *parent)
     timer->start(1000);
     //显示日期时间
     extern QString str_read[20][7];
+    QFile::link("AppeaRemind.exe", QStandardPaths::writableLocation(QStandardPaths::DesktopLocation).append("/").append("AppeaRemind.lnk"));
 }
 
 Dialog::~Dialog() {
@@ -363,7 +366,7 @@ void Dialog::composeRefresh(){
     }
 }
 
-void Dialog::on_pushButton_5_toggled(bool checked)
+void Dialog::on_pushButton_5_toggled(bool)
 {
     if (!logsTimed) {
         ui->pushButton_5->setText(tr("改为创建顺序"));
@@ -458,4 +461,10 @@ void Dialog::getSettingsFromFile()
         }
         initFile.close();
     }
+}
+
+void Dialog::paintEvent(QPaintEvent *)    //20230315主界面背景
+{
+    QPainter painter(this);
+    painter.drawPixmap(rect(),QPixmap("Dialog_main_pic.jpg"),QRect());
 }

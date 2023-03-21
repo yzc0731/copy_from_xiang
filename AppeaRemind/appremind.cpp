@@ -1,6 +1,5 @@
 #include "appremind.h"
 #include "ui_appremind.h"
-
 #include "QPainter"
 #include <QPoint>
 #include <QMouseEvent>
@@ -43,12 +42,12 @@ void AppRemind::paintEvent(QPaintEvent *)
     QPainter p(this);
     for(int i=0;i<=60;i++)
     {
-        p.setPen(QPen(QColor(0,120,255,4*i),5));
+        p.setPen(QPen(QColor(0,120,255,3*i),5));
         p.drawLine(QPointF(i,i),QPointF(i,i));
     }
     p.drawLine(QPoint(60,60),QPoint(60,90));
     p.drawLine(QPoint(60,60),QPoint(90,60));
     p.drawLine(QPoint(30,30),QPoint(90,30));
-    p.setPen(QPen(QColor(0,120,255,4*60),6));//粉刷为白色
-    p.drawRect(60,60,120,120);
+    p.setPen(QPen(QColor(0,120,255,4*60),6));//蓝色
+    //p.drawRect(60,60,120,120);
 }

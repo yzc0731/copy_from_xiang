@@ -40,7 +40,26 @@ Ball::Ball(QWidget *parent, QString text, QPoint posBegin, int radius, QString i
 void Ball::paintEvent(QPaintEvent *)
 {
     QPainter p(this);//将当前窗体作为画布
-    p.setBrush(Qt::white);//粉刷为白色
+    if(_importance == "非常重要")
+    {
+        p.setBrush(QColor(255,100,70,50));
+    }
+    if(_importance == "无")
+    {
+        p.setBrush(QColor(255,255,255,50));
+    }
+    if(_importance == "比较重要")
+    {
+        p.setBrush(QColor(65,105,225,50));
+    }
+    if(_importance == "重要")
+    {
+        p.setBrush(QColor(255,255,0,50));
+    }
+    if(_importance == "紧迫")
+    {
+        p.setBrush(QColor(255,0,0,50));      //纯红色
+    }
     p.setPen(Qt::NoPen);//没有线条
     //画圆形
     p.drawEllipse(_center,_radius,_radius);

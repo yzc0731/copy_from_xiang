@@ -2,7 +2,7 @@
 #define EDITDIALOG_H
 
 #include <QDialog>
-
+#include "history.h"
 #include "note.h"
 
 namespace Ui {
@@ -18,10 +18,13 @@ public:
     ~EditDialog();
     QString s1,s2,s3,s4,s5,s6,s7;
     Note *note;
+    friend class history;
 private slots:
     void on_pushButton_clicked();
 
     void on_checkBox_stateChanged(int arg1);
+
+    void on_pushButton_2_clicked();
 
 private:
     Ui::EditDialog *ui;

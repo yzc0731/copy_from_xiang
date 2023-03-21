@@ -2,9 +2,7 @@
 
 #include <QDebug>
 #include <QApplication>
-#include <QMessageBox>
 
-#include "dialog.h"
 #include "about.h"
 #include "history.h"
 #include "addnew.h"

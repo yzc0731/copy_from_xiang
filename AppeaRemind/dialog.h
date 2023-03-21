@@ -11,7 +11,7 @@
 #include <QString>
 #include <QObject>
 #include <QLabel>
-
+#include <QPainter>
 #include "suspenddia.h"
 #include "datetime.h"
 #include "note.h"
@@ -44,7 +44,7 @@ public:
     void composeRefresh();
     void settingsToFile();
     void getSettingsFromFile();
-
+    void paintEvent(QPaintEvent *ev);
 public slots:
     void on_pushButton_clicked();
     void on_pushButton_2_clicked();

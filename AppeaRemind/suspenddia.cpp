@@ -17,7 +17,12 @@ SuspendDia::SuspendDia(QWidget *parent, bool logsTimed):
     QDialog(parent),ui(new Ui::SuspendDia)
 {
     ui->setupUi(this);
-    //this->setWindowTitle(tr("悬浮窗"));
+
+    QPalette pa;
+    pa.setColor(QPalette::Background,QColor(255,255,200,180));
+    this->setAutoFillBackground(true);
+    this->setPalette(pa);
+
     this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint
                          | Qt::WindowMinMaxButtonsHint|Qt::WindowStaysOnTopHint);
     getSettingsFromFile();//每次打开悬浮窗的时候，都要从设置文件中获得参数
@@ -96,7 +101,7 @@ void SuspendDia::onRefresh()
 }
 
 void SuspendDia::onRefreshForTime()
-{   
+{
     //如果是第一次按照时间顺序排序，先从log.txt里面读取，按照时间排序之后输出
     if (ui->frame->layout() != nullptr) {   //删除原有布局
         QLayoutItem *item;
@@ -166,7 +171,7 @@ void SuspendDia::onRefreshForTime()
     std::sort(note_vector_time.begin(),note_vector_time.end(),isSmaller);
     for(unsigned i=0; i < note_vector_time.size(); i++){
         if(note_vector_time.at(i)->finish == 0 && nothing){
-            gridLayout->addWidget(note_vector_time.at(i));            
+            gridLayout->addWidget(note_vector_time.at(i));
             addStringToBall(note_vector_time.at(i));
             nothing = false;
         }
@@ -212,15 +217,14 @@ void SuspendDia::backFromSet()
 {
     _radiusOfBall = set->getRadius();
     _autoOpen = set->isAutoOpen();
-    //autoOpen(_autoOpen);
+    hasSet = false;
 }
 
 void SuspendDia::mouseDoubleClickEvent(QMouseEvent *)
 {
-    settingsToFile();
-
-    if(set){
+    if(hasSet){
         set->close();
+        backFromSet();
     }
     if (!hasBall){
         int width = this->width();
@@ -228,6 +232,7 @@ void SuspendDia::mouseDoubleClickEvent(QMouseEvent *)
         _beginPos = QPoint (_beginPos.x()+width/2, _beginPos.y()+height/2);
         ball = new Ball(nullptr, _text, _beginPos, _radiusOfBall, _importance);    // 创建一个悬浮球
         ball->show();
+        settingsToFile();
         this->hide();   // 隐藏悬浮窗窗口
 
         connect(ball,&Ball::backFromBall,this,&SuspendDia::backFromBall);//监测窗口s的回退信号
@@ -333,12 +338,17 @@ void SuspendDia::getSettingsFromFile()
 
 void SuspendDia::on_settingBtn_clicked()
 {
-    set = new SettingDia(nullptr,_pacity,_radiusOfBall,_autoOpen);    // 创建一个设置窗口
-    QPoint setPos = QPoint(_beginPos.x()-set->width(),_beginPos.y());
-    set->move(setPos);
-    set->show();
-    connect(set,&SettingDia::backFromSet,this,&SuspendDia::backFromSet);
-    connect(set,&SettingDia::pacityChanged,this,&SuspendDia::pacityChange);
+    if (hasSet){
+        return;
+    } else {
+        set = new SettingDia(nullptr,_pacity,_radiusOfBall,_autoOpen);    // 创建一个设置窗口
+        QPoint setPos = QPoint(_beginPos.x()-set->width(),_beginPos.y());
+        set->move(setPos);
+        set->show();
+        connect(set,&SettingDia::backFromSet,this,&SuspendDia::backFromSet);
+        connect(set,&SettingDia::pacityChanged,this,&SuspendDia::pacityChange);
+        hasSet = true;
+    }
 }
 
 void SuspendDia::pacityChange(){

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>440</width>
-    <height>288</height>
+    <height>254</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,10 +16,10 @@
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>240</x>
-     <y>10</y>
-     <width>181</width>
-     <height>31</height>
+     <x>280</x>
+     <y>5</y>
+     <width>151</width>
+     <height>30</height>
     </rect>
    </property>
    <property name="text">
@@ -29,9 +29,9 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>10</y>
-     <width>161</width>
+     <x>5</x>
+     <y>5</y>
+     <width>131</width>
      <height>31</height>
     </rect>
    </property>
@@ -41,7 +41,7 @@
     </font>
    </property>
    <property name="text">
-    <string>编辑界面</string>
+    <string>编辑</string>
    </property>
   </widget>
   <widget class="QWidget" name="formLayoutWidget">
@@ -50,20 +50,20 @@
      <x>10</x>
      <y>40</y>
      <width>421</width>
-     <height>242</height>
+     <height>211</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
     <property name="horizontalSpacing">
-     <number>5</number>
+     <number>0</number>
     </property>
     <property name="verticalSpacing">
-     <number>9</number>
+     <number>2</number>
     </property>
     <item row="0" column="0">
      <widget class="QLabel" name="nameLabel">
       <property name="text">
-       <string>姓名(Name)</string>
+       <string>事件名(Name)</string>
       </property>
      </widget>
     </item>
@@ -142,8 +142,17 @@
         <height>80</height>
        </size>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>备注(Note)</string>
+       <string>备注
+(Note)</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
       </property>
      </widget>
     </item>
@@ -154,6 +163,9 @@
         <width>0</width>
         <height>80</height>
        </size>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
       </property>
      </widget>
     </item>
@@ -250,6 +262,19 @@
      </layout>
     </item>
    </layout>
+  </widget>
+  <widget class="QPushButton" name="pushButton_2">
+   <property name="geometry">
+    <rect>
+     <x>139</x>
+     <y>5</y>
+     <width>141</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>删除</string>
+   </property>
   </widget>
  </widget>
  <resources/>

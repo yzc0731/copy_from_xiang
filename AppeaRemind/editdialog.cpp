@@ -2,20 +2,25 @@
 #include "ui_editdialog.h"
 
 #include <QDebug>
-
 #include "vector_.h"
 
 EditDialog::EditDialog(Note *n1,QString str1,QString str2,QString str3,QString str4,QString str5,QString str6,QString str7) :
     s1(str1),s2(str2),s3(str3),s4(str4),s5(str5),s6(str6),s7(str7),note(n1),ui(new Ui::EditDialog)
 {
     ui->setupUi(this);
+//
     ui->nameLineEdit->setText(s1);
+//
     QTime tm = QTime::fromString(s2,"hh:mm");
     ui->timeTimeEdit->setTime(tm);
+//
     QDate da = QDate::fromString(s3,"yyyy/MM/dd");
     ui->dateDateEdit->setDate(da);
+//
     ui->noteLineEdit->setText(s4);
+//
     ui->impoComboBox->setCurrentText(s5);
+//
     if(note->repeat_times == "#")
         {
         ui->label_2->hide();
@@ -87,3 +92,13 @@ void EditDialog::on_checkBox_stateChanged(int arg1)
         ui->comboBox->show();
     }   //此函数用于控制是否重复
 }
+
+void EditDialog::on_pushButton_2_clicked()
+{
+    std::vector<Note*>::iterator itor;
+    for (itor = note->note_vector->begin();itor != note->note_vector->end();itor++) {
+        if(*itor == note)
+        {itor = note->note_vector->erase(itor);break;}
+    }
+    this->on_pushButton_clicked();
+}      //删除函数

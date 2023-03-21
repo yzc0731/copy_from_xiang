@@ -17,12 +17,8 @@
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>版本：v0.6
-
-
-本次更新完善了编辑功能，现在更改可以立刻刷新
-可以根据重要程度设置颜色了，虽然不知道怎么调()
-目前应该可以正确读取系统时间并且增加10min</string>
+      <string>版本v1.0
+现在是功能基本完善的版本了</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>

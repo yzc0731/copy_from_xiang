@@ -6,14 +6,35 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>389</width>
-    <height>258</height>
+    <width>550</width>
+    <height>165</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="1,4">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
@@ -26,14 +47,14 @@
      <item>
       <widget class="QPushButton" name="backBtn">
        <property name="text">
-        <string>回到主界面</string>
+        <string>返回</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="exitBtn">
        <property name="text">
-        <string>退出悬浮窗</string>
+        <string>退出</string>
        </property>
       </widget>
      </item>

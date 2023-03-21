@@ -29,7 +29,6 @@ public:
     void mousePressEvent(QMouseEvent *);       //鼠标按下事件
     void mouseReleaseEvent(QMouseEvent *);     //鼠标释放事件
     void mouseMoveEvent(QMouseEvent *);        //鼠标移动事件
-    //void closeEvent(QCloseEvent *);         // 点击“x”按钮
     void settingsToFile();
     void getSettingsFromFile();
     void backFromBall();
@@ -48,6 +47,7 @@ private:
     Ui::SuspendDia *ui;
     double _pacity = 1.0;
     bool hasBall = false;
+    bool hasSet = false;
     QString _text;
     int _radiusOfBall = 50;
     bool pressed = false;

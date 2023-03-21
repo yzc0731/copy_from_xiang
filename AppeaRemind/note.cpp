@@ -1,6 +1,7 @@
 #include "note.h"
 #include "ui_note.h"
 
+
 #include <windows.h>
 #include <iostream>
 #include <QFile>
@@ -25,10 +26,11 @@ Note::Note(QWidget *parent) :
 Note::Note(std::vector<Note*> *note_vector,int num,QString str1,QString str2,QString str3,QString str4,QString str5,QString str6,QString str7) :
         finish(num),Thing(str1),Time(str2),Date(str3),ddl(str4),note(str5),repeat_times(str6),repeat_gap(str7),ui(new Ui::Note)
 {
+    this->isAm = false;
     this->am = new AppRemind(this->Thing, this->Date, this->Time);
     index=note_vector->size();
     ui->setupUi(this);
-    this->note_vector = note_vector;
+    this->note_vector=note_vector;
     this->setWindowFlags(Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_TranslucentBackground);
     ui->label->setText(Thing);
@@ -41,37 +43,47 @@ Note::Note(std::vector<Note*> *note_vector,int num,QString str1,QString str2,QSt
     QPalette pa;
     if(ddl == "非常重要")
     {
-        pa.setColor(QPalette::Background,QColor(255,0,0));
+        pa.setColor(QPalette::Background,QColor(255,100,70,50));
     }
     if(ddl == "无")
     {
-        pa.setColor(QPalette::Background,QColor(255,255,255));
+        pa.setColor(QPalette::Background,QColor(255,255,255,50));
     }
     if(ddl == "比较重要")
     {
-        pa.setColor(QPalette::Background,QColor(0,255,255));    //蓝色....
+        pa.setColor(QPalette::Background,QColor(65,105,225,50));    //蓝色....
+    }
+    if(ddl == "重要")
+    {
+        pa.setColor(QPalette::Background,QColor(255,255,0,50));   //黄色
+    }
+    if(ddl == "紧迫")
+    {
+        pa.setColor(QPalette::Background,QColor(255,0,0,50));      //纯红色
     }
     ui->label_4->setAutoFillBackground(true);
     ui->label_4->setPalette(pa);
 }
-
 Note::~Note()
 {
     delete ui;
 }
-
 void Note::on_checkBox_clicked()
 {
     Sleep(1000);
-    if(note_vector->at(index)->repeat_times == "#"){
+    if(note_vector->at(index)->repeat_times == "#")
+    {
         finish=1;
         note_vector->at(index)->finish=1;
-        note_vector->at(index)->ui->checkBox->setChecked(true);//保持选中
+        note_vector->at(index)->
+        ui->checkBox->setChecked(true);    //保持选中
         Vector_ vector;
         vector.vector_for_file(*note_vector);
         this->close();
     }
-    if(note_vector->at(index)->repeat_times != "#"){
+    //
+    if(note_vector->at(index)->repeat_times != "#")
+    {
         QString str_date = note_vector->at(index)->Date;
         QStringList list = str_date.split("/");
         int year,month,day;
@@ -209,13 +221,12 @@ void Note::on_checkBox_clicked()
                 note_vector->at(index)->repeat_gap = "#";
             }
         }
-        if(isAm){
-            this->am->close();
-            ui->pushButton_2->setText("+");
-        }
+    if(isAm){
+        this->am->close();
+        ui->pushButton_2->setText("+");
+    }
         Vector_ vector;
         vector.vector_for_file(*note_vector);
-        //先覆写后台log.txt文件，再刷新输出到主界面上
         emit refresh();
 }
 //
@@ -228,8 +239,6 @@ void Note::on_pushButton_clicked()
     //vector.vector_for_file(*note_vector);
     //目前需要重启才能生效
 }
-
-
 void Note::on_pushButton_2_clicked()
 {
     if (!finish){
@@ -243,4 +252,26 @@ void Note::on_pushButton_2_clicked()
             ui->pushButton_2->setText("+");
         }
     }
+}
+void Note::paintEvent(QPaintEvent * )   //20230315设置主界面背景
+{
+    QPainter painter(this);
+    painter.setOpacity(0.5);
+    if(this->ddl == "紧迫")
+    {
+        painter.drawPixmap(rect(),QPixmap("impo_5.png"),QRect());
+    }
+    else if(this->ddl == "非常重要")
+    {
+        painter.drawPixmap(rect(),QPixmap("impo_4.png"),QRect());
+    }
+    else if(this->ddl =="重要")
+    {
+        painter.drawPixmap(rect(),QPixmap("impo_3.png"),QRect());
+    }
+    else if(this->ddl =="比较重要")
+    {
+        painter.drawPixmap(rect(),QPixmap("impo_2.png"),QRect());
+    }
+    //20230316设置note的背景，缺少一个过期的设置，需要xsr来对比时间。
 }

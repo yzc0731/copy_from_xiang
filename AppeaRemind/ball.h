@@ -39,7 +39,7 @@ signals:
 private:
     Ui::Ball *ui;
     QString _text = "Nothing on list";  //控件显示文本
-    QPoint _center = QPoint(75,75);     //相对窗体的圆心位置坐标
+    QPoint _center = QPoint(150,150);     //相对窗体的圆心位置坐标
     QPoint _beginPos;                   //窗体相对屏幕的起始坐标
     int _radius;                   //圆形半径
     bool ishideable = true;

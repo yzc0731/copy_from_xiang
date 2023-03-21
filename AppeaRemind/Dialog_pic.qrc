@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Dialog_pic.png</file>
+        <file>Dialog_main_pic.jpg</file>
+        <file>xuanfu.png</file>
+        <file>addnew.png</file>
+        <file>about_ima.png</file>
+        <file>history_ima.png</file>
+        <file>impo_5.png</file>
+        <file>impo_2.png</file>
+        <file>impo_3.png</file>
+        <file>impo_4.png</file>
+    </qresource>
+</RCC>
