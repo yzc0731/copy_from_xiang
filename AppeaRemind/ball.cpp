@@ -75,38 +75,24 @@ Ball::~Ball()
     delete ui;
 }
 
-void Ball::enterEvent(QEvent *e)
+void Ball::enterEvent(QEvent *)
 {   //鼠标进入悬浮球，停止计时器，回到原位置,新建一个计时器，然后再等0.5秒之后才可能触发hide操作
-    if (m_timer != nullptr )
-    {
-        if(m_timer->isActive()){
-            m_timer->stop();
-        }
-    }
-    ShowDockWidget();
-    QWidget::enterEvent(e);
+    showBall();
 }
 
-void Ball::leaveEvent(QEvent *e)
+void Ball::leaveEvent(QEvent *)
 {
-    QPoint mousePos = mapFromGlobal(QCursor::pos());
-    if ( rect().contains(mousePos) == false && mousePos.x() != rect().width()){
-        HideDockWidget();
+    QTimer::singleShot(1000, this, SLOT(timeOut()));
+}
+
+void Ball::timeOut()
+{
+    QPoint mouseRelativePos = mapFromGlobal(QCursor::pos());
+    if (isContains(mouseRelativePos)){
+        return;
     } else {
-        if (m_timer == nullptr)
-        {
-            m_timer = new QTimer(this);
-            connect(m_timer, &QTimer::timeout, this, [this]{
-                QPoint mousePos = mapFromGlobal(QCursor::pos());
-                if (this->rect().contains(mousePos) == false && mousePos.x() != rect().width())
-                {
-                    HideDockWidget();
-                }
-            });
-        }
-        m_timer->start(500);    //鼠标离开悬浮球0.5秒之后，就触发hide操作
+        hideBall();
     }
-    QWidget::leaveEvent(e);
 }
 
 void Ball::mousePressEvent(QMouseEvent *e){
@@ -177,7 +163,7 @@ void Ball::MoveWindow(const QPoint &start, const QPoint &end, unsigned int step)
     this->move(end);
 }
 
-void Ball::ShowDockWidget()
+void Ball::showBall()
 {
     QPoint windowPos = QPoint (_globalBallPos.x()-_center.x(), _globalBallPos.y()-_center.y());
     QPoint windowPos2;
@@ -207,14 +193,14 @@ void Ball::ShowDockWidget()
     hideStatus = 0;
 }
 
-void Ball::HideDockWidget()
+void Ball::hideBall()
 {
     QPoint windowPos = QPoint (_globalBallPos.x()-_center.x(),_globalBallPos.y()-_center.y());
     QPoint windowPos2;
     if (hideStatus != 0){   //如果这个东西现在是隐藏状态，就不能被隐藏
         return;
     }
-    //如果hideStatus == 0，那么这个东西可被隐藏，就按照下面的步骤触发隐藏操作
+    //如果hideStatus == 0，那么这个东西可被隐藏，就按照下面的步骤触发隐藏操作    
     QScreen *screen = qApp->primaryScreen();
     int screenWidth = screen->size().width();            //屏幕宽
 
@@ -237,11 +223,6 @@ void Ball::HideDockWidget()
     }
     MoveWindow(windowPos, windowPos2);
     _globalBallPos = QPoint (this->pos().x()+_center.x(), this->pos().y()+_center.y());
-    if (hideStatus != 0){          //如果隐藏成功，那么就停止计时器
-        if (m_timer && m_timer->isActive()){
-            m_timer->stop();
-        }
-    }
 }
 
 QPoint Ball::getBeginPos()
