@@ -49,5 +49,5 @@ void AppRemind::paintEvent(QPaintEvent *)
     p.drawLine(QPoint(60,60),QPoint(90,60));
     p.drawLine(QPoint(30,30),QPoint(90,30));
     p.setPen(QPen(QColor(0,120,255,4*60),6));//蓝色
-    //p.drawRect(60,60,120,120);
+    p.drawRect(60,60,120,120);
 }

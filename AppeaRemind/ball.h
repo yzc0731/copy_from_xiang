@@ -27,11 +27,9 @@ public:
     void mouseMoveEvent(QMouseEvent *e);        //鼠标移动事件
     bool isContains(QPoint p);                  //判断鼠标是否在圆形范围之内
     void mouseDoubleClickEvent(QMouseEvent *); //鼠标双击事件
-
     void MoveWindow(const QPoint &start, const QPoint &end, unsigned int step = 10);
     void ShowDockWidget();
     void HideDockWidget();
-
     QPoint getBeginPos();
 
 signals:
@@ -47,10 +45,10 @@ private:
     int _radius;                   //圆形半径
     int hideStatus = 0; //0表示没有隐藏，1表示左隐藏，2表示右隐藏，3表示上隐藏
     QTimer *m_timer = nullptr;
-    int wideDetectRange = qApp->primaryScreen()->size().width()/25;
-    int highDetectRange = qApp->primaryScreen()->size().height()/25;
-    int hideLength = _radius/3;
-    //int returnLength = _radius/2;
+    const int wideDetectRange = qApp->primaryScreen()->size().width()/25;
+    const int highDetectRange = qApp->primaryScreen()->size().height()/25;
+    const int hideLength = _radius/3;
+    const int returnLength = _radius;
     QString _importance;
 
 public:

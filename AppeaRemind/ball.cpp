@@ -43,27 +43,22 @@ void Ball::paintEvent(QPaintEvent *)
     if(_importance == "非常重要")
     {
         p.setBrush(QColor(255,100,70,150));
-        qDebug() << "little red";
     }
     if(_importance == "无")
     {
         p.setBrush(QColor(255,255,255,150));
-        qDebug() << "white";
     }
     if(_importance == "比较重要")
     {
         p.setBrush(QColor(65,105,225,150));
-        qDebug() << "blue";
     }
     if(_importance == "重要")
     {
         p.setBrush(QColor(255,255,0,150));
-        qDebug() << "yellow";
     }
     if(_importance == "紧迫")
     {
         p.setBrush(QColor(255,0,0,150));      //纯红色
-        qDebug() <<"red";
     }
     p.setPen(Qt::NoPen);//没有线条
     //画圆形
@@ -195,21 +190,20 @@ void Ball::ShowDockWidget()
     int screenWidth = screen->size().width();            //屏幕宽
     switch (hideStatus) {
         case 1:{
-            windowPos2 = QPoint (-_center.x(),windowPos.y());
+            windowPos2 = QPoint (returnLength -_center.x(),windowPos.y());
             break;
         }
         case 2:{
-            windowPos2 = QPoint (screenWidth-_center.x(),windowPos.y());
+            windowPos2 = QPoint (screenWidth - returnLength -_center.x(),windowPos.y());
             break;
         }
         case 3:{
-            windowPos2 = QPoint (windowPos.x(),-_center.y());
+            windowPos2 = QPoint (windowPos.x(),returnLength -_center.y());
             break;
         }
     }
     MoveWindow(windowPos, windowPos2);
     _globalBallPos = QPoint (this->pos().x()+_center.x(), this->pos().y()+_center.y());
-    qDebug() << _globalBallPos.x() << "," <<_globalBallPos.y();
     hideStatus = 0;
 }
 
@@ -225,8 +219,6 @@ void Ball::HideDockWidget()
     int screenWidth = screen->size().width();            //屏幕宽
 
     if (_globalBallPos.x() < wideDetectRange ){                 //左边
-        qDebug() << _globalBallPos.x() << "," <<_globalBallPos.y();
-        qDebug() << this->pos().x();
         windowPos2 = QPoint(- hideLength - _center.x(), windowPos.y());
         //MoveWindow(windowPos, windowPos2);
         //这一步让this->pos()变成了windowPos2
@@ -245,8 +237,6 @@ void Ball::HideDockWidget()
     }
     MoveWindow(windowPos, windowPos2);
     _globalBallPos = QPoint (this->pos().x()+_center.x(), this->pos().y()+_center.y());
-    qDebug() << _globalBallPos.x() << "," <<_globalBallPos.y();
-    qDebug() << this->pos().x();
     if (hideStatus != 0){          //如果隐藏成功，那么就停止计时器
         if (m_timer && m_timer->isActive()){
             m_timer->stop();

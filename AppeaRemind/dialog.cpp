@@ -68,7 +68,7 @@ Dialog::~Dialog() {
 void Dialog::on_pushButton_clicked() {
     Addnew *add = new Addnew(&note_vector);
     add->exec();
-    onRefresh() ; //刷新
+    composeRefresh(); //刷新
 }   //打开新增面板
 
 void Dialog::on_pushButton_2_clicked() {
