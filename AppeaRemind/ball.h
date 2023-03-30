@@ -32,8 +32,8 @@ public:
     void hideBall();
     QPoint getBeginPos();
 
-private slots:
-    void timeOut();
+public slots:
+    void hideTimertimeOut();
 
 signals:
     void backFromBall();

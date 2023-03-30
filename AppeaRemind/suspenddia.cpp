@@ -19,7 +19,7 @@ SuspendDia::SuspendDia(QWidget *parent, bool logsTimed):
     ui->setupUi(this);
 
     QPalette pa;
-    pa.setColor(QPalette::Background,QColor(255,255,200,180));
+    pa.setColor(QPalette::Background,QColor(255,255,200,255));
     this->setAutoFillBackground(true);
     this->setPalette(pa);
 
@@ -61,7 +61,8 @@ void SuspendDia::onRefresh()
     QGridLayout *gridLayout = new QGridLayout();                   //网格布局
 
     QFile file;
-    file.setFileName("log.txt");
+    QString nametxt = QString("log.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
+    file.setFileName(nametxt);                                    //保存到本地地址
     QString str_read[9];
     QString strline;
     int num;
@@ -116,7 +117,8 @@ void SuspendDia::onRefreshForTime()
     gridLayout->setVerticalSpacing(20);
 
     QFile file;
-    file.setFileName("log.txt");                                     //打开本地地址
+    QString nametxt = QString("log.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
+    file.setFileName(nametxt);                                    //保存到本地地址
     QString str_read[9];
     QString strline;
     int num;
@@ -270,7 +272,8 @@ void SuspendDia::settingsToFile()
 {
     std::vector<QString> strAll;
     QFile readFile;
-    readFile.setFileName("logset.txt");
+    QString nametxt = QString("logset.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
+    readFile.setFileName(nametxt);
     QTextStream stream(&readFile);
     if(readFile.open(QIODevice::ReadOnly)){
         QString strLine;
@@ -281,7 +284,7 @@ void SuspendDia::settingsToFile()
     }
     readFile.close();
     QFile fileModify;
-    fileModify.setFileName("logset.txt");
+    fileModify.setFileName(nametxt);
     if(fileModify.open(QIODevice::WriteOnly|QIODevice::Text))
     {
         QTextStream stream(&fileModify);
@@ -302,9 +305,10 @@ void SuspendDia::settingsToFile()
 
 void SuspendDia::getSettingsFromFile()
 {
-    if(QFileInfo::exists("logset.txt")){
+    QString nametxt = QString("logset.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
+    if(QFileInfo::exists(nametxt)){
         QFile file;
-        file.setFileName("logset.txt");         //保存到本地地址
+        file.setFileName(nametxt);         //保存到本地地址
         QString strline;
         if (file.open(QIODevice::ReadOnly))
         {
@@ -323,7 +327,7 @@ void SuspendDia::getSettingsFromFile()
     } else {
         qDebug()<<"File not exists";
         QFile initFile;
-        initFile.setFileName("logset.txt");
+        initFile.setFileName(nametxt);
         if(initFile.open(QIODevice::WriteOnly|QIODevice::Text))
         {
             QTextStream stream(&initFile);

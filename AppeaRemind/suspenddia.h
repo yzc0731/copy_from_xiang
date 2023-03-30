@@ -31,9 +31,6 @@ public:
     void mouseMoveEvent(QMouseEvent *);        //鼠标移动事件
     void settingsToFile();
     void getSettingsFromFile();
-    void backFromBall();
-    void backFromSet();
-    void pacityChange();
 
 signals:
     void back();
@@ -42,6 +39,11 @@ private slots:
     void on_exitBtn_clicked();
     void on_settingBtn_clicked();
     void on_backBtn_clicked();
+    void backFromBall();
+    void backFromSet();
+
+public slots:
+    void pacityChange();
 
 private:
     Ui::SuspendDia *ui;

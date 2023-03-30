@@ -31,6 +31,11 @@ Ball::Ball(QWidget *parent, QString text, QPoint posBegin, int radius, QString i
     ui->setupUi(this);
     QPoint windowPos = QPoint (_globalBallPos.x()-150,_globalBallPos.y()-150);
     this->move(windowPos);
+    qDebug() << _text;
+    if(_text == ""){
+        _text = "Nothing!";
+    }
+    qDebug() << _text;
     // 无边框
     this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint|Qt::WindowStaysOnTopHint);
     // 窗口整体透明，但窗口控件不透明
@@ -44,10 +49,6 @@ void Ball::paintEvent(QPaintEvent *)
     {
         p.setBrush(QColor(255,100,70,150));
     }
-    if(_importance == "无")
-    {
-        p.setBrush(QColor(255,255,255,150));
-    }
     if(_importance == "比较重要")
     {
         p.setBrush(QColor(65,105,225,150));
@@ -60,6 +61,7 @@ void Ball::paintEvent(QPaintEvent *)
     {
         p.setBrush(QColor(255,0,0,150));      //纯红色
     }
+    p.setBrush(QColor(255,255,255,150));
     p.setPen(Qt::NoPen);//没有线条
     //画圆形
     p.drawEllipse(_center,_radius,_radius);
@@ -82,10 +84,10 @@ void Ball::enterEvent(QEvent *)
 
 void Ball::leaveEvent(QEvent *)
 {
-    QTimer::singleShot(1000, this, SLOT(timeOut()));
+    QTimer::singleShot(1000, this, &Ball::hideTimertimeOut);
 }
 
-void Ball::timeOut()
+void Ball::hideTimertimeOut()
 {
     QPoint mouseRelativePos = mapFromGlobal(QCursor::pos());
     if (isContains(mouseRelativePos)){

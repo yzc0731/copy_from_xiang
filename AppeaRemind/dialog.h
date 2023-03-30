@@ -40,11 +40,11 @@ public:
     void onRefresh_for_time();
     void closeEvent(QCloseEvent *); // 点击“x”按钮
     bool isLogsTimed();
-    void suspendDiaBack();
-    void composeRefresh();
+    //void composeRefresh();
     void settingsToFile();
     void getSettingsFromFile();
     void paintEvent(QPaintEvent *ev);
+
 public slots:
     void on_pushButton_clicked();
     void on_pushButton_2_clicked();
@@ -52,6 +52,8 @@ public slots:
     void on_toSusbendBtn_clicked();
     void on_pushButton_5_toggled(bool checked);
     void timeUpdate(void);
+    void suspendDiaBack();
+    void composeRefresh();
 
 public:
     Ui::Dialog *ui;
@@ -68,6 +70,6 @@ private:
     int nextTime = 0;   // 说明有下一次
     SuspendDia *s;
     QString _text;
-    bool logsTimed= false;
+    bool logsTimed = 1;
 };
 #endif // DIALOG_H
