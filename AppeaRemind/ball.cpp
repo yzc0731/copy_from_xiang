@@ -31,11 +31,9 @@ Ball::Ball(QWidget *parent, QString text, QPoint posBegin, int radius, QString i
     ui->setupUi(this);
     QPoint windowPos = QPoint (_globalBallPos.x()-150,_globalBallPos.y()-150);
     this->move(windowPos);
-    qDebug() << _text;
     if(_text == ""){
         _text = "Nothing!";
     }
-    qDebug() << _text;
     // 无边框
     this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint|Qt::WindowStaysOnTopHint);
     // 窗口整体透明，但窗口控件不透明

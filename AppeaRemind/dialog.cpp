@@ -353,9 +353,18 @@ void Dialog::onRefresh_for_time(){        //用于时间顺序的刷新函数
         note_vector_time.push_back(note_vector.at(i));
     }
     std::sort(note_vector_time.begin(),note_vector_time.end(),isSmaller);
+
+    QString aheadDate;
     for(unsigned i=0; i < note_vector_time.size(); i++){
-        if(note_vector_time.at(i)->finish == 0){
-            gridLayout->addWidget(note_vector_time.at(i));
+        Note *notei= note_vector_time.at(i);
+        if(notei->finish == 0){
+            if (notei->Date != aheadDate){
+                QLabel *daylabel = new QLabel(this);
+                daylabel->setText(notei->Date);
+                gridLayout->addWidget(daylabel);
+                aheadDate = notei->Date;
+            }
+            gridLayout->addWidget(notei);
         }
     }
     ui->frame_2->widget()->setLayout(gridLayout);
