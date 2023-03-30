@@ -39,7 +39,7 @@ Dialog::Dialog(QWidget *parent)
     ui->setupUi(this);
 
     this->setWindowTitle("AppeaRemind");
-    //this->setWindowOpacity(0.8);
+    this->setWindowOpacity(0.9);
     Qt::WindowFlags windowFlag  = Qt::Widget;
     this->setWindowFlags(windowFlag);     // 添加最小化、最大化按键，并且这些按钮自动有对应功能
 
@@ -361,6 +361,9 @@ void Dialog::onRefresh_for_time(){        //用于时间顺序的刷新函数
             if (notei->Date != aheadDate){
                 QLabel *daylabel = new QLabel(this);
                 daylabel->setText(notei->Date);
+                QFont font ("Microsoft YaHei", 15, 75);
+                daylabel->setFont(font);
+                daylabel->setAlignment(Qt::AlignCenter);
                 gridLayout->addWidget(daylabel);
                 aheadDate = notei->Date;
             }
