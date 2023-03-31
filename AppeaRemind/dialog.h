@@ -40,7 +40,7 @@ public:
     void onRefresh_for_time();
     void closeEvent(QCloseEvent *); // 点击“x”按钮
     bool isLogsTimed();
-    //void composeRefresh();
+    void composeRefresh();
     void settingsToFile();
     void getSettingsFromFile();
     void paintEvent(QPaintEvent *ev);
@@ -53,7 +53,6 @@ public slots:
     void on_pushButton_5_toggled(bool checked);
     void timeUpdate(void);
     void suspendDiaBack();
-    void composeRefresh();
 
 public:
     Ui::Dialog *ui;
@@ -62,14 +61,12 @@ public:
     QDateTime datetime;
     QTimer *timer;
     QString systime;
-    //QString str_time[10][7];
     int sign[100] = {0};
-    int m;
+    int m = 0;
 
 private:
     int nextTime = 0;   // 说明有下一次
-    SuspendDia *s;
-    QString _text;
-    bool logsTimed = 1;
+    SuspendDia *s = nullptr;
+    bool logsTimed = 1;   // 默认为按照ddl时间排序
 };
 #endif // DIALOG_H

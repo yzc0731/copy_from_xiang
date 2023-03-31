@@ -86,10 +86,10 @@ void Dialog::timeUpdate(void)
     datetime = QDateTime::currentDateTime();
     systime = datetime.toString("hh:mm yyyy/MM/dd");
     QFile file, file1;
-    // int line = 0;
     // 得出事项的数目
-    QString nametxt = QString("log.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
-    file1.setFileName(nametxt);                                      //保存到本地地址
+    //QString nametxt = QString("log.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
+    //file1.setFileName(nametxt);                                      //保存到本地地址
+    file1.setFileName("log.txt");
     QString strline;
     if (file1.open(QIODevice::ReadOnly))                               //只读
     {
@@ -106,9 +106,7 @@ void Dialog::timeUpdate(void)
         }
     }
     //识别事项
-    file.setFileName(nametxt);                                    //保存到本地地址
-    //QString str_read[10][7];
-    //QString strline;
+    file.setFileName("log.txt");                                    //保存到本地地址
     QString str_time[line][7];
     int mark[line];
     int j = 0;
@@ -116,7 +114,6 @@ void Dialog::timeUpdate(void)
     {
         QTextCodec *codec = QTextCodec::codecForName("GBK");         //指定读码方式为GBK
         //note_vector1.clear();
-
         while (!file.atEnd())                                        //当没有读到文件末尾时
         {
             strline = codec->toUnicode(file.readLine());             //以GBK的编码方式读取一行
@@ -217,8 +214,9 @@ void Dialog::onRefresh() {        //用于初始化和添加的刷新函数
     QGridLayout *gridLayout = new QGridLayout();                     //网格布局
     gridLayout->setVerticalSpacing(20);
     QFile file;
-    QString nametxt = QString("log.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
-    file.setFileName(nametxt);                                    //保存到本地地址
+    //QString nametxt = QString("log.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
+    //file.setFileName(nametxt);                                    //保存到本地地址
+    file.setFileName("log.txt");
     QString str_read[9];
     QString strline;
     int num;
@@ -262,8 +260,9 @@ void Dialog::onRefresh1() {     //专门用于编辑的刷新函数
     }
     QGridLayout *gridLayout = new QGridLayout();                   //网格布局
     QFile file;
-    QString nametxt = QString("log.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
-    file.setFileName(nametxt);                                    //保存到本地地址
+    //QString nametxt = QString("log.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
+    //file.setFileName(nametxt);                                    //保存到本地地址
+    file.setFileName("log.txt");
     QString str_read[9];
     QString strline;
     int num;
@@ -306,8 +305,9 @@ void Dialog::onRefresh_for_time(){        //用于时间顺序的刷新函数
     QGridLayout *gridLayout = new QGridLayout();                     //网格布局
     gridLayout->setVerticalSpacing(20);
     QFile file;
-    QString nametxt = QString("log.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
-    file.setFileName(nametxt);                                    //保存到本地地址
+    //QString nametxt = QString("log.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
+    //file.setFileName(nametxt);                                    //保存到本地地址
+    file.setFileName("log.txt");
     QString str_read[9];
     QString strline;
     int num;
@@ -420,8 +420,9 @@ void Dialog::settingsToFile()
 {
     std::vector<QString> strAll;
     QFile readFile;
-    QString nametxt = QString("logset.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
-    readFile.setFileName(nametxt);
+    //QString nametxt = QString("logset.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
+    //readFile.setFileName(nametxt);
+    readFile.setFileName("logset.txt");
     QTextStream stream(&readFile);
     if(readFile.open(QIODevice::ReadOnly)){
         QString strLine;
@@ -432,7 +433,7 @@ void Dialog::settingsToFile()
     }
     readFile.close();
     QFile fileModify;
-    fileModify.setFileName(nametxt);
+    fileModify.setFileName("logset.txt");
     if(fileModify.open(QIODevice::WriteOnly|QIODevice::Text))
     {
         QTextStream stream(&fileModify);
@@ -451,10 +452,10 @@ void Dialog::settingsToFile()
 
 void Dialog::getSettingsFromFile()
 {
-    QString nametxt = QString("logset.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
-    if(QFileInfo::exists(nametxt)){
+    //QString nametxt = QString("logset.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
+    if(QFileInfo::exists("logset.txt")){
         QFile file;
-        file.setFileName(nametxt);         //保存到本地地址
+        file.setFileName("logset.txt");         //保存到本地地址
         QString strline;
         if (file.open(QIODevice::ReadOnly))
         {
@@ -467,7 +468,7 @@ void Dialog::getSettingsFromFile()
         }
     } else {
         QFile initFile;
-        initFile.setFileName(nametxt);
+        initFile.setFileName("logset.txt");
         if(initFile.open(QIODevice::WriteOnly|QIODevice::Text))
         {
             QTextStream stream(&initFile);

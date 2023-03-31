@@ -10,19 +10,19 @@
 #include <QApplication>
 #include <QScreen>
 
-Ball::Ball(QWidget *parent) :
-    QDialog(parent),ui(new Ui::Ball)
-{
-    ui->setupUi(this);
-    _globalBallPos = this->pos();
+//Ball::Ball(QWidget *parent) :
+//    QDialog(parent),ui(new Ui::Ball)
+//{
+//    ui->setupUi(this);
+//    _globalBallPos = this->pos();
 
-    // 无边框
-    this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint
-                         | Qt::WindowMinMaxButtonsHint|Qt::WindowStaysOnTopHint);
+//    // 无边框
+//    this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint
+//                         | Qt::WindowMinMaxButtonsHint|Qt::WindowStaysOnTopHint);
 
-    // 窗口整体透明，但窗口控件不透明
-    this->setAttribute(Qt::WA_TranslucentBackground,true);
-}
+//    // 窗口整体透明，但窗口控件不透明
+//    this->setAttribute(Qt::WA_TranslucentBackground,true);
+//}
 
 Ball::Ball(QWidget *parent, QString text, QPoint posBegin, int radius, QString importance):
     QDialog(parent),ui(new Ui::Ball),_text(text),
@@ -43,6 +43,7 @@ Ball::Ball(QWidget *parent, QString text, QPoint posBegin, int radius, QString i
 void Ball::paintEvent(QPaintEvent *)
 {
     QPainter p(this);//将当前窗体作为画布
+    p.setBrush(QColor(255,255,255,150));
     if(_importance == "非常重要")
     {
         p.setBrush(QColor(255,100,70,150));
@@ -59,7 +60,6 @@ void Ball::paintEvent(QPaintEvent *)
     {
         p.setBrush(QColor(255,0,0,150));      //纯红色
     }
-    p.setBrush(QColor(255,255,255,150));
     p.setPen(Qt::NoPen);//没有线条
     //画圆形
     p.drawEllipse(_center,_radius,_radius);
@@ -99,7 +99,7 @@ void Ball::mousePressEvent(QMouseEvent *e){
    if(isContains(e->pos()))
     {
         _pressed = true;
-        _relateWindowPos = e->pos();    //鼠标相对窗体的位置
+        _mouseRelateWidgetPos = e->pos();    //鼠标相对窗体的位置
         update();                //触发窗体重绘
     }
 }
@@ -109,7 +109,7 @@ void Ball::mouseMoveEvent(QMouseEvent *e){
     {
          //e->pos鼠标移动过程中，鼠标相对窗体的位置-刚按下鼠标时鼠标相对窗体的位置=鼠标移动的大小
          //鼠标移动的大小+窗体原来的位置=窗体移动后的位置
-         this->move(e->pos() - _relateWindowPos + this->pos());
+         this->move(e->pos() - _mouseRelateWidgetPos + this->pos());
     }
 }
 

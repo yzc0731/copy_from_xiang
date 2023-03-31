@@ -50,17 +50,17 @@ private:
     double _pacity = 1.0;
     bool hasBall = false;
     bool hasSet = false;
-    QString _text;
+    QString _text = "Nothing!";
     int _radiusOfBall = 50;
     bool pressed = false;
     bool _autoOpen = false;
-    QString _importance;
+    QString _importance = "无";
 
 public:
-    QPoint _beginPos;
+    QPoint _beginPos = QPoint(100,100);
     SettingDia *set = nullptr;
-    Note *notesus;
-    Ball *ball;
+    Note *notesus = nullptr;
+    Ball *ball = nullptr;
 };
 
 #endif // SUSPENDDIA_H

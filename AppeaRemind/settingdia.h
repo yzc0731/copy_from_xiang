@@ -32,9 +32,9 @@ signals:
 
 private:
     Ui::SettingDia *ui;
-    double _pacity;
-    int _radius;
-    bool _autoOpen;
+    double _pacity = 1.0;
+    int _radius = 50;
+    bool _autoOpen = 0;
 };
 
 #endif // SETTINGDIA_H
