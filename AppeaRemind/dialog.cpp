@@ -1,6 +1,5 @@
 #include "dialog.h"
 #include "ui_dialog.h"
-
 #include <vector>
 #include <algorithm>
 #include <QGridLayout>
@@ -17,7 +16,6 @@
 #include <QTimer>
 #include <QMessageBox>
 #include <QString>
-
 #include "datetime.h"
 #include "vector_.h"
 #include "addnew.h"
@@ -28,6 +26,10 @@
 #include "suspenddia.h"
 #include "note.h"
 #include <QStandardPaths>
+#include <QStyle>
+#include <QMenu>
+#include <QAction>
+
 QString name;
 QString thing;
 QString importance;
@@ -45,25 +47,46 @@ Dialog::Dialog(QWidget *parent)
 
     getSettingsFromFile();
     if(logsTimed){
-        ui->pushButton_5->setText(tr("改为按添加顺序排序"));
+        ui->pushButton_5->setText(tr("改为创建顺序"));
     } else {
-        ui->pushButton_5->setText(tr("改为按截止时间排序"));
+        ui->pushButton_5->setText(tr("改为时间顺序"));
     }
+
     datetime = QDateTime::currentDateTime();
+    three_later_datetime = datetime.addSecs(600);   //10min
+    five_later_datetime = datetime.addSecs(1800);   //30min
+    ten_later_datetime = datetime.addSecs(3600);    //6omin
+    three_later_systime = three_later_datetime.toString("hh:mm yyyy/MM/dd");
+    five_later_systime = five_later_datetime.toString("hh:mm yyyy/MM/dd");
+    ten_later_systime = ten_later_datetime.toString("hh:mm yyyy/MM/dd");   //xsr
     systime = datetime.toString("hhh:mm yyyy/MM/dd");
     //创建定时器定时更新时间和日期
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &Dialog::timeUpdate);
     timer->start(1000);
-    //显示日期时间
-    //extern QString str_read[20][7];
     QFile::link("AppeaRemind.exe", QStandardPaths::writableLocation(QStandardPaths::DesktopLocation).append("/").append("AppeaRemind.lnk"));
+
+    m_systray  = new QSystemTrayIcon(this);
+    //设置提示文字
+    m_systray->setToolTip("AppeaRemind");
+    // 设置托盘图标
+    m_systray->setIcon(QIcon("Dialog_pic.png"));
+    //托盘菜单项
+    QMenu * menu = new QMenu();
+    menu->addAction(ui->actionExit);
+    m_systray->setContextMenu(menu);
+    // 关联托盘事件
+    connect(m_systray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+    this, SLOT(OnSystemTrayClicked(QSystemTrayIcon::ActivationReason)));
+    //显示托盘
+    m_systray->show();
+    //托盘菜单响应
+    connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(OnExit()));
 }
 
 Dialog::~Dialog() {
     delete ui;
 }  //析构函数
-
 
 void Dialog::on_pushButton_clicked() {
     Addnew *add = new Addnew(&note_vector);
@@ -86,10 +109,9 @@ void Dialog::timeUpdate(void)
     datetime = QDateTime::currentDateTime();
     systime = datetime.toString("hh:mm yyyy/MM/dd");
     QFile file, file1;
+    // int line = 0;
     // 得出事项的数目
-    //QString nametxt = QString("log.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
-    //file1.setFileName(nametxt);                                      //保存到本地地址
-    file1.setFileName("log.txt");
+    file1.setFileName("log.txt");                                      //保存到本地地址
     QString strline;
     if (file1.open(QIODevice::ReadOnly))                               //只读
     {
@@ -106,7 +128,9 @@ void Dialog::timeUpdate(void)
         }
     }
     //识别事项
-    file.setFileName("log.txt");                                    //保存到本地地址
+    file.setFileName("log.txt");                                      //保存到本地地址
+    //QString str_read[10][7];
+    //QString strline;
     QString str_time[line][7];
     int mark[line];
     int j = 0;
@@ -114,6 +138,7 @@ void Dialog::timeUpdate(void)
     {
         QTextCodec *codec = QTextCodec::codecForName("GBK");         //指定读码方式为GBK
         //note_vector1.clear();
+
         while (!file.atEnd())                                        //当没有读到文件末尾时
         {
             strline = codec->toUnicode(file.readLine());             //以GBK的编码方式读取一行
@@ -133,14 +158,38 @@ void Dialog::timeUpdate(void)
     settime[z] = str_time[z][2] + " " + str_time[z][3];
 
     for(m = 0;m < line; m++)
-    if((settime[m] == systime)&&(mark[m] == 0)&&(sign[m] == 0))           //判定时间是否到达
     {
-        name = str_time[m][1];
-        thing = str_time[m][5];
-        importance = str_time[m][4];
-        dateTime *alarm = new dateTime;
-        alarm -> show();
-        sign[m] = 1;                                                     //防止不会一直弹出
+        if((settime[m] == systime)&&(mark[m] == 0)&&(sign[m] == 0))           //判定时间是否到达
+        {
+            name = str_time[m][1];
+            thing = str_time[m][5];
+            importance = str_time[m][4];
+            dateTime *alarm = new dateTime;
+            alarm -> show();
+            sign[m] = 1;                                                     //防止不会一直弹出
+        }
+        if((str_time[m][4] == "非常重要")&&(settime[m] == ten_later_systime)&&(ten_sign[m] == 0)) //提前60分钟——非常重要
+                {
+
+                    QIcon icon1 = QApplication::style()->standardIcon((QStyle::StandardPixmap)9);
+                    m_systray->showMessage(name+" 仅剩60分钟！ ", thing, icon1);
+
+                   //dateTime *alarm = new dateTime;
+                    //alarm -> show();
+                        ten_sign[m] = 1;
+                }
+        if(((str_time[m][4] == "重要")||(str_time[m][4] == "非常重要"))&&(settime[m] == five_later_systime)&&(five_sign[m] == 0)) //提前5分钟——紧迫、重要
+                {
+                        QIcon icon1 = QApplication::style()->standardIcon((QStyle::StandardPixmap)9);
+                        m_systray->showMessage(name+" 仅剩30分钟！ ", thing, icon1);
+                        five_sign[m] = 1;
+                }
+        if(((str_time[m][4] == "比较重要")||(str_time[m][4] == "重要")||(str_time[m][4] == "非常重要"))&&(settime[m] == three_later_systime)&&(three_sign[m] == 0)) //提前3分钟——比较重要、重要、紧迫
+                {
+                        QIcon icon1 = QApplication::style()->standardIcon((QStyle::StandardPixmap)9);
+                        m_systray->showMessage(name+" 仅剩10分钟！ ", thing, icon1);
+                        three_sign[m] = 1;
+                }
    }
 }
 
@@ -161,7 +210,6 @@ void Dialog::closeEvent(QCloseEvent *){
 
     QCheckBox *checkbox = new QCheckBox("下次不再提示");
     questionBox->setCheckBox(checkbox);
-
     switch (nextTime)
     {
         case 0:
@@ -214,9 +262,7 @@ void Dialog::onRefresh() {        //用于初始化和添加的刷新函数
     QGridLayout *gridLayout = new QGridLayout();                     //网格布局
     gridLayout->setVerticalSpacing(20);
     QFile file;
-    //QString nametxt = QString("log.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
-    //file.setFileName(nametxt);                                    //保存到本地地址
-    file.setFileName("log.txt");
+    file.setFileName("log.txt");                                     //保存到本地地址
     QString str_read[9];
     QString strline;
     int num;
@@ -260,9 +306,7 @@ void Dialog::onRefresh1() {     //专门用于编辑的刷新函数
     }
     QGridLayout *gridLayout = new QGridLayout();                   //网格布局
     QFile file;
-    //QString nametxt = QString("log.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
-    //file.setFileName(nametxt);                                    //保存到本地地址
-    file.setFileName("log.txt");
+    file.setFileName("log.txt");                                    //保存到本地地址
     QString str_read[9];
     QString strline;
     int num;
@@ -305,9 +349,7 @@ void Dialog::onRefresh_for_time(){        //用于时间顺序的刷新函数
     QGridLayout *gridLayout = new QGridLayout();                     //网格布局
     gridLayout->setVerticalSpacing(20);
     QFile file;
-    //QString nametxt = QString("log.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
-    //file.setFileName(nametxt);                                    //保存到本地地址
-    file.setFileName("log.txt");
+    file.setFileName("log.txt");                                     //保存到本地地址
     QString str_read[9];
     QString strline;
     int num;
@@ -353,7 +395,11 @@ void Dialog::onRefresh_for_time(){        //用于时间顺序的刷新函数
         note_vector_time.push_back(note_vector.at(i));
     }
     std::sort(note_vector_time.begin(),note_vector_time.end(),isSmaller);
-
+//    for(unsigned i=0; i < note_vector_time.size(); i++){
+//        if(note_vector_time.at(i)->finish == 0){
+//            gridLayout->addWidget(note_vector_time.at(i));
+//        }
+//    }
     QString aheadDate;
     for(unsigned i=0; i < note_vector_time.size(); i++){
         Note *notei= note_vector_time.at(i);
@@ -369,7 +415,7 @@ void Dialog::onRefresh_for_time(){        //用于时间顺序的刷新函数
             }
             gridLayout->addWidget(notei);
         }
-    }
+    }                                                                //yzc
     ui->frame_2->widget()->setLayout(gridLayout);
     repaint();
 }
@@ -385,12 +431,12 @@ void Dialog::composeRefresh(){
 void Dialog::on_pushButton_5_toggled(bool)
 {
     if (!logsTimed) {
-        ui->pushButton_5->setText(tr("改为按添加顺序排序"));
+        ui->pushButton_5->setText(tr("改为创建顺序"));
         this->onRefresh_for_time();
         //输出为按照时间排序的文件
         logsTimed = true;
     } else {
-        ui->pushButton_5->setText(tr("改为按截止时间排序"));
+        ui->pushButton_5->setText(tr("改为时间顺序"));
         this->onRefresh();
         logsTimed = false;
     }
@@ -420,8 +466,6 @@ void Dialog::settingsToFile()
 {
     std::vector<QString> strAll;
     QFile readFile;
-    //QString nametxt = QString("logset.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
-    //readFile.setFileName(nametxt);
     readFile.setFileName("logset.txt");
     QTextStream stream(&readFile);
     if(readFile.open(QIODevice::ReadOnly)){
@@ -452,7 +496,6 @@ void Dialog::settingsToFile()
 
 void Dialog::getSettingsFromFile()
 {
-    //QString nametxt = QString("logset.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
     if(QFileInfo::exists("logset.txt")){
         QFile file;
         file.setFileName("logset.txt");         //保存到本地地址
@@ -486,4 +529,21 @@ void Dialog::paintEvent(QPaintEvent *)    //20230315主界面背景
 {
     QPainter painter(this);
     painter.drawPixmap(rect(),QPixmap("Dialog_main_pic.jpg"),QRect());
+}
+int Dialog::OnExit()
+{
+    QApplication::exit();
+    return 0;
+}
+
+
+int Dialog::OnSystemTrayClicked(QSystemTrayIcon::ActivationReason reason)
+{
+    if (reason == QSystemTrayIcon::Trigger
+        || reason == QSystemTrayIcon::DoubleClick)
+    {
+        // 显示主窗口
+        this->showNormal();
+    }
+    return 0;
 }

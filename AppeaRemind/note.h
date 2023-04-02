@@ -28,9 +28,12 @@ public:
     QString repeat_gap;
     int time_int;
     void paintEvent(QPaintEvent * ev);   //20230315设置Note面背景
+    void emit_exchange();   //20230327
+    //void opacityChange();
+
 signals:
     void refresh();
-
+    void delete_();  //20230327
 private slots:
     void on_checkBox_clicked();
     void on_pushButton_clicked();
@@ -40,6 +43,8 @@ private:
     Ui::Note *ui;
     AppRemind *am;
     bool isAm = false;
+    //QTimer *timer;
+    //double noteExitPacity = 1.00;
 };
 
 #endif // NOTE_H

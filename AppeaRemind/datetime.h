@@ -31,9 +31,8 @@ class dateTime : public QDialog
 public:
     explicit dateTime(QWidget *parent = nullptr);
     ~dateTime();
-
     void timeUpdate(void);
-
+    void paintEvent(QPaintEvent *);
 private slots:
     void on_pushButton_clicked();
     void on_pushButton_2_clicked();

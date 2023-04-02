@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include "note.h"
-
+#include <QIcon>
 namespace Ui {
     class history;
 }

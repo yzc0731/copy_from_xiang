@@ -15,8 +15,7 @@ class Ball : public QDialog
     Q_OBJECT
 
 public:
-    //Ball(QWidget *parent = nullptr);
-    explicit Ball(QWidget *parent = nullptr, QString text = "Nothing!",
+    explicit Ball(QWidget *parent = nullptr, QString text = "Nothing on list",
          QPoint posBegin = QPoint(100,100), int radius = 50, QString importance = "无");
     void paintEvent(QPaintEvent *);
     ~Ball();
@@ -32,7 +31,7 @@ public:
     void hideBall();
     QPoint getBeginPos();
 
-public slots:
+private slots:
     void hideTimertimeOut();
 
 signals:
@@ -41,10 +40,10 @@ signals:
 
 private:
     Ui::Ball *ui;
-    QString _text = "Nothing!";  //控件显示文本
-    QPoint _center = QPoint(100,100);     //相对窗体的圆心位置坐标
-    QPoint _globalBallPos = QPoint(100,100);        //窗体相对屏幕的起始坐标
-    QPoint _mouseRelateWidgetPos = QPoint(100,100);        //鼠标相对窗体的坐标
+    QString _text = "Nothing!";             //控件显示文本
+    QPoint _center = QPoint(100,100);       //相对窗体的圆心位置坐标
+    QPoint _globalBallPos = QPoint(100,100);                  //窗体相对屏幕的起始坐标
+    QPoint _mouseRelateWidgetPos = QPoint(100,100);
     int _radius = 50;                   //圆形半径
     int hideStatus = 0; //0表示没有隐藏，1表示左隐藏，2表示右隐藏，3表示上隐藏
     const int wideDetectRange = qApp->primaryScreen()->size().width()/25;

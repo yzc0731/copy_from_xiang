@@ -1,8 +1,6 @@
 #ifndef ADDNEW_H
 #define ADDNEW_H
-
 #include <QDialog>
-
 #include "dialog.h"
 #include "note.h"
 
@@ -10,7 +8,6 @@ namespace Ui
 {
     class Addnew;
 }
-
 class Addnew : public QDialog
 {
 Q_OBJECT

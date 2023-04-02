@@ -7,20 +7,21 @@
 EditDialog::EditDialog(Note *n1,QString str1,QString str2,QString str3,QString str4,QString str5,QString str6,QString str7) :
     s1(str1),s2(str2),s3(str3),s4(str4),s5(str5),s6(str6),s7(str7),note(n1),ui(new Ui::EditDialog)
 {
+
+    QPalette pa;
+    pa.setColor(QPalette::Background,QColor(190,230,230,160));
+    this->setAutoFillBackground(true);      //背景
+    this->setPalette(pa);                   //20230328
+
+    QDialog::connect(this,&EditDialog::finish_delete,n1,&Note::emit_exchange);
     ui->setupUi(this);
-//
     ui->nameLineEdit->setText(s1);
-//
     QTime tm = QTime::fromString(s2,"hh:mm");
     ui->timeTimeEdit->setTime(tm);
-//
     QDate da = QDate::fromString(s3,"yyyy/MM/dd");
     ui->dateDateEdit->setDate(da);
-//
     ui->noteLineEdit->setText(s4);
-//
     ui->impoComboBox->setCurrentText(s5);
-//
     if(note->repeat_times == "#")
         {
         ui->label_2->hide();
@@ -31,7 +32,6 @@ EditDialog::EditDialog(Note *n1,QString str1,QString str2,QString str3,QString s
     {
         ui->checkBox->setCheckState(Qt::Checked);
         int repeat_times = s6.toInt();
-        //qDebug()<<s6<<s7;
         ui->spinBox->setValue(repeat_times);
         ui->comboBox->setCurrentText(s7);
     }
@@ -60,10 +60,6 @@ void EditDialog::on_pushButton_clicked()
         str[5]=ui->spinBox->text();           //重复情况
         str[6]=ui->comboBox->currentText();   //
     }
-//----------------------------------------------------------------//
-    for(int i=0;i<5;i++)
-        qDebug()<<str[i]<<endl;               //在Qt界面输出以上五点（类似调试输出）
-
     note->Thing = str[0];
     note->Time = str[1];
     note->Date = str[2];
@@ -100,4 +96,5 @@ void EditDialog::on_pushButton_2_clicked()
         {itor = note->note_vector->erase(itor);break;}
     }
     this->on_pushButton_clicked();
+    emit finish_delete();
 }      //删除函数

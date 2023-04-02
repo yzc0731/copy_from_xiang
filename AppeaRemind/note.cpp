@@ -1,14 +1,14 @@
 #include "note.h"
 #include "ui_note.h"
 
-
+#include <QGraphicsOpacityEffect>
 #include <windows.h>
 #include <iostream>
 #include <QFile>
 #include <QTextStream>
 #include <QDate>
 #include <QDebug>
-
+#include <QGraphicsOpacityEffect>
 #include "appremind.h"
 #include "vector_.h"
 #include "editdialog.h"
@@ -57,10 +57,10 @@ Note::Note(std::vector<Note*> *note_vector,int num,QString str1,QString str2,QSt
     {
         pa.setColor(QPalette::Background,QColor(255,255,0,50));   //黄色
     }
-    if(ddl == "紧迫")
-    {
-        pa.setColor(QPalette::Background,QColor(255,0,0,50));      //纯红色
-    }
+//    if(ddl == "紧迫")
+//    {
+//        pa.setColor(QPalette::Background,QColor(255,0,0,50));      //纯红色
+//    }
     ui->label_4->setAutoFillBackground(true);
     ui->label_4->setPalette(pa);
 }
@@ -68,9 +68,21 @@ Note::~Note()
 {
     delete ui;
 }
+
+//void Note::opacityChange(){
+//    noteExitPacity -= 0.1;
+//    QGraphicsOpacityEffect *opacity = new QGraphicsOpacityEffect;
+//    opacity->setOpacity(noteExitPacity);
+//    ui->label->setGraphicsEffect(opacity);
+//    qDebug() << noteExitPacity;
+//}
+
 void Note::on_checkBox_clicked()
 {
-    Sleep(1000);
+//    timer = new QTimer(this);
+//    timer->setSingleShot(true);
+//    timer->start(1000);
+//    connect (timer, &QTimer::timeout, this, &Note::opacityChange);
     if(note_vector->at(index)->repeat_times == "#")
     {
         finish=1;
@@ -81,7 +93,6 @@ void Note::on_checkBox_clicked()
         vector.vector_for_file(*note_vector);
         this->close();
     }
-    //
     if(note_vector->at(index)->repeat_times != "#")
     {
         QString str_date = note_vector->at(index)->Date;
@@ -257,11 +268,11 @@ void Note::paintEvent(QPaintEvent * )   //20230315设置主界面背景
 {
     QPainter painter(this);
     painter.setOpacity(0.5);
-    if(this->ddl == "紧迫")
-    {
-        painter.drawPixmap(rect(),QPixmap("impo_5.png"),QRect());
-    }
-    else if(this->ddl == "非常重要")
+//    if(this->ddl == "紧迫")
+//    {
+//        painter.drawPixmap(rect(),QPixmap("impo_5.png"),QRect());
+//    }
+    if(this->ddl == "非常重要")
     {
         painter.drawPixmap(rect(),QPixmap("impo_4.png"),QRect());
     }
@@ -274,4 +285,8 @@ void Note::paintEvent(QPaintEvent * )   //20230315设置主界面背景
         painter.drawPixmap(rect(),QPixmap("impo_2.png"),QRect());
     }
     //20230316设置note的背景，缺少一个过期的设置，需要xsr来对比时间。
+}
+void Note::emit_exchange()
+{
+    emit delete_();
 }

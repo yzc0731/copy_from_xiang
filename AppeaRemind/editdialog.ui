@@ -6,19 +6,22 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>440</width>
+    <width>432</width>
     <height>254</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>编辑</string>
+  </property>
+  <property name="sizeGripEnabled">
+   <bool>false</bool>
   </property>
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>280</x>
+     <x>300</x>
      <y>5</y>
-     <width>151</width>
+     <width>111</width>
      <height>30</height>
     </rect>
    </property>
@@ -47,17 +50,23 @@
   <widget class="QWidget" name="formLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>0</x>
      <y>40</y>
-     <width>421</width>
-     <height>211</height>
+     <width>431</width>
+     <height>213</height>
     </rect>
    </property>
    <layout class="QFormLayout" name="formLayout">
     <property name="horizontalSpacing">
-     <number>0</number>
+     <number>2</number>
     </property>
     <property name="verticalSpacing">
+     <number>3</number>
+    </property>
+    <property name="leftMargin">
+     <number>2</number>
+    </property>
+    <property name="bottomMargin">
      <number>2</number>
     </property>
     <item row="0" column="0">
@@ -198,11 +207,6 @@
         <string>非常重要</string>
        </property>
       </item>
-      <item>
-       <property name="text">
-        <string>紧迫</string>
-       </property>
-      </item>
      </widget>
     </item>
     <item row="5" column="0">
@@ -266,9 +270,9 @@
   <widget class="QPushButton" name="pushButton_2">
    <property name="geometry">
     <rect>
-     <x>139</x>
+     <x>149</x>
      <y>5</y>
-     <width>141</width>
+     <width>111</width>
      <height>30</height>
     </rect>
    </property>

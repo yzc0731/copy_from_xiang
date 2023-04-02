@@ -191,7 +191,7 @@
           <item row="0" column="2">
            <widget class="QLabel" name="label_2">
             <property name="frameShape">
-             <enum>QFrame::Box</enum>
+             <enum>QFrame::StyledPanel</enum>
             </property>
             <property name="frameShadow">
              <enum>QFrame::Plain</enum>
@@ -207,7 +207,7 @@
           <item row="0" column="3">
            <widget class="QLabel" name="label_3">
             <property name="frameShape">
-             <enum>QFrame::Box</enum>
+             <enum>QFrame::StyledPanel</enum>
             </property>
             <property name="frameShadow">
              <enum>QFrame::Plain</enum>
@@ -256,7 +256,7 @@
               <item>
                <widget class="QLabel" name="label_7">
                 <property name="frameShape">
-                 <enum>QFrame::Box</enum>
+                 <enum>QFrame::StyledPanel</enum>
                 </property>
                 <property name="frameShadow">
                  <enum>QFrame::Plain</enum>
@@ -269,7 +269,7 @@
               <item>
                <widget class="QLabel" name="label68">
                 <property name="frameShape">
-                 <enum>QFrame::Box</enum>
+                 <enum>QFrame::StyledPanel</enum>
                 </property>
                 <property name="frameShadow">
                  <enum>QFrame::Plain</enum>

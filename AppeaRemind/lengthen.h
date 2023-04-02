@@ -15,17 +15,12 @@ class lengthen;
 class lengthen : public QDialog
 {
     Q_OBJECT
-
 public:
     explicit lengthen(QWidget *parent = nullptr);
     ~lengthen();
-
 private slots:
     void on_pushButton_clicked();
-
     void myslot();
-
-
 private:
     Ui::lengthen *ui;
     QTimer *timer;

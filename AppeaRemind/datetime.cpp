@@ -16,13 +16,15 @@ dateTime::dateTime(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::dateTime)
 {
+    QRect mRect;//20230328
+    mRect = QGuiApplication::primaryScreen()->geometry();//取当前屏幕分辨率
+
     ui->setupUi(this);
+    ui->things->setStyleSheet("QTextEdit{background-color:rgba(255,238,231,255);}");
     //初始化时间和日期显示
     //隐藏标题栏
     setWindowFlags(Qt::FramelessWindowHint);//无边框
-    //打开的窗口在屏幕右下角
-    QDesktopWidget *widget= QApplication::desktop();
-    move(widget->width()-this->width(),widget->height()-this->height()+10);
+    move(mRect.width()/2 - this->width(),mRect.height()/2 - this->height());
     ui->things->setText("名称："+ name + "\n" +"备注：" + thing+ "\n" +"重要程度：" + importance) ;
     datetime = QDateTime::currentDateTime();
     systime = datetime.toString("hh:mm yyyy/MM/dd");
@@ -91,3 +93,9 @@ void dateTime::on_pushButton_2_clicked()
     timing->show();
     hide();
 }
+void dateTime::paintEvent(QPaintEvent *)    //20230328背景
+{
+    QPainter painter(this);
+    painter.drawPixmap(rect(),QPixmap("Dialog_pic.jpg"),QRect());
+}
+

@@ -19,7 +19,7 @@ SuspendDia::SuspendDia(QWidget *parent, bool logsTimed):
     ui->setupUi(this);
 
     QPalette pa;
-    pa.setColor(QPalette::Background,QColor(255,255,200,255));
+    pa.setColor(QPalette::Background,QColor(255,255,200,180));
     this->setAutoFillBackground(true);
     this->setPalette(pa);
 
@@ -61,8 +61,6 @@ void SuspendDia::onRefresh()
     QGridLayout *gridLayout = new QGridLayout();                   //网格布局
 
     QFile file;
-    //QString nametxt = QString("log.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
-    //file.setFileName(nametxt);                                    //保存到本地地址
     file.setFileName("log.txt");
     QString str_read[9];
     QString strline;
@@ -118,9 +116,7 @@ void SuspendDia::onRefreshForTime()
     gridLayout->setVerticalSpacing(20);
 
     QFile file;
-    //QString nametxt = QString("log.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
-    //file.setFileName(nametxt);                                    //保存到本地地址
-    file.setFileName("log.txt");
+    file.setFileName("log.txt");                                     //打开本地地址
     QString str_read[9];
     QString strline;
     int num;
@@ -274,8 +270,6 @@ void SuspendDia::settingsToFile()
 {
     std::vector<QString> strAll;
     QFile readFile;
-    //QString nametxt = QString("logset.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
-    //readFile.setFileName(nametxt);
     readFile.setFileName("logset.txt");
     QTextStream stream(&readFile);
     if(readFile.open(QIODevice::ReadOnly)){
@@ -308,7 +302,6 @@ void SuspendDia::settingsToFile()
 
 void SuspendDia::getSettingsFromFile()
 {
-    //QString nametxt = QString("logset.txt").toLatin1();               //读取文件的时候转化为拉丁文编码
     if(QFileInfo::exists("logset.txt")){
         QFile file;
         file.setFileName("logset.txt");         //保存到本地地址

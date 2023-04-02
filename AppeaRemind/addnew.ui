@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>511</width>
-    <height>251</height>
+    <height>261</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -141,11 +141,6 @@
        <string>非常重要</string>
       </property>
      </item>
-     <item>
-      <property name="text">
-       <string>紧迫</string>
-      </property>
-     </item>
     </widget>
    </item>
    <item row="1" column="0">
@@ -166,7 +161,7 @@
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>30</height>
+       <height>40</height>
       </size>
      </property>
      <property name="font">
@@ -272,12 +267,12 @@
      <property name="minimumSize">
       <size>
        <width>30</width>
-       <height>30</height>
+       <height>40</height>
       </size>
      </property>
      <property name="font">
       <font>
-       <pointsize>12</pointsize>
+       <pointsize>14</pointsize>
       </font>
      </property>
      <property name="text">

@@ -9,18 +9,6 @@
 
 const QString regedit = "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run";
 
-SettingDia::SettingDia(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::SettingDia)
-{
-    ui->setupUi(this);
-    // this->setWindowTitle(tr("设置"));
-    this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint
-                         | Qt::WindowMinMaxButtonsHint|Qt::WindowStaysOnTopHint);
-    QScrollArea *scroll=new QScrollArea(this);
-    scroll->setWidget(this);
-}
-
 SettingDia::SettingDia(QWidget *parent, double pacity, int radius, bool autoOpen):
     QDialog(parent),ui(new Ui::SettingDia),_pacity(pacity), _radius(radius),_autoOpen(autoOpen)
 {
@@ -82,7 +70,6 @@ void SettingDia::autoOpen(bool flag)
     }
     else{
         autoRunSetting.remove(name);
-        qDebug() << "delete auto open";
     }
 }
 

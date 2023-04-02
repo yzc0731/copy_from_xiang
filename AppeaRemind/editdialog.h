@@ -19,6 +19,9 @@ public:
     QString s1,s2,s3,s4,s5,s6,s7;
     Note *note;
     friend class history;
+
+signals:
+    void finish_delete();
 private slots:
     void on_pushButton_clicked();
 

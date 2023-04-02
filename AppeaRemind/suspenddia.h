@@ -31,20 +31,16 @@ public:
     void mouseMoveEvent(QMouseEvent *);        //鼠标移动事件
     void settingsToFile();
     void getSettingsFromFile();
-
+public slots:
+    void pacityChange();
 signals:
     void back();
-
 private slots:
     void on_exitBtn_clicked();
     void on_settingBtn_clicked();
     void on_backBtn_clicked();
     void backFromBall();
     void backFromSet();
-
-public slots:
-    void pacityChange();
-
 private:
     Ui::SuspendDia *ui;
     double _pacity = 1.0;
@@ -55,7 +51,6 @@ private:
     bool pressed = false;
     bool _autoOpen = false;
     QString _importance = "无";
-
 public:
     QPoint _beginPos = QPoint(100,100);
     SettingDia *set = nullptr;

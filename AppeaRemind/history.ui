@@ -6,50 +6,51 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>713</width>
-    <height>151</height>
+    <width>703</width>
+    <height>164</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>历史事项</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="gridLayout" rowstretch="1,4" columnstretch="0,0">
    <property name="leftMargin">
-    <number>5</number>
+    <number>1</number>
    </property>
    <property name="topMargin">
-    <number>5</number>
+    <number>1</number>
    </property>
    <property name="rightMargin">
-    <number>5</number>
+    <number>1</number>
    </property>
    <property name="bottomMargin">
-    <number>5</number>
+    <number>1</number>
    </property>
    <property name="spacing">
-    <number>5</number>
+    <number>1</number>
    </property>
    <item row="0" column="0">
     <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <family>宋体</family>
+       <pointsize>13</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="text">
       <string>历史事项</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QPushButton" name="pushButton">
-     <property name="text">
-      <string>编辑</string>
      </property>
     </widget>
    </item>
    <item row="1" column="0" colspan="2">
     <widget class="QScrollArea" name="scrollArea">
      <property name="frameShape">
-      <enum>QFrame::Box</enum>
+      <enum>QFrame::StyledPanel</enum>
      </property>
      <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+      <enum>QFrame::Plain</enum>
      </property>
      <property name="midLineWidth">
       <number>1</number>
@@ -65,8 +66,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>683</width>
-        <height>110</height>
+        <width>685</width>
+        <height>127</height>
        </rect>
       </property>
      </widget>

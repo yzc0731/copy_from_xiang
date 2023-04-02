@@ -10,20 +10,6 @@
 #include <QApplication>
 #include <QScreen>
 
-//Ball::Ball(QWidget *parent) :
-//    QDialog(parent),ui(new Ui::Ball)
-//{
-//    ui->setupUi(this);
-//    _globalBallPos = this->pos();
-
-//    // 无边框
-//    this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint
-//                         | Qt::WindowMinMaxButtonsHint|Qt::WindowStaysOnTopHint);
-
-//    // 窗口整体透明，但窗口控件不透明
-//    this->setAttribute(Qt::WA_TranslucentBackground,true);
-//}
-
 Ball::Ball(QWidget *parent, QString text, QPoint posBegin, int radius, QString importance):
     QDialog(parent),ui(new Ui::Ball),_text(text),
     _globalBallPos(posBegin), _radius(radius), _importance(importance)
@@ -56,10 +42,10 @@ void Ball::paintEvent(QPaintEvent *)
     {
         p.setBrush(QColor(255,255,0,150));
     }
-    if(_importance == "紧迫")
-    {
-        p.setBrush(QColor(255,0,0,150));      //纯红色
-    }
+    //if(_importance == "紧迫")
+    //{
+    //    p.setBrush(QColor(255,0,0,150));      //纯红色
+    //}
     p.setPen(Qt::NoPen);//没有线条
     //画圆形
     p.drawEllipse(_center,_radius,_radius);
@@ -82,7 +68,7 @@ void Ball::enterEvent(QEvent *)
 
 void Ball::leaveEvent(QEvent *)
 {
-    QTimer::singleShot(1000, this, &Ball::hideTimertimeOut);
+    QTimer::singleShot(1000, this,&Ball::hideTimertimeOut);
 }
 
 void Ball::hideTimertimeOut()
@@ -127,7 +113,7 @@ bool Ball::isContains(QPoint p){
             && _center.x()+_radius > p.x()
             && _center.y()-_radius < p.y()
             && _center.y()+_radius > p.y());
-}//将其看做方形的？
+}  //将其看做方形的？
 
 void Ball::mouseDoubleClickEvent(QMouseEvent *)
 {
