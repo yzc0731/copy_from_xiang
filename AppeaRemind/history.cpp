@@ -8,7 +8,7 @@ history::history(QWidget *parent,std::vector<Note*> *note_vector1) :
 {
     this->setWindowTitle(tr("历史事项"));
     this->setWindowIcon(QIcon("history_ima.png"));
-    for(int i = 0;i<note_vector_history->size();i++)
+    for(unsigned int i = 0; i<note_vector_history->size();i++)
     {
         QDialog::connect(note_vector_history->at(i),&Note::delete_,this,&history::refresh_history);
     }

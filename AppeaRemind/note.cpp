@@ -26,7 +26,7 @@ Note::Note(QWidget *parent) :
 Note::Note(std::vector<Note*> *note_vector,int num,QString str1,QString str2,QString str3,QString str4,QString str5,QString str6,QString str7) :
         finish(num),Thing(str1),Time(str2),Date(str3),ddl(str4),note(str5),repeat_times(str6),repeat_gap(str7),ui(new Ui::Note)
 {
-    this->isAm = false;
+    //this->amShow = false;
     this->am = new AppRemind(this->Thing, this->Date, this->Time);
     index=note_vector->size();
     ui->setupUi(this);
@@ -105,16 +105,16 @@ void Note::on_checkBox_clicked()
         int times = note_vector->at(index)->repeat_times.toInt() - 1;//减少一次重复
         int day_add;
 
-        qDebug()<<note_vector->at(index)->repeat_gap;
+        //qDebug()<<note_vector->at(index)->repeat_gap;
         if(note_vector->at(index)->repeat_gap =="每周")  day_add = 7;
         else if(note_vector->at(index)->repeat_gap == "每两周") day_add = 14;
         else if(note_vector->at(index)->repeat_gap == "每天") day_add = 1;
         else day_add = 2;
-//---------------------------------------------
         if(day <= 28-day_add)                         //不满月
             {
-                day=day+day_add;
+                day += day_add;
                 QString day_ = QString::number(day,10);
+                day_ =day_.asprintf("%02d",day);
                 QString datestr_new = list[0] +"/"+ list[1] +"/"+ day_;
                 note_vector->at(index)->Date = datestr_new;
             }
@@ -124,9 +124,10 @@ void Note::on_checkBox_clicked()
                 {
                     day=day+day_add;
                     QString day_ = QString::number(day,10);
+                    day_ =day_.asprintf("%02d",day);
                     QString datestr_new = list[0] +"/"+ list[1] +"/"+ day_;
                     note_vector->at(index)->Date = datestr_new;
-                    qDebug()<<"2";
+                    //qDebug()<<"2";
                 }
           else
                 {
@@ -140,7 +141,7 @@ void Note::on_checkBox_clicked()
                         day_ =day_.asprintf("%02d",day);
                         QString datestr_new = list[0] +"/"+ mon_ +"/"+ day_;
                         note_vector->at(index)->Date = datestr_new;
-                        qDebug()<<"3";
+                        //qDebug()<<"3";
                     }
                 else    //mon==12，满一年。
                     {
@@ -185,6 +186,7 @@ void Note::on_checkBox_clicked()
                 {
                     day = day + day_add ;
                     QString day_ = QString::number(day,10);
+                    day_ =day_.asprintf("%02d",day);
                     QString datestr_new = list[0] +"/"+ list[1] +"/"+ day_;
                     note_vector->at(index)->Date = datestr_new;
                  }
@@ -206,6 +208,7 @@ void Note::on_checkBox_clicked()
                 {
                     day = day + day_add ;
                     QString day_ = QString::number(day,10);
+                    day_ =day_.asprintf("%02d",day);
                     QString datestr_new = list[0] +"/"+ list[1] +"/"+ day_;
                     note_vector->at(index)->Date = datestr_new;
                  }
@@ -232,7 +235,7 @@ void Note::on_checkBox_clicked()
                 note_vector->at(index)->repeat_gap = "#";
             }
         }
-    if(isAm){
+    if(amShow){
         this->am->close();
         ui->pushButton_2->setText("+");
     }
@@ -253,13 +256,13 @@ void Note::on_pushButton_clicked()
 void Note::on_pushButton_2_clicked()
 {
     if (!finish){
-        if (!isAm){
+        if (!amShow){
             this->am->show();
-            isAm = true;
+            amShow = true;
             ui->pushButton_2->setText("-");
         } else {
-            this->am->close();
-            isAm = false;
+            this->am->hide();
+            amShow = false;
             ui->pushButton_2->setText("+");
         }
     }
@@ -289,4 +292,19 @@ void Note::paintEvent(QPaintEvent * )   //20230315设置主界面背景
 void Note::emit_exchange()
 {
     emit delete_();
+}
+
+bool Note::isAmShow()
+{
+    return amShow;
+}
+
+void Note::setAmShow(bool flag)
+{
+    amShow = flag;
+    if(flag){
+        am->show();
+    } else {
+        am->hide();
+    }
 }

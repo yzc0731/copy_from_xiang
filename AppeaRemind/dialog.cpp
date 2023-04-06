@@ -198,6 +198,9 @@ void Dialog::closeEvent(QCloseEvent *){
     // 如果选择no或者右上角的“x”，啥都不做，直接退出
     // 如果选择yes，就跳出悬浮界面
     // 这个函数结束之后主界面直接关闭
+    for (unsigned i = 0; i < note_vector.size(); i++){
+        note_vector.at(i)->setAmShow(false);
+    }
     QMessageBox *questionBox = new QMessageBox(this);
     questionBox->setIcon(QMessageBox::Question);
     questionBox->setText("是否进入桌面悬浮状态");
@@ -296,7 +299,7 @@ void Dialog::onRefresh() {        //用于初始化和添加的刷新函数
 
 void Dialog::onRefresh1() {     //专门用于编辑的刷新函数
    //
-    if (ui->frame_2->widget()->layout() != nullptr) {//删除原有布局
+    if (ui->frame_2->widget()->layout() != nullptr) {   //删除原有布局
         QLayoutItem *item;
         while ((item = ui->frame_2->widget()->layout()->takeAt(0)) != nullptr) {
             delete item->widget();
@@ -395,11 +398,6 @@ void Dialog::onRefresh_for_time(){        //用于时间顺序的刷新函数
         note_vector_time.push_back(note_vector.at(i));
     }
     std::sort(note_vector_time.begin(),note_vector_time.end(),isSmaller);
-//    for(unsigned i=0; i < note_vector_time.size(); i++){
-//        if(note_vector_time.at(i)->finish == 0){
-//            gridLayout->addWidget(note_vector_time.at(i));
-//        }
-//    }
     QString aheadDate;
     for(unsigned i=0; i < note_vector_time.size(); i++){
         Note *notei= note_vector_time.at(i);
@@ -455,6 +453,9 @@ void Dialog::suspendDiaBack(){
 
 void Dialog::on_toSusbendBtn_clicked()
 {
+    for (unsigned i = 0; i < note_vector.size(); i++){
+        note_vector.at(i)->setAmShow(false);
+    }
     s = new SuspendDia(nullptr,logsTimed);  // 创建一个子窗口
     s->show();
     this->hide();   // 隐藏主窗口

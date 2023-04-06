@@ -58,7 +58,7 @@ Addnew::Addnew(std::vector<Note*> *note_vector) :
             min_=min_.asprintf("%02d",min);
             hou_=hou_.asprintf("%02d",hou);              //为了补0 的无奈之举
             QString timestr_new = hou_+":"+min_;
-            qDebug()<<timestr_new;
+            //qDebug()<<timestr_new;
             time = QTime::fromString(timestr_new,"hh:mm");
             //qDebug()<<time;
             ui->dateDateEdit->setDate(date);
@@ -304,8 +304,8 @@ void Addnew::on_pushButton_clicked()
     {str[5] = ui->spinBox->text();
     str[6] = ui->comboBox_2->currentText();}
 
-    for(int i=0;i<7;i++)
-        qDebug()<<str[i]<<endl;           //在Qt界面输出以上五点（类似调试输出）
+//    for(int i=0;i<7;i++)
+//        qDebug()<<str[i]<<endl;           //在Qt界面输出以上五点（类似调试输出）
     //以下用于写入note_vector
     Note *n1 = nullptr;
     n1 = new Note(note_vector1,0,str[0], str[1], str[2], str[4], str[3],str[5],str[6]);

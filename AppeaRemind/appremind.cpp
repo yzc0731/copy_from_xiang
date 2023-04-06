@@ -3,6 +3,7 @@
 #include "QPainter"
 #include <QPoint>
 #include <QMouseEvent>
+#include <QDebug>
 
 AppRemind::AppRemind(QString Thing, QString Date, QString Time):
     ui(new Ui::AppRemind)
@@ -10,8 +11,11 @@ AppRemind::AppRemind(QString Thing, QString Date, QString Time):
     ui->setupUi(this);
     this->setWindowFlags(Qt::FramelessWindowHint | windowFlags());
     this->setAttribute(Qt::WA_TranslucentBackground,true);
+    QFont font ("Microsoft YaHei", 10, 75);
     ui->label_2->setText(Thing);
+    ui->label_2->setFont(font);
     ui->label->setText(Date+" "+Time);
+    ui->label->setFont(font);
 }
 
 AppRemind::~AppRemind()
@@ -42,12 +46,19 @@ void AppRemind::paintEvent(QPaintEvent *)
     QPainter p(this);
     for(int i=0;i<=60;i++)
     {
-        p.setPen(QPen(QColor(0,120,255,3*i),5));
+        p.setPen(QPen(QColor(0,120,255,3*i),7));
         p.drawLine(QPointF(i,i),QPointF(i,i));
     }
     p.drawLine(QPoint(60,60),QPoint(60,90));
     p.drawLine(QPoint(60,60),QPoint(90,60));
-    p.drawLine(QPoint(30,30),QPoint(90,30));
-    p.setPen(QPen(QColor(0,120,255,4*60),6));//蓝色
-    p.drawRect(60,60,120,120);    //to do: capacity change to 0
+    p.setBrush(QColor(255,255,255,150));
+    p.setPen(Qt::NoPen);//没有线条
+    p.drawRect(60,0,145,58);
+    QPainterPath path;
+    path.moveTo (0, 0);
+    path.lineTo (60, 0);
+    path.lineTo (60, 60);
+    path.lineTo (0, 0);
+    p.fillPath (path, QColor(255,255,255,150));
+    //p.drawRect(60,60,120,120);    //TODO: capacity change to 0
 }

@@ -42,12 +42,10 @@ public:
     void onRefresh_for_time();
     void closeEvent(QCloseEvent *); // 点击“x”按钮
     bool isLogsTimed();
-
     void composeRefresh();
     void settingsToFile();
     void getSettingsFromFile();
     void paintEvent(QPaintEvent *ev);
-
     QSystemTrayIcon *trayIcon;
     QSystemTrayIcon *ten_trayIcon;
     QSystemTrayIcon *five_trayIcon;
@@ -57,6 +55,7 @@ public:
     QMenu *five_menu;
     QMenu *three_menu;
     QSystemTrayIcon* m_systray;         //xsr 20230402
+
 public slots:
     void on_pushButton_clicked();
     void on_pushButton_2_clicked();
@@ -65,6 +64,7 @@ public slots:
     void on_pushButton_5_toggled(bool checked);
     void timeUpdate(void);
     void suspendDiaBack();
+
 public:
     Ui::Dialog *ui;
     Ui::dateTime  *warning;

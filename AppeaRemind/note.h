@@ -30,6 +30,8 @@ public:
     void paintEvent(QPaintEvent * ev);   //20230315设置Note面背景
     void emit_exchange();   //20230327
     //void opacityChange();
+    bool isAmShow();
+    void setAmShow(bool flag);
 
 signals:
     void refresh();
@@ -41,8 +43,8 @@ private slots:
 
 private:
     Ui::Note *ui;
+    bool amShow = false;
     AppRemind *am;
-    bool isAm = false;
     //QTimer *timer;
     //double noteExitPacity = 1.00;
 };

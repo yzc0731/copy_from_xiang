@@ -31,10 +31,13 @@ public:
     void mouseMoveEvent(QMouseEvent *);        //鼠标移动事件
     void settingsToFile();
     void getSettingsFromFile();
+
 public slots:
     void pacityChange();
+
 signals:
     void back();
+
 private slots:
     void on_exitBtn_clicked();
     void on_settingBtn_clicked();

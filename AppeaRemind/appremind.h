@@ -14,9 +14,9 @@ class AppRemind : public QDialog
 public:
     explicit AppRemind(QString Thing = "", QString Date = "", QString Time = "");
     ~AppRemind();
-    void mousePressEvent(QMouseEvent *e);       //鼠标按下事件
-    void mouseMoveEvent(QMouseEvent *e);        //鼠标移动事件
-    void mouseReleaseEvent(QMouseEvent *e);     //鼠标释放事件
+    void mousePressEvent(QMouseEvent *e);
+    void mouseMoveEvent(QMouseEvent *e);
+    void mouseReleaseEvent(QMouseEvent *e);
 
 private:
     Ui::AppRemind *ui;

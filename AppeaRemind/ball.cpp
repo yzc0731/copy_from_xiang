@@ -20,10 +20,9 @@ Ball::Ball(QWidget *parent, QString text, QPoint posBegin, int radius, QString i
     if(_text == ""){
         _text = "Nothing!";
     }
-    // 无边框
-    this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint|Qt::WindowStaysOnTopHint);
-    // 窗口整体透明，但窗口控件不透明
-    this->setAttribute(Qt::WA_TranslucentBackground,true);
+    this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint |
+                         Qt::WindowMinMaxButtonsHint|Qt::WindowStaysOnTopHint);// 无边框
+    this->setAttribute(Qt::WA_TranslucentBackground,true);// 窗口整体透明，但窗口控件不透明
 }
 
 void Ball::paintEvent(QPaintEvent *)
@@ -47,13 +46,11 @@ void Ball::paintEvent(QPaintEvent *)
     //    p.setBrush(QColor(255,0,0,150));      //纯红色
     //}
     p.setPen(Qt::NoPen);//没有线条
-    //画圆形
-    p.drawEllipse(_center,_radius,_radius);
-    //添加文本，QTextOption(Qt::AlignCenter)可以让文本居中
+    p.drawEllipse(_center,_radius,_radius);//画圆形
     QPen pen = QPen(Qt::black);
     p.setPen(pen);
     p.drawText(QRect(_center.x()-_radius,_center.x()-_radius,2*_radius,2*_radius),
-               _text, QTextOption(Qt::AlignCenter));
+               _text, QTextOption(Qt::AlignCenter));//添加文本
 }
 
 Ball::~Ball()
@@ -113,7 +110,7 @@ bool Ball::isContains(QPoint p){
             && _center.x()+_radius > p.x()
             && _center.y()-_radius < p.y()
             && _center.y()+_radius > p.y());
-}  //将其看做方形的？
+}
 
 void Ball::mouseDoubleClickEvent(QMouseEvent *)
 {

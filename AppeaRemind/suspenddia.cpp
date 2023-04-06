@@ -194,6 +194,9 @@ void SuspendDia::addStringToBall(Note *note)
 
 void SuspendDia::on_exitBtn_clicked()
 {
+    for (unsigned i = 0; i < note_vector.size(); i++){
+        note_vector.at(i)->setAmShow(false);
+    }
     if(set){
         set->close();
     }
@@ -223,6 +226,9 @@ void SuspendDia::backFromSet()
 
 void SuspendDia::mouseDoubleClickEvent(QMouseEvent *)
 {
+    for (unsigned i = 0; i < note_vector.size(); i++){
+        note_vector.at(i)->setAmShow(false);
+    }
     if(hasSet){
         set->close();
         backFromSet();
@@ -359,6 +365,9 @@ void SuspendDia::pacityChange(){
 
 void SuspendDia::on_backBtn_clicked()
 {
+    for (unsigned i = 0; i < note_vector.size(); i++){
+        note_vector.at(i)->setAmShow(false);
+    }
     hasBall = true;
     if(set != nullptr){
         set->close();
