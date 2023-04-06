@@ -25,17 +25,12 @@ Note::Note(QWidget *parent) :
 
 Note::Note(std::vector<Note*> *note_vector,int num,QString str1,
            QString str2, QString str3, QString str4,QString str5,
-           QString str6,QString str7, bool amShow)
+           QString str6,QString str7)
     :finish(num),Thing(str1),Time(str2),Date(str3),
       ddl(str4),note(str5),repeat_times(str6),
-      repeat_gap(str7), amShow_(amShow), ui(new Ui::Note)
+      repeat_gap(str7), ui(new Ui::Note)
 {
     this->am = new AppRemind(this->Thing, this->Date, this->Time);
-    if(amShow_){
-        am->show();
-    } else {
-        am->hide();
-    }
     index=note_vector->size();
     ui->setupUi(this);
     this->note_vector=note_vector;
@@ -247,32 +242,21 @@ void Note::on_checkBox_clicked()
         this->am->close();
         ui->pushButton_2->setText("+");
     }
-        Vector_ vector;
-        vector.vector_for_file(*note_vector);
-        emit refresh();
+    Vector_ vector;
+    vector.vector_for_file(*note_vector);
+    emit refresh();
 }
-//
+
 void Note::on_pushButton_clicked()
 {
     EditDialog *edi = new EditDialog(this,this->Thing,this->Time,this->Date,this->note,this->ddl,this->repeat_times,this->repeat_gap);  //通过新窗口的构造函数实现对this的内容的更改
     edi->exec();
     emit refresh();
-    //Vector_ vector;
-    //vector.vector_for_file(*note_vector);
-    //目前需要重启才能生效
 }
 void Note::on_pushButton_2_clicked()
 {
     if (!finish){
-        if (!amShow_){
-            this->am->show();
-            amShow_ = true;
-            ui->pushButton_2->setText("-");
-        } else {
-            this->am->hide();
-            amShow_ = false;
-            ui->pushButton_2->setText("+");
-        }
+        setAmShow(!amShow_);
     }
 }
 void Note::paintEvent(QPaintEvent * )   //20230315设置主界面背景
@@ -307,7 +291,9 @@ void Note::setAmShow(bool flag)
     amShow_ = flag;
     if(flag){
         am->show();
+        ui->pushButton_2->setText("-");
     } else {
         am->hide();
+        ui->pushButton_2->setText("+");
     }
 }

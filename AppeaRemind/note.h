@@ -16,7 +16,7 @@ public:
     explicit Note(QWidget *parent = nullptr);
     explicit Note(std::vector<Note*> *note_vector, int num = 0, QString str1 = "空",
                   QString str2 = "00:00",QString str3 = "2023/01/01",QString str4 = "无",
-                  QString str5 = "",QString str6 = "#",QString str7 = "#", bool amShow = 0);
+                  QString str5 = "",QString str6 = "#",QString str7 = "#");
     ~Note();
     int index;
     int finish;
@@ -32,7 +32,7 @@ public:
     void paintEvent(QPaintEvent * ev);   //20230315设置Note面背景
     void emit_exchange();   //20230327
     void setAmShow(bool flag);
-    bool amShow_;
+    bool amShow_ = false;
 
 signals:
     void refresh();

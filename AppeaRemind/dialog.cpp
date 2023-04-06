@@ -191,9 +191,9 @@ void Dialog::timeUpdate(void)
 
 void Dialog::closeEvent(QCloseEvent *){
     //关闭所有appremind窗口
-//    for (unsigned i = 0; i < note_vector.size(); i++){
-//        note_vector.at(i)->setAmShow(false);
-//    }
+    for (unsigned i = 0; i < note_vector.size(); i++) {
+        note_vector.at(i)->setAmShow(false);
+    }
     // 点击关闭之后，跳出下面这个对话框。
     // 如果选择no或者右上角的“x”，啥都不做，直接退出
     // 如果选择yes，就跳出悬浮界面
@@ -263,7 +263,7 @@ void Dialog::onRefresh() {        //用于初始化和添加的刷新函数
     gridLayout->setVerticalSpacing(20);
     QFile file;
     file.setFileName("log.txt");                                     //保存到本地地址
-    QString str_read[10];
+    QString str_read[9];
     QString strline;
     int num;
     if (file.open(QIODevice::ReadOnly))                              //只读
@@ -278,13 +278,12 @@ void Dialog::onRefresh() {        //用于初始化和添加的刷新函数
             if (c0 > 57 || c0 < 48)
             { return; }
             QStringList list = strline.split(" ");                   //以一个空格为分隔符
-            for (int i = 0; i < 10; i++){str_read[i] = list[i];}
+            for (int i = 0; i < 9; i++){str_read[i] = list[i];}
             num = str_read[0].toInt();                 //将第一个数据转化为int类
-            bool amShow = str_read[8].toInt();
-            Note *n1 = new Note(&note_vector, num, str_read[1],
-                    str_read[2],str_read[3], str_read[4],
-                    str_read[5],str_read[6], str_read[7], amShow);
-            QObject::connect(n1,&Note::refresh,this,&Dialog::composeRefresh);  //关联信号和槽
+            Note* n1 = new Note(&note_vector, num, str_read[1], 
+                str_read[2], str_read[3], str_read[4], 
+                str_read[5], str_read[6], str_read[7]);
+            QObject::connect(n1,&Note::refresh,this,&Dialog::composeRefresh);
             note_vector.push_back(n1);                //放到vector最后一个位置
             if (n1->finish == 0) {
                 gridLayout->addWidget(n1);
@@ -307,7 +306,7 @@ void Dialog::onRefresh1() {     //专门用于编辑的刷新函数
     QGridLayout *gridLayout = new QGridLayout();                   //网格布局
     QFile file;
     file.setFileName("log.txt");                                    //保存到本地地址
-    QString str_read[10];
+    QString str_read[9];
     QString strline;
     int num;
     if (file.open(QIODevice::ReadOnly))                              //只读
@@ -322,14 +321,13 @@ void Dialog::onRefresh1() {     //专门用于编辑的刷新函数
             if (c0 > 57 || c0 < 48)
             { return; }
             QStringList list = strline.split(" ");                   //以一个空格为分隔符
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 9; i++) {
                 str_read[i] = list[i];
             }
             num = str_read[0].toInt();         //将第一个数据转化为int类
-            bool amShow = str_read[8].toInt();
-            Note *n1 = new Note(&note_vector, num, str_read[1],
-                    str_read[2],str_read[3], str_read[4],
-                    str_read[5],str_read[6], str_read[7], amShow);
+            Note* n1 = new Note(&note_vector, num, str_read[1],
+                str_read[2], str_read[3], str_read[4],
+                str_read[5], str_read[6], str_read[7]);
             QObject::connect(n1,&Note::refresh,this,&Dialog::composeRefresh);   //关联信号和槽
             note_vector.push_back(n1);         //放到vector最后一个位置
             if (n1->finish == 0) {gridLayout->addWidget(n1);}
@@ -353,7 +351,7 @@ void Dialog::onRefresh_for_time(){        //用于时间顺序的刷新函数
     gridLayout->setVerticalSpacing(20);
     QFile file;
     file.setFileName("log.txt");                                     //保存到本地地址
-    QString str_read[10];//这里我把9改成10
+    QString str_read[9];
     QString strline;
     int num;
     if (file.open(QIODevice::ReadOnly))                              //只读
@@ -367,12 +365,11 @@ void Dialog::onRefresh_for_time(){        //用于时间顺序的刷新函数
             char c0 = c.toLatin1();
             if (c0 > 57 || c0 < 48) { return; }
             QStringList list = strline.split(" ");                   //以一个空格为分隔符
-            for (int i = 0; i < 10; i++) { str_read[i] = list[i]; }  //这里我把9改成10
+            for (int i = 0; i < 9; i++) { str_read[i] = list[i]; }  //这里我把9改成10
             num = str_read[0].toInt();                 //将第一个数据转化为int类
-            bool amShow = str_read[8].toInt();
-            Note *n1 = new Note(&note_vector, num, str_read[1],
-                    str_read[2],str_read[3], str_read[4],
-                    str_read[5],str_read[6], str_read[7], amShow);
+            Note* n1 = new Note(&note_vector, num, str_read[1],
+                str_read[2], str_read[3], str_read[4],
+                str_read[5], str_read[6], str_read[7]);
             QObject::connect(n1, &Note::refresh, this, &Dialog::composeRefresh);  //关联信号和槽
             note_vector.push_back(n1);                //放到vector最后一个位置
 
@@ -454,9 +451,10 @@ void Dialog::suspendDiaBack(){
 
 void Dialog::on_toSusbendBtn_clicked()
 {
-//    for (unsigned i = 0; i < note_vector.size(); i++){
-//        note_vector.at(i)->setAmShow(false);
-//    }
+    for (unsigned i = 0; i < note_vector.size(); i++){
+        note_vector.at(i)->setAmShow(false);
+    }
+    qDebug() << note_vector.size();
     s = new SuspendDia(nullptr,logsTimed);  // 创建一个子窗口
     s->show();
     this->hide();   // 隐藏主窗口
@@ -541,8 +539,7 @@ int Dialog::OnExit()
 
 int Dialog::OnSystemTrayClicked(QSystemTrayIcon::ActivationReason reason)
 {
-    if (reason == QSystemTrayIcon::Trigger
-        || reason == QSystemTrayIcon::DoubleClick)
+    if (reason == QSystemTrayIcon::Trigger|| reason == QSystemTrayIcon::DoubleClick)
     {
         // 显示主窗口
         this->showNormal();

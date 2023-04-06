@@ -53,7 +53,7 @@ void AppRemind::paintEvent(QPaintEvent *)
     p.drawLine(QPoint(60,60),QPoint(90,60));
     p.setBrush(QColor(255,255,255,150));
     p.setPen(Qt::NoPen);//没有线条
-    p.drawRect(60,0,145,58);
+    p.drawRect(60,0,170,58);
     QPainterPath path;
     path.moveTo (0, 0);
     path.lineTo (60, 0);
