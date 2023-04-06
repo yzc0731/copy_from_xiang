@@ -23,11 +23,19 @@ Note::Note(QWidget *parent) :
     this->setAttribute(Qt::WA_TranslucentBackground);
 }
 
-Note::Note(std::vector<Note*> *note_vector,int num,QString str1,QString str2,QString str3,QString str4,QString str5,QString str6,QString str7) :
-        finish(num),Thing(str1),Time(str2),Date(str3),ddl(str4),note(str5),repeat_times(str6),repeat_gap(str7),ui(new Ui::Note)
+Note::Note(std::vector<Note*> *note_vector,int num,QString str1,
+           QString str2, QString str3, QString str4,QString str5,
+           QString str6,QString str7, bool amShow)
+    :finish(num),Thing(str1),Time(str2),Date(str3),
+      ddl(str4),note(str5),repeat_times(str6),
+      repeat_gap(str7), amShow_(amShow), ui(new Ui::Note)
 {
-    //this->amShow = false;
     this->am = new AppRemind(this->Thing, this->Date, this->Time);
+    if(amShow_){
+        am->show();
+    } else {
+        am->hide();
+    }
     index=note_vector->size();
     ui->setupUi(this);
     this->note_vector=note_vector;
@@ -235,7 +243,7 @@ void Note::on_checkBox_clicked()
                 note_vector->at(index)->repeat_gap = "#";
             }
         }
-    if(amShow){
+    if(amShow_){
         this->am->close();
         ui->pushButton_2->setText("+");
     }
@@ -256,13 +264,13 @@ void Note::on_pushButton_clicked()
 void Note::on_pushButton_2_clicked()
 {
     if (!finish){
-        if (!amShow){
+        if (!amShow_){
             this->am->show();
-            amShow = true;
+            amShow_ = true;
             ui->pushButton_2->setText("-");
         } else {
             this->am->hide();
-            amShow = false;
+            amShow_ = false;
             ui->pushButton_2->setText("+");
         }
     }
@@ -294,14 +302,9 @@ void Note::emit_exchange()
     emit delete_();
 }
 
-bool Note::isAmShow()
-{
-    return amShow;
-}
-
 void Note::setAmShow(bool flag)
 {
-    amShow = flag;
+    amShow_ = flag;
     if(flag){
         am->show();
     } else {

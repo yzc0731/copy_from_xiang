@@ -57,7 +57,7 @@ private:
 public:
     QPoint _beginPos = QPoint(100,100);
     SettingDia *set = nullptr;
-    Note *notesus = nullptr;
+    //Note *notesus = nullptr;
     Ball *ball = nullptr;
 };
 

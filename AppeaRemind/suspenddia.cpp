@@ -62,7 +62,7 @@ void SuspendDia::onRefresh()
 
     QFile file;
     file.setFileName("log.txt");
-    QString str_read[9];
+    QString str_read[10];
     QString strline;
     int num;
 
@@ -81,12 +81,14 @@ void SuspendDia::onRefresh()
             char c0 = c.toLatin1();
             if (c0 > 57 || c0 < 48) { return; }
             QStringList list = strline.split(" ");                   //以一个空格为分隔符
-            for (int i = 0; i < 9; i++) {
+            for (int i = 0; i < 10; i++) {
                 str_read[i] = list[i];
             }
             num = str_read[0].toInt();   //将第一个数据转化为int类
-            notesus = new Note(&note_vector,num,str_read[1],str_read[2],str_read[3],
-                    str_read[4],str_read[5],str_read[6],str_read[7]);
+            bool amShow = str_read[8].toInt();
+            Note *notesus = new Note(&note_vector, num, str_read[1],
+                    str_read[2],str_read[3], str_read[4],
+                    str_read[5],str_read[6], str_read[7], amShow);
             QObject::connect(notesus,&Note::refresh,this,&SuspendDia::onRefresh);  //关联信号和槽
             //每次点击都能实现
             note_vector.push_back(notesus);   //将读到的每行数据放到vector中，这个vector中的所有数据最后又会重新写入log.txt文件
@@ -117,7 +119,7 @@ void SuspendDia::onRefreshForTime()
 
     QFile file;
     file.setFileName("log.txt");                                     //打开本地地址
-    QString str_read[9];
+    QString str_read[10];
     QString strline;
     int num;
 
@@ -134,11 +136,12 @@ void SuspendDia::onRefreshForTime()
             char c0 = c.toLatin1();
             if (c0 > 57 || c0 < 48) { return; }
             QStringList list = strline.split(" ");                   //以一个空格为分隔符
-            for (int i = 0; i < 9; i++) { str_read[i] = list[i]; }
+            for (int i = 0; i < 10; i++) { str_read[i] = list[i]; }
             num = str_read[0].toInt();                 //将第一个数据转化为int类
+            bool amShow = str_read[8].toInt();
             Note *n1 = new Note(&note_vector, num, str_read[1],
-                        str_read[2], str_read[3],str_read[4],
-                        str_read[5],str_read[6], str_read[7]);
+                    str_read[2],str_read[3], str_read[4],
+                    str_read[5],str_read[6], str_read[7], amShow);
             QObject::connect(n1, &Note::refresh, this, &SuspendDia::onRefreshForTime);
             //因为在这个界面上没有办法修改顺序，所以就不需要composeRefresh
             note_vector.push_back(n1);                //放到vector最后一个位置
@@ -194,9 +197,9 @@ void SuspendDia::addStringToBall(Note *note)
 
 void SuspendDia::on_exitBtn_clicked()
 {
-    for (unsigned i = 0; i < note_vector.size(); i++){
-        note_vector.at(i)->setAmShow(false);
-    }
+//    for (unsigned i = 0; i < note_vector.size(); i++){
+//        note_vector.at(i)->setAmShow(false);
+//    }
     if(set){
         set->close();
     }
@@ -226,9 +229,9 @@ void SuspendDia::backFromSet()
 
 void SuspendDia::mouseDoubleClickEvent(QMouseEvent *)
 {
-    for (unsigned i = 0; i < note_vector.size(); i++){
-        note_vector.at(i)->setAmShow(false);
-    }
+//    for (unsigned i = 0; i < note_vector.size(); i++){
+//        note_vector.at(i)->setAmShow(false);
+//    }
     if(hasSet){
         set->close();
         backFromSet();
@@ -365,9 +368,9 @@ void SuspendDia::pacityChange(){
 
 void SuspendDia::on_backBtn_clicked()
 {
-    for (unsigned i = 0; i < note_vector.size(); i++){
-        note_vector.at(i)->setAmShow(false);
-    }
+//    for (unsigned i = 0; i < note_vector.size(); i++){
+//        note_vector.at(i)->setAmShow(false);
+//    }
     hasBall = true;
     if(set != nullptr){
         set->close();

@@ -169,38 +169,35 @@ void Dialog::timeUpdate(void)
             sign[m] = 1;                                                     //防止不会一直弹出
         }
         if((str_time[m][4] == "非常重要")&&(settime[m] == ten_later_systime)&&(ten_sign[m] == 0)) //提前60分钟——非常重要
-                {
-
-                    QIcon icon1 = QApplication::style()->standardIcon((QStyle::StandardPixmap)9);
-                    m_systray->showMessage(name+" 仅剩60分钟！ ", thing, icon1);
-
-                   //dateTime *alarm = new dateTime;
-                    //alarm -> show();
-                        ten_sign[m] = 1;
-                }
+        {
+            QIcon icon1 = QApplication::style()->standardIcon((QStyle::StandardPixmap)9);
+            m_systray->showMessage(name+" 仅剩60分钟！ ", thing, icon1);
+            ten_sign[m] = 1;
+        }
         if(((str_time[m][4] == "重要")||(str_time[m][4] == "非常重要"))&&(settime[m] == five_later_systime)&&(five_sign[m] == 0)) //提前5分钟——紧迫、重要
-                {
-                        QIcon icon1 = QApplication::style()->standardIcon((QStyle::StandardPixmap)9);
-                        m_systray->showMessage(name+" 仅剩30分钟！ ", thing, icon1);
-                        five_sign[m] = 1;
-                }
+        {
+            QIcon icon1 = QApplication::style()->standardIcon((QStyle::StandardPixmap)9);
+            m_systray->showMessage(name+" 仅剩30分钟！ ", thing, icon1);
+            five_sign[m] = 1;
+        }
         if(((str_time[m][4] == "比较重要")||(str_time[m][4] == "重要")||(str_time[m][4] == "非常重要"))&&(settime[m] == three_later_systime)&&(three_sign[m] == 0)) //提前3分钟——比较重要、重要、紧迫
-                {
-                        QIcon icon1 = QApplication::style()->standardIcon((QStyle::StandardPixmap)9);
-                        m_systray->showMessage(name+" 仅剩10分钟！ ", thing, icon1);
-                        three_sign[m] = 1;
-                }
+        {
+            QIcon icon1 = QApplication::style()->standardIcon((QStyle::StandardPixmap)9);
+            m_systray->showMessage(name+" 仅剩10分钟！ ", thing, icon1);
+            three_sign[m] = 1;
+        }
    }
 }
 
 void Dialog::closeEvent(QCloseEvent *){
+    //关闭所有appremind窗口
+//    for (unsigned i = 0; i < note_vector.size(); i++){
+//        note_vector.at(i)->setAmShow(false);
+//    }
     // 点击关闭之后，跳出下面这个对话框。
     // 如果选择no或者右上角的“x”，啥都不做，直接退出
     // 如果选择yes，就跳出悬浮界面
     // 这个函数结束之后主界面直接关闭
-    for (unsigned i = 0; i < note_vector.size(); i++){
-        note_vector.at(i)->setAmShow(false);
-    }
     QMessageBox *questionBox = new QMessageBox(this);
     questionBox->setIcon(QMessageBox::Question);
     questionBox->setText("是否进入桌面悬浮状态");
@@ -266,7 +263,7 @@ void Dialog::onRefresh() {        //用于初始化和添加的刷新函数
     gridLayout->setVerticalSpacing(20);
     QFile file;
     file.setFileName("log.txt");                                     //保存到本地地址
-    QString str_read[9];
+    QString str_read[10];
     QString strline;
     int num;
     if (file.open(QIODevice::ReadOnly))                              //只读
@@ -281,11 +278,12 @@ void Dialog::onRefresh() {        //用于初始化和添加的刷新函数
             if (c0 > 57 || c0 < 48)
             { return; }
             QStringList list = strline.split(" ");                   //以一个空格为分隔符
-            for (int i = 0; i < 9; i++){str_read[i] = list[i];}
+            for (int i = 0; i < 10; i++){str_read[i] = list[i];}
             num = str_read[0].toInt();                 //将第一个数据转化为int类
-            Note *n1 = new Note(&note_vector,num, str_read[1],
-                    str_read[2], str_read[3], str_read[4],
-                    str_read[5], str_read[6], str_read[7]);
+            bool amShow = str_read[8].toInt();
+            Note *n1 = new Note(&note_vector, num, str_read[1],
+                    str_read[2],str_read[3], str_read[4],
+                    str_read[5],str_read[6], str_read[7], amShow);
             QObject::connect(n1,&Note::refresh,this,&Dialog::composeRefresh);  //关联信号和槽
             note_vector.push_back(n1);                //放到vector最后一个位置
             if (n1->finish == 0) {
@@ -298,7 +296,6 @@ void Dialog::onRefresh() {        //用于初始化和添加的刷新函数
 }
 
 void Dialog::onRefresh1() {     //专门用于编辑的刷新函数
-   //
     if (ui->frame_2->widget()->layout() != nullptr) {   //删除原有布局
         QLayoutItem *item;
         while ((item = ui->frame_2->widget()->layout()->takeAt(0)) != nullptr) {
@@ -310,7 +307,7 @@ void Dialog::onRefresh1() {     //专门用于编辑的刷新函数
     QGridLayout *gridLayout = new QGridLayout();                   //网格布局
     QFile file;
     file.setFileName("log.txt");                                    //保存到本地地址
-    QString str_read[9];
+    QString str_read[10];
     QString strline;
     int num;
     if (file.open(QIODevice::ReadOnly))                              //只读
@@ -325,11 +322,14 @@ void Dialog::onRefresh1() {     //专门用于编辑的刷新函数
             if (c0 > 57 || c0 < 48)
             { return; }
             QStringList list = strline.split(" ");                   //以一个空格为分隔符
-            for (int i = 0; i < 9; i++) {
+            for (int i = 0; i < 10; i++) {
                 str_read[i] = list[i];
             }
             num = str_read[0].toInt();         //将第一个数据转化为int类
-            Note *n1 = new Note(&note_vector, num, str_read[1], str_read[2], str_read[3], str_read[4], str_read[5],str_read[6],str_read[7]);
+            bool amShow = str_read[8].toInt();
+            Note *n1 = new Note(&note_vector, num, str_read[1],
+                    str_read[2],str_read[3], str_read[4],
+                    str_read[5],str_read[6], str_read[7], amShow);
             QObject::connect(n1,&Note::refresh,this,&Dialog::composeRefresh);   //关联信号和槽
             note_vector.push_back(n1);         //放到vector最后一个位置
             if (n1->finish == 0) {gridLayout->addWidget(n1);}
@@ -353,7 +353,7 @@ void Dialog::onRefresh_for_time(){        //用于时间顺序的刷新函数
     gridLayout->setVerticalSpacing(20);
     QFile file;
     file.setFileName("log.txt");                                     //保存到本地地址
-    QString str_read[9];
+    QString str_read[10];//这里我把9改成10
     QString strline;
     int num;
     if (file.open(QIODevice::ReadOnly))                              //只读
@@ -367,11 +367,12 @@ void Dialog::onRefresh_for_time(){        //用于时间顺序的刷新函数
             char c0 = c.toLatin1();
             if (c0 > 57 || c0 < 48) { return; }
             QStringList list = strline.split(" ");                   //以一个空格为分隔符
-            for (int i = 0; i < 9; i++) { str_read[i] = list[i]; }
+            for (int i = 0; i < 10; i++) { str_read[i] = list[i]; }  //这里我把9改成10
             num = str_read[0].toInt();                 //将第一个数据转化为int类
+            bool amShow = str_read[8].toInt();
             Note *n1 = new Note(&note_vector, num, str_read[1],
                     str_read[2],str_read[3], str_read[4],
-                    str_read[5],str_read[6], str_read[7]);
+                    str_read[5],str_read[6], str_read[7], amShow);
             QObject::connect(n1, &Note::refresh, this, &Dialog::composeRefresh);  //关联信号和槽
             note_vector.push_back(n1);                //放到vector最后一个位置
 
@@ -453,9 +454,9 @@ void Dialog::suspendDiaBack(){
 
 void Dialog::on_toSusbendBtn_clicked()
 {
-    for (unsigned i = 0; i < note_vector.size(); i++){
-        note_vector.at(i)->setAmShow(false);
-    }
+//    for (unsigned i = 0; i < note_vector.size(); i++){
+//        note_vector.at(i)->setAmShow(false);
+//    }
     s = new SuspendDia(nullptr,logsTimed);  // 创建一个子窗口
     s->show();
     this->hide();   // 隐藏主窗口
