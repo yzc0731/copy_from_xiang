@@ -62,7 +62,7 @@ public slots:
     void on_pushButton_4_clicked();
     void on_toSusbendBtn_clicked();
     void on_pushButton_5_toggled(bool checked);
-    void timeUpdate(void);
+    void timeUpdate();
     void suspendDiaBack();
 
 public:
@@ -74,9 +74,9 @@ public:
     QString systime,three_later_systime,five_later_systime,ten_later_systime;
     //QString str_time[10][7];
     int sign[100] = {0};
-    int ten_sign[10] = {0};          //
-    int three_sign[10] = {0};       //
-    int five_sign[10] = {0};        //
+    int ten_sign[100] = {0};          //
+    int three_sign[100] = {0};       //
+    int five_sign[100] = {0};        //
     int m = 0;
 
 private:

@@ -3,7 +3,6 @@
 #include <vector>
 #include <algorithm>
 #include <QGridLayout>
-#include <QDebug>
 #include <QFile>
 #include <QFileInfo>
 #include <QTextCodec>
@@ -12,6 +11,7 @@
 #include <QCheckBox>
 #include <QPushButton>
 #include <QDateTime>
+#include <QDebug>
 #include <QTime>
 #include <QTimer>
 #include <QMessageBox>
@@ -73,6 +73,7 @@ Dialog::Dialog(QWidget *parent)
     m_systray->setIcon(QIcon("Dialog_pic.png"));
     //托盘菜单项
     QMenu * menu = new QMenu();
+    menu->addAction(ui->action_add_new);
     menu->addAction(ui->actionExit);
     m_systray->setContextMenu(menu);
     // 关联托盘事件
@@ -82,6 +83,7 @@ Dialog::Dialog(QWidget *parent)
     m_systray->show();
     //托盘菜单响应
     connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(OnExit()));
+    connect(ui->action_add_new, SIGNAL(triggered()), this, SLOT(on_pushButton_clicked()));
 }
 
 Dialog::~Dialog() {
@@ -96,49 +98,43 @@ void Dialog::on_pushButton_clicked() {
 
 void Dialog::on_pushButton_2_clicked() {
     About *about = new About;
-    about->show();
+    about->exec();
+    //about->show();
 }  //打开关于面板
 
 void Dialog::on_pushButton_4_clicked() {
     history *a = new history(this, &note_vector);
-    a->show();
+    a->exec();
+    //a->show();
 }   //历史事项对应窗口
 
-void Dialog::timeUpdate(void)
+void Dialog::timeUpdate()
 {
     datetime = QDateTime::currentDateTime();
     systime = datetime.toString("hh:mm yyyy/MM/dd");
     QFile file, file1;
-    // int line = 0;
-    // 得出事项的数目
     file1.setFileName("log.txt");                                      //保存到本地地址
     QString strline;
     if (file1.open(QIODevice::ReadOnly))                               //只读
     {
         QTextCodec *codec = QTextCodec::codecForName("GBK");         //指定读码方式为GBK
-        //note_vector1.clear();
         while (!file1.atEnd())                                        //当没有读到文件末尾时
         {
             strline = codec->toUnicode(file1.readLine());             //以GBK的编码方式读取一行
             QChar c = strline[0];                                    //判断第一个字符是否是回车符（空文件只有一个回车符）
             char c0 = c.toLatin1();
             if (c0 > 57 || c0 < 48) { return; }
-            //QStringList list = strline.split(" ");                   //以一个空格为分隔符
             line ++;
         }
     }
     //识别事项
     file.setFileName("log.txt");                                      //保存到本地地址
-    //QString str_read[10][7];
-    //QString strline;
     QString str_time[line][7];
     int mark[line];
     int j = 0;
     if (file.open(QIODevice::ReadOnly))                               //只读
     {
         QTextCodec *codec = QTextCodec::codecForName("GBK");         //指定读码方式为GBK
-        //note_vector1.clear();
-
         while (!file.atEnd())                                        //当没有读到文件末尾时
         {
             strline = codec->toUnicode(file.readLine());             //以GBK的编码方式读取一行
@@ -155,7 +151,9 @@ void Dialog::timeUpdate(void)
     }
     QString settime[line];
     for(int z = 0; z < line; z++)                                             //读取所有设定时间并转化为字符串
-    settime[z] = str_time[z][2] + " " + str_time[z][3];
+    {
+        settime[z] = str_time[z][2] + " " + str_time[z][3];
+    }
 
     for(m = 0;m < line; m++)
     {
@@ -170,18 +168,39 @@ void Dialog::timeUpdate(void)
         }
         if((str_time[m][4] == "非常重要")&&(settime[m] == ten_later_systime)&&(ten_sign[m] == 0)) //提前60分钟——非常重要
         {
+            m_systray->hide();
+            name = str_time[m][1];
+            thing = str_time[m][5];
+            importance = str_time[m][4];
+            connect(m_systray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+            this, SLOT(OnSystemTrayClicked(QSystemTrayIcon::ActivationReason)));
             QIcon icon1 = QApplication::style()->standardIcon((QStyle::StandardPixmap)9);
+            m_systray->show();
             m_systray->showMessage(name+" 仅剩60分钟！ ", thing, icon1);
             ten_sign[m] = 1;
         }
         if(((str_time[m][4] == "重要")||(str_time[m][4] == "非常重要"))&&(settime[m] == five_later_systime)&&(five_sign[m] == 0)) //提前5分钟——紧迫、重要
         {
+            m_systray->hide();
+            name = str_time[m][1];
+            thing = str_time[m][5];
+            importance = str_time[m][4];
+            connect(m_systray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+            this, SLOT(OnSystemTrayClicked(QSystemTrayIcon::ActivationReason)));
+            m_systray->show();
             QIcon icon1 = QApplication::style()->standardIcon((QStyle::StandardPixmap)9);
             m_systray->showMessage(name+" 仅剩30分钟！ ", thing, icon1);
             five_sign[m] = 1;
         }
         if(((str_time[m][4] == "比较重要")||(str_time[m][4] == "重要")||(str_time[m][4] == "非常重要"))&&(settime[m] == three_later_systime)&&(three_sign[m] == 0)) //提前3分钟——比较重要、重要、紧迫
         {
+            m_systray->hide();
+            name = str_time[m][1];
+            thing = str_time[m][5];
+            importance = str_time[m][4];
+            connect(m_systray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+            this, SLOT(OnSystemTrayClicked(QSystemTrayIcon::ActivationReason)));
+            m_systray->show();
             QIcon icon1 = QApplication::style()->standardIcon((QStyle::StandardPixmap)9);
             m_systray->showMessage(name+" 仅剩10分钟！ ", thing, icon1);
             three_sign[m] = 1;
@@ -190,10 +209,6 @@ void Dialog::timeUpdate(void)
 }
 
 void Dialog::closeEvent(QCloseEvent *){
-    //关闭所有appremind窗口
-    for (unsigned i = 0; i < note_vector.size(); i++) {
-        note_vector.at(i)->setAmShow(false);
-    }
     // 点击关闭之后，跳出下面这个对话框。
     // 如果选择no或者右上角的“x”，啥都不做，直接退出
     // 如果选择yes，就跳出悬浮界面
@@ -334,7 +349,6 @@ void Dialog::onRefresh_for_time(){        //用于时间顺序的刷新函数
     }//删除布局之后再从文件中读一遍
 
     note_vector_time.clear();
-    //
     QString date_time_str[note_vector.size()][2];   //储存时间和日期
     QDateTime date_time[note_vector.size()];        //日时
     uint time[note_vector.size()];
@@ -408,9 +422,6 @@ void Dialog::suspendDiaBack(){
 
 void Dialog::on_toSusbendBtn_clicked()
 {
-    for (unsigned i = 0; i < note_vector.size(); i++){
-        note_vector.at(i)->setAmShow(false);
-    }
     s = new SuspendDia(nullptr,logsTimed);  // 创建一个子窗口
     s->show();
     this->hide();   // 隐藏主窗口

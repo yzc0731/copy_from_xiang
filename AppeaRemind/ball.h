@@ -16,7 +16,7 @@ class Ball : public QDialog
 
 public:
     explicit Ball(QWidget *parent = nullptr, QString text = "Nothing on list",
-         QPoint posBegin = QPoint(100,100), int radius = 50, QString importance = "无");
+         QPoint posBegin = QPoint(100,100), int radius = 50, QString importance = "无", double pacity = 1.0);
     void paintEvent(QPaintEvent *);
     ~Ball();
     void enterEvent(QEvent *);

@@ -388,6 +388,19 @@
     <string>退出程序</string>
    </property>
   </action>
+  <action name="action_add_new">
+   <property name="icon">
+    <iconset>
+     <normalon>addnew.png</normalon>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>添加事项</string>
+   </property>
+   <property name="toolTip">
+    <string>添加事项</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="Dialog_pic.qrc"/>

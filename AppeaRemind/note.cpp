@@ -1,27 +1,17 @@
 #include "note.h"
 #include "ui_note.h"
-
+#include <QDebug>
 #include <QGraphicsOpacityEffect>
 #include <windows.h>
 #include <iostream>
 #include <QFile>
 #include <QTextStream>
 #include <QDate>
-#include <QDebug>
 #include <QGraphicsOpacityEffect>
 #include "appremind.h"
 #include "vector_.h"
 #include "editdialog.h"
 #include "dialog.h"
-
-Note::Note(QWidget *parent) :
-        QWidget(parent),
-        ui(new Ui::Note)
-{
-    ui->setupUi(this);
-    this->setWindowFlags(Qt::FramelessWindowHint);
-    this->setAttribute(Qt::WA_TranslucentBackground);
-}
 
 Note::Note(std::vector<Note*> *note_vector,int num,QString str1,
            QString str2, QString str3, QString str4,QString str5,
@@ -30,7 +20,7 @@ Note::Note(std::vector<Note*> *note_vector,int num,QString str1,
       ddl(str4),note(str5),repeat_times(str6),
       repeat_gap(str7), ui(new Ui::Note)
 {
-    this->am = new AppRemind(this->Thing, this->Date, this->Time);
+    //this->am = new AppRemind(this->Thing, this->Date, this->Time);
     index=note_vector->size();
     ui->setupUi(this);
     this->note_vector=note_vector;
@@ -43,6 +33,10 @@ Note::Note(std::vector<Note*> *note_vector,int num,QString str1,
     ui->label_5->setText(note);
     ui->label_7->setText(repeat_times);
     ui->label68->setText(repeat_gap);
+    if(this->finish == 1)
+    {
+        ui->checkBox->setCheckState(Qt::Checked);
+    }    //20230414
     QPalette pa;
     if(ddl == "非常重要")
     {
@@ -60,10 +54,6 @@ Note::Note(std::vector<Note*> *note_vector,int num,QString str1,
     {
         pa.setColor(QPalette::Background,QColor(255,255,0,50));   //黄色
     }
-//    if(ddl == "紧迫")
-//    {
-//        pa.setColor(QPalette::Background,QColor(255,0,0,50));      //纯红色
-//    }
     ui->label_4->setAutoFillBackground(true);
     ui->label_4->setPalette(pa);
 }
@@ -72,26 +62,17 @@ Note::~Note()
     delete ui;
 }
 
-//void Note::opacityChange(){
-//    noteExitPacity -= 0.1;
-//    QGraphicsOpacityEffect *opacity = new QGraphicsOpacityEffect;
-//    opacity->setOpacity(noteExitPacity);
-//    ui->label->setGraphicsEffect(opacity);
-//    qDebug() << noteExitPacity;
-//}
-
 void Note::on_checkBox_clicked()
 {
-//    timer = new QTimer(this);
-//    timer->setSingleShot(true);
-//    timer->start(1000);
-//    connect (timer, &QTimer::timeout, this, &Note::opacityChange);
+    if (finish == 1){
+        ui->checkBox->setCheckState(Qt::Checked);
+        return;
+    }
     if(note_vector->at(index)->repeat_times == "#")
     {
         finish=1;
         note_vector->at(index)->finish=1;
-        note_vector->at(index)->
-        ui->checkBox->setChecked(true);    //保持选中
+        note_vector->at(index)->ui->checkBox->setChecked(true);    //保持选中
         Vector_ vector;
         vector.vector_for_file(*note_vector);
         this->close();
@@ -107,8 +88,6 @@ void Note::on_checkBox_clicked()
         //定义完毕
         int times = note_vector->at(index)->repeat_times.toInt() - 1;//减少一次重复
         int day_add;
-
-        //qDebug()<<note_vector->at(index)->repeat_gap;
         if(note_vector->at(index)->repeat_gap =="每周")  day_add = 7;
         else if(note_vector->at(index)->repeat_gap == "每两周") day_add = 14;
         else if(note_vector->at(index)->repeat_gap == "每天") day_add = 1;
@@ -130,7 +109,6 @@ void Note::on_checkBox_clicked()
                     day_ =day_.asprintf("%02d",day);
                     QString datestr_new = list[0] +"/"+ list[1] +"/"+ day_;
                     note_vector->at(index)->Date = datestr_new;
-                    //qDebug()<<"2";
                 }
           else
                 {
@@ -144,7 +122,6 @@ void Note::on_checkBox_clicked()
                         day_ =day_.asprintf("%02d",day);
                         QString datestr_new = list[0] +"/"+ mon_ +"/"+ day_;
                         note_vector->at(index)->Date = datestr_new;
-                        //qDebug()<<"3";
                     }
                 else    //mon==12，满一年。
                     {
@@ -238,10 +215,6 @@ void Note::on_checkBox_clicked()
                 note_vector->at(index)->repeat_gap = "#";
             }
         }
-    if(amShow_){
-        this->am->close();
-        ui->pushButton_2->setText("+");
-    }
     Vector_ vector;
     vector.vector_for_file(*note_vector);
     emit refresh();
@@ -249,24 +222,24 @@ void Note::on_checkBox_clicked()
 
 void Note::on_pushButton_clicked()
 {
-    EditDialog *edi = new EditDialog(this,this->Thing,this->Time,this->Date,this->note,this->ddl,this->repeat_times,this->repeat_gap);  //通过新窗口的构造函数实现对this的内容的更改
+    EditDialog *edi = new EditDialog(this,this->Thing,
+                                     this->Time,this->Date,this->note,
+                                     this->ddl,this->repeat_times,this->repeat_gap);  //通过新窗口的构造函数实现对this的内容的更改
     edi->exec();
     emit refresh();
 }
+
 void Note::on_pushButton_2_clicked()
 {
-    if (!finish){
-        setAmShow(!amShow_);
-    }
+    if (finish == 1){return;}
+    AppRemind *am = new AppRemind(this->Thing, this->Date, this->Time);
+    am->show();
 }
+
 void Note::paintEvent(QPaintEvent * )   //20230315设置主界面背景
 {
     QPainter painter(this);
     painter.setOpacity(0.5);
-//    if(this->ddl == "紧迫")
-//    {
-//        painter.drawPixmap(rect(),QPixmap("impo_5.png"),QRect());
-//    }
     if(this->ddl == "非常重要")
     {
         painter.drawPixmap(rect(),QPixmap("impo_4.png"),QRect());
@@ -280,20 +253,4 @@ void Note::paintEvent(QPaintEvent * )   //20230315设置主界面背景
         painter.drawPixmap(rect(),QPixmap("impo_2.png"),QRect());
     }
     //20230316设置note的背景，缺少一个过期的设置，需要xsr来对比时间。
-}
-void Note::emit_exchange()
-{
-    emit delete_();
-}
-
-void Note::setAmShow(bool flag)
-{
-    amShow_ = flag;
-    if(flag){
-        am->show();
-        ui->pushButton_2->setText("-");
-    } else {
-        am->hide();
-        ui->pushButton_2->setText("+");
-    }
 }

@@ -18,7 +18,10 @@
     <widget class="QLabel" name="label">
      <property name="text">
       <string>版本v1.0
-现在是功能基本完善的版本了</string>
+现在是功能基本完善的版本了
+
+为什么历史事项不能被删除和编辑
+我们想让用户知道的是，人的过往是会被记住的</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>

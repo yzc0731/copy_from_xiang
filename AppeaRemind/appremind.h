@@ -17,6 +17,7 @@ public:
     void mousePressEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
+    void mouseDoubleClickEvent(QMouseEvent *e);
 
 private:
     Ui::AppRemind *ui;
@@ -25,7 +26,6 @@ private:
 
 protected:
     void paintEvent(QPaintEvent *);
-
 };
 
 #endif // APPREMIND_H

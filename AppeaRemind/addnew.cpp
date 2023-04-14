@@ -1,12 +1,11 @@
 #include "addnew.h"
 #include "ui_addnew.h"
-#include <QDebug>
 #include <QFile>
 #include <QDate>
 #include <QTime>
 #include "dialog.h"
 #include "vector_.h"
-
+#include <QDebug>
 Addnew::Addnew(std::vector<Note*> *note_vector) :
         ui(new Ui::Addnew)
 
@@ -42,7 +41,6 @@ Addnew::Addnew(std::vector<Note*> *note_vector) :
         QString min_ = QString::number(min,10);
         QString timestr_new = list1[0] +":"+ min_;
         time = QTime::fromString(timestr_new,"hh:mm");
-        //qDebug()<<time;
         ui->dateDateEdit->setDate(date);
         ui->timeTimeEdit->setTime(time);
     }
@@ -58,9 +56,7 @@ Addnew::Addnew(std::vector<Note*> *note_vector) :
             min_=min_.asprintf("%02d",min);
             hou_=hou_.asprintf("%02d",hou);              //为了补0 的无奈之举
             QString timestr_new = hou_+":"+min_;
-            //qDebug()<<timestr_new;
             time = QTime::fromString(timestr_new,"hh:mm");
-            //qDebug()<<time;
             ui->dateDateEdit->setDate(date);
             ui->timeTimeEdit->setTime(time);
         }
@@ -303,9 +299,6 @@ void Addnew::on_pushButton_clicked()
     else if(ui->checkBox->checkState() == Qt::Checked)
     {str[5] = ui->spinBox->text();
     str[6] = ui->comboBox_2->currentText();}
-
-//    for(int i=0;i<7;i++)
-//        qDebug()<<str[i]<<endl;           //在Qt界面输出以上五点（类似调试输出）
     //以下用于写入note_vector
     Note *n1 = nullptr;
     n1 = new Note(note_vector1,0,str[0], str[1], str[2], str[4], str[3],str[5],str[6]);

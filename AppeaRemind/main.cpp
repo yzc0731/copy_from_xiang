@@ -1,8 +1,5 @@
 #include "dialog.h"
-
-#include <QDebug>
 #include <QApplication>
-
 #include "about.h"
 #include "history.h"
 #include "addnew.h"

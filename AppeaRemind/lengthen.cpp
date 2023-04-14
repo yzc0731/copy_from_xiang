@@ -1,6 +1,6 @@
 #include "lengthen.h"
 #include "ui_lengthen.h"
-
+#include <QDebug>
 #include "datetime.h"
 
 lengthen::lengthen(QWidget *parent) :

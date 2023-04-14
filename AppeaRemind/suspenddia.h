@@ -52,7 +52,7 @@ private:
     QString _text = "Nothing!";
     int _radiusOfBall = 50;
     bool pressed = false;
-    bool _autoOpen = false;
+    int _autoOpen = 0;
     QString _importance = "无";
 public:
     QPoint _beginPos = QPoint(100,100);

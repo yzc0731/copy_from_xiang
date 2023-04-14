@@ -11,12 +11,13 @@ class SettingDia : public QDialog
 {
     Q_OBJECT
 public:
-    explicit SettingDia(QWidget *parent = nullptr, double pacity = 1.0, int radius = 50, bool autoOpen = 0);
+    explicit SettingDia(QWidget *parent = nullptr, double pacity = 1.0, int radius = 50, int autoOpen = 0);
     ~SettingDia();
     double getPacity();
     int getRadius();
-    bool isAutoOpen();
-    void autoOpen(bool flag);
+    int getAutoOpen();
+    bool checkIfSet();
+    void autoOpen(int flag);
 private slots:
     void on_backBtn_clicked();
     void on_horizontalSlider_valueChanged(int value);
@@ -29,7 +30,7 @@ private:
     Ui::SettingDia *ui;
     double _pacity = 1.0;
     int _radius = 50;
-    bool _autoOpen = 0;
+    int _autoOpen = 0;
 };
 
 #endif // SETTINGDIA_H

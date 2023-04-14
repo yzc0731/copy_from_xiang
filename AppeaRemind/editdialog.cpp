@@ -1,9 +1,7 @@
 #include "editdialog.h"
 #include "ui_editdialog.h"
-
-#include <QDebug>
 #include "vector_.h"
-
+#include <QDebug>
 EditDialog::EditDialog(Note *n1,QString str1,QString str2,QString str3,QString str4,QString str5,QString str6,QString str7) :
     s1(str1),s2(str2),s3(str3),s4(str4),s5(str5),s6(str6),s7(str7),note(n1),ui(new Ui::EditDialog)
 {
@@ -12,8 +10,6 @@ EditDialog::EditDialog(Note *n1,QString str1,QString str2,QString str3,QString s
     pa.setColor(QPalette::Background,QColor(190,230,230,160));
     this->setAutoFillBackground(true);      //背景
     this->setPalette(pa);                   //20230328
-
-    QDialog::connect(this,&EditDialog::finish_delete,n1,&Note::emit_exchange);
     ui->setupUi(this);
     ui->nameLineEdit->setText(s1);
     QTime tm = QTime::fromString(s2,"hh:mm");
@@ -34,6 +30,11 @@ EditDialog::EditDialog(Note *n1,QString str1,QString str2,QString str3,QString s
         int repeat_times = s6.toInt();
         ui->spinBox->setValue(repeat_times);
         ui->comboBox->setCurrentText(s7);
+    }
+    if(n1->finish == 1){
+        ui->pushButton->hide();
+        ui->pushButton_2->hide();
+        ui->label->setText(tr("仅可查看"));
     }
 }
 EditDialog::~EditDialog()
@@ -57,8 +58,8 @@ void EditDialog::on_pushButton_clicked()
     }
     else
     {
-        str[5]=ui->spinBox->text();           //重复情况
-        str[6]=ui->comboBox->currentText();   //
+        str[5]=ui->spinBox->text();
+        str[6]=ui->comboBox->currentText();
     }
     note->Thing = str[0];
     note->Time = str[1];
@@ -68,7 +69,7 @@ void EditDialog::on_pushButton_clicked()
     note->repeat_times = str[5];
     note->repeat_gap = str[6];
     Vector_ vector;
-    vector.vector_for_file(*note->note_vector);   //?
+    vector.vector_for_file(*note->note_vector);
     close();
 }
 
@@ -92,9 +93,10 @@ void EditDialog::on_pushButton_2_clicked()
 {
     std::vector<Note*>::iterator itor;
     for (itor = note->note_vector->begin();itor != note->note_vector->end();itor++) {
-        if(*itor == note)
-        {itor = note->note_vector->erase(itor);break;}
+        if(*itor == note){
+            itor = note->note_vector->erase(itor);
+            break;
+        }
     }
     this->on_pushButton_clicked();
-    emit finish_delete();
-}      //删除函数
+}//删除函数，连log.txt中都会删除

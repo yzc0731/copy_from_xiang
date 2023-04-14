@@ -1,16 +1,15 @@
 #include "ball.h"
 #include "ui_ball.h"
-
+#include <QDebug>
 #include <QPainter>
 #include <QTimer>
 #include <QDateTime>
 #include <QMouseEvent>
 #include <QDesktopWidget>
-#include <QDebug>
 #include <QApplication>
 #include <QScreen>
 
-Ball::Ball(QWidget *parent, QString text, QPoint posBegin, int radius, QString importance):
+Ball::Ball(QWidget *parent, QString text, QPoint posBegin, int radius, QString importance, double pacity):
     QDialog(parent),ui(new Ui::Ball),_text(text),
     _globalBallPos(posBegin), _radius(radius), _importance(importance)
 {
@@ -23,6 +22,7 @@ Ball::Ball(QWidget *parent, QString text, QPoint posBegin, int radius, QString i
     this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowSystemMenuHint |
                          Qt::WindowMinMaxButtonsHint|Qt::WindowStaysOnTopHint);// 无边框
     this->setAttribute(Qt::WA_TranslucentBackground,true);// 窗口整体透明，但窗口控件不透明
+    this->setWindowOpacity(pacity);
 }
 
 void Ball::paintEvent(QPaintEvent *)

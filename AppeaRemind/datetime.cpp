@@ -11,7 +11,7 @@
 #include "note.h"
 #include "dialog.h"
 #include "lengthen.h"
-
+#include <QDebug>
 dateTime::dateTime(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::dateTime)

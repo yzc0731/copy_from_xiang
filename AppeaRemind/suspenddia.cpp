@@ -1,11 +1,10 @@
 #include "suspenddia.h"
 #include "ui_suspenddia.h"
-
+#include <QDebug>
 #include <QPushButton>
 #include <QTextCodec>
 #include <QFile>
 #include <QFileInfo>
-#include <QDebug>
 #include <QDateTime>
 #include <QApplication>
 #include <QScreen>
@@ -50,6 +49,7 @@ SuspendDia::~SuspendDia()
 
 void SuspendDia::onRefresh()
 {
+    _text = "Nothing!";
     if (ui->frame->layout() != nullptr) {//删除原有布局
         QLayoutItem *item;
         while ((item = ui->frame->layout()->takeAt(0)) != nullptr) {
@@ -104,6 +104,7 @@ void SuspendDia::onRefresh()
 
 void SuspendDia::onRefreshForTime()
 {
+    _text = "Nothing!";
     //如果是第一次按照时间顺序排序，先从log.txt里面读取，按照时间排序之后输出
     if (ui->frame->layout() != nullptr) {   //删除原有布局
         QLayoutItem *item;
@@ -195,10 +196,9 @@ void SuspendDia::addStringToBall(Note *note)
 
 void SuspendDia::on_exitBtn_clicked()
 {
-    for (unsigned i = 0; i < note_vector.size(); i++){
-        note_vector.at(i)->setAmShow(false);
-    }
+
     if(set){
+        backFromSet();
         set->close();
     }
     settingsToFile();
@@ -221,24 +221,21 @@ void SuspendDia::backFromBall()
 void SuspendDia::backFromSet()
 {
     _radiusOfBall = set->getRadius();
-    _autoOpen = set->isAutoOpen();
+    _autoOpen = set->getAutoOpen();
     hasSet = false;
 }
 
 void SuspendDia::mouseDoubleClickEvent(QMouseEvent *)
 {
-    for (unsigned i = 0; i < note_vector.size(); i++){
-        note_vector.at(i)->setAmShow(false);
-    }
-    if(hasSet){
-        set->close();
+    if(set){
         backFromSet();
+        set->close();
     }
     if (!hasBall){
         int width = this->width();
         int height = this->height();
         _beginPos = QPoint (_beginPos.x()+width/2, _beginPos.y()+height/2);
-        ball = new Ball(nullptr, _text, _beginPos, _radiusOfBall, _importance);    // 创建一个悬浮球
+        ball = new Ball(nullptr, _text, _beginPos, _radiusOfBall, _importance, _pacity);    // 创建一个悬浮球
         ball->show();
         settingsToFile();
         this->hide();   // 隐藏悬浮窗窗口
@@ -292,7 +289,6 @@ void SuspendDia::settingsToFile()
     if(fileModify.open(QIODevice::WriteOnly|QIODevice::Text))
     {
         QTextStream stream(&fileModify);
-        //strAllList = strAll.split("\n");    //按照行来划分成list
         int size = strAll.size();   //size = 5。
         strAll[2] = "pacity#"+QString("%1").arg(_pacity);     //取第三行,实现对pacity的替换
         strAll[3] = "radius#"+QString("%1").arg(_radiusOfBall);     //取第四行,实现对nextTime的替换
@@ -328,7 +324,6 @@ void SuspendDia::getSettingsFromFile()
             _autoOpen = list3[1].toInt();
         }
     } else {
-        qDebug()<<"File not exists";
         QFile initFile;
         initFile.setFileName("logset.txt");
         if(initFile.open(QIODevice::WriteOnly|QIODevice::Text))
@@ -366,12 +361,10 @@ void SuspendDia::pacityChange(){
 
 void SuspendDia::on_backBtn_clicked()
 {
-    for (unsigned i = 0; i < note_vector.size(); i++){
-        note_vector.at(i)->setAmShow(false);
-    }
     hasBall = true;
     if(set != nullptr){
         set->close();
+        backFromSet();
     }
     settingsToFile();
     emit this->back();
